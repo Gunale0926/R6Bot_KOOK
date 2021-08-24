@@ -15,7 +15,7 @@ class R6Active extends AppCommand {
     intro = '激活测试权限';
     response : 'pm';
     func: AppFunc<BaseSession> = async (session) => {
-       console.log('1');
+        
     }
 }
 export const r6Active = new R6Active();

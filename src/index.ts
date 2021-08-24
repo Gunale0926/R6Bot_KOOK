@@ -4,6 +4,7 @@ import { r6Search } from 'commands/r6/r6.search.app';
 import { bot } from 'init/client';
 import { echoMenu } from './commands/echo/echo.menu';
 import { r6Menu } from './commands/r6/r6.menu'
+import { r6Applyrole } from 'commands/r6/r6.applyrole.app';
 var mysql = require('mysql');
 var tabname = 'usrlib'
 var list: string[] = [null, null, null, null, null]
@@ -77,6 +78,7 @@ bot.addCommands(r6Menu);
 bot.addAlias(r6Status,"状态");
 bot.addAlias(r6Search,"查询")
 bot.addAlias(r6Record,"记录")
+bot.addAlias(r6Applyrole,"申请角色")
 bot.connect();
 bot.logger.debug('system init success');
 export var List = list;
