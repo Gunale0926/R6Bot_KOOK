@@ -1,6 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
 import { bot } from 'init/client';
-var flag = 0;
 class R6Applyrole extends AppCommand {
     code = 'applyrole'; // 只是用作标记
     trigger = 'applyrole'; // 用于触发的文字
@@ -13,7 +12,7 @@ class R6Applyrole extends AppCommand {
         async function give(response: any) {
             for (var i = 0; i < response.length; i++) {
                 if (response[i].name == session.args[0]&&response[i].position >=3 &&response[i].position <= 44) {
-                    session.user.grantRole(35688, session.guildId)
+                    session.user.grantRole(0, session.guildId)
                         .then(function (res) {
                             if (res) {
                                 for (var j = 0; j < res.roles.length; j++) {
@@ -23,6 +22,7 @@ class R6Applyrole extends AppCommand {
                                     }
                                 }
                                     session.user.grantRole(response[i].roleId, session.guildId)
+                                    session.user.grantRole(35688, session.guildId)
                                     session.send("申请成功");
                                     return;
                             }

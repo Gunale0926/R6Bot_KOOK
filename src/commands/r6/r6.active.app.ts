@@ -1,7 +1,7 @@
 import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
 import { bot } from 'init/client';
 var mysql = require('mysql');
-var tabname = 'usrlib'
+var tabname = 'keylib'
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',

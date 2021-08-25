@@ -1,13 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
 import { bot } from 'init/client';
-var mysql = require('mysql');
-var tabname = 'usrlib'
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'bot_db'
-});
 class R6Active extends AppCommand {
     code = 'team'; // 只是用作标记
     trigger = 'team'; // 用于触发的文字
