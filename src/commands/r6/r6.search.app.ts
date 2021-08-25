@@ -21,12 +21,13 @@ class R6Search extends AppCommand {
 
                 var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id + ' && sel =1';
                 connection.query(exp, function (err: any, result: any) {
+                    console.log(JSON.stringify(result));
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
+                        session.send("数据库中查无此人，请先\".记录\"")
                         reject()
                     }
-                    else if (result.toString().search(/(\S*)/)) {
-                        console.log(result.toString());
+                    else if (JSON.stringify(result).search('r6id')) {
                         var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]
                         resolve(r6id);
                     } else {

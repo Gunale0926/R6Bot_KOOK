@@ -11,24 +11,24 @@ class R6Applyrole extends AppCommand {
         }()
         async function give(response: any) {
             for (var i = 0; i < response.length; i++) {
+                console.log(response);
                 if (response[i].name == session.args[0]&&response[i].position >=3 &&response[i].position <= 44) {
-                    session.user.grantRole(0, session.guildId)
+                    var rid=response[i].roleId
+                    session.user.grantRole(372468,session.guildId)
                         .then(function (res) {
                             if (res) {
                                 for (var j = 0; j < res.roles.length; j++) {
-                                    if (res.roles[j] === 35688) {
+                                    if (res.roles[j] == 35688) {
                                         session.send("请勿重复申请")
+                                        session.user.revokeRole(372468,session.guildId)
                                         return;
                                     }
                                 }
-                                    session.user.grantRole(response[i].roleId, session.guildId)
+                                    session.user.grantRole(rid, session.guildId)
                                     session.user.grantRole(35688, session.guildId)
+                                    session.user.revokeRole(372468,session.guildId)
                                     session.send("申请成功");
                                     return;
-                            }
-                            else {
-                                console.log('you don\'t offer args');
-                                return;
                             }
                         })
                 }
