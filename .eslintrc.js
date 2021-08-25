@@ -17,8 +17,13 @@ module.exports = {
     },
     plugins: [
         '@typescript-eslint',
+        '@typescript-eslint/tslint',
+        'import',
+        'no-null',
+        'prefer-arrow',
         'eslint-plugin-prettier',
-    ], 
+        'unicorn',
+    ],
     rules: {
         'prettier/prettier': [
             'error',
@@ -170,7 +175,7 @@ module.exports = {
         'no-eval': 'error',
         'no-extra-bind': 'error',
         'no-fallthrough': 'error',
-        // 'no-invalid-this': 'error',
+        'no-invalid-this': 'error',
         'no-multiple-empty-lines': [
             'error',
             {
@@ -215,6 +220,7 @@ module.exports = {
                 next: 'return',
             },
         ],
+        'prefer-arrow/prefer-arrow-functions': 'error',
         'prefer-const': 'error',
         'prefer-object-spread': 'error',
         'prefer-template': 'error',

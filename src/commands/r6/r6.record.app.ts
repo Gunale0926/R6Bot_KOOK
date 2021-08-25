@@ -1,4 +1,4 @@
-import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 var mysql = require('mysql');
 var tabname = 'usrlib'
 var connection = mysql.createConnection({

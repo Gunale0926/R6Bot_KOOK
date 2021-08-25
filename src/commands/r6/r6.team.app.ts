@@ -1,5 +1,5 @@
-import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
-import { bot } from 'init/client';
+import { AppCommand, AppFunc, BaseSession, Card } from '../..';
+import { bot } from 'tests/init';
 class R6Active extends AppCommand {
     code = 'team'; // 只是用作标记
     trigger = 'team'; // 用于触发的文字

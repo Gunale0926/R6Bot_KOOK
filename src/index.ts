@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { r6Status } from 'commands/r6/r6.status.app';
 import { r6Record } from 'commands/r6/r6.record.app';
 import { r6Search } from 'commands/r6/r6.search.app';
@@ -82,3 +83,18 @@ bot.addAlias(r6Applyrole,"申请角色")
 bot.connect();
 bot.logger.debug('system init success');
 export var List = list;
+=======
+export * from './core/session';
+
+export { ResultTypes } from './core/types';
+export * from './core/command';
+export * from './core/card';
+export { SendOptions } from './core/msg.types';
+export { kBotifyLogger as kBotifyLogger } from './core/logger';
+export { KBotify } from './core/kbotify';
+
+export * from './core/user';
+export * from './core/message';
+export * from './core/kbotify';
+export * from './core/channel';
+>>>>>>> Stashed changes

@@ -28,14 +28,14 @@
         "sourceMap": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "strictNullChecks":false
+        "strictNullChecks":false,
     },
     "include": [
         // "./src/commands/shared/*.ts",
         // "./src/utils/*.ts",
         // "./src/index.ts",
         "./src/**/*.ts",
-        ".eslintrc.js", "src/commands/r6/r6.status.app.js",
+        ".eslintrc.js",
     ],
     "exclude": ["./src/tests/*.ts"]
 }

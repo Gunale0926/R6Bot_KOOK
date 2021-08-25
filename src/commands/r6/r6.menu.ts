@@ -1,4 +1,5 @@
-import { Card, MenuCommand } from 'kbotify';
+import { MenuCommand } from '../..';
+import { Card } from '../../core/card'
 import { r6Status } from './r6.status.app';
 import { r6Record } from './r6.record.app';
 import { r6Search } from './r6.search.app'
@@ -13,4 +14,4 @@ class R6Menu extends MenuCommand {
     useCardMenu = true; // 使用卡片菜单
 }
 
-export const r6Menu = new R6Menu(r6Status, r6Record, r6Search, r6Active,r6Applyrole);
+export const r6Menu = new R6Menu(r6Status, r6Record, r6Search, r6Active, r6Applyrole);

@@ -1,5 +1,5 @@
-import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
-import { List } from '../../index'
+import { AppCommand, AppFunc, BaseSession, Card } from '../..';
+import { List } from 'tests/init'
 var https = require('https');
 var url = "https://r6.tracker.network/profile/pc/";
 var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0;

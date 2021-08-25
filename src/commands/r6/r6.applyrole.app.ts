@@ -1,5 +1,5 @@
-import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
-import { bot } from 'init/client';
+import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from '../..';
+import { bot } from 'tests/init';
 class R6Applyrole extends AppCommand {
     code = 'applyrole'; // 只是用作标记
     trigger = 'applyrole'; // 用于触发的文字
