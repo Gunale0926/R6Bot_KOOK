@@ -26,11 +26,11 @@ class R6Active extends AppCommand {
                     }
                     else if (JSON.stringify(result).search('"act":0') !== -1) {
                         //var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]
-                        session.send('激活中')
                         resolve(cdk);
                     }
                     else {
                         session.send("CDK错误或已经被激活！")
+                        reject();
                     }
                 });
             })
@@ -47,7 +47,9 @@ class R6Active extends AppCommand {
                         reject()
                     }
                     else {
-                        session.send('激活成功');
+                        session.send('激活成功！');
+                        session.user.grantRole(373739,session.guildId);//赞助者
+                        session.user.grantRole(373758,session.guildId);//内测
                         resolve()
                     }
                 })

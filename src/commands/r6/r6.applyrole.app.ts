@@ -11,7 +11,6 @@ class R6Applyrole extends AppCommand {
         }()
         async function give(response: any) {
             for (var i = 0; i < response.length; i++) {
-                console.log(response);
                 if (response[i].name == session.args[0]&&response[i].position >=3 &&response[i].position <= 44) {
                     var rid=response[i].roleId
                     session.user.grantRole(372468,session.guildId)
