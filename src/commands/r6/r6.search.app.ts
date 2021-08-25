@@ -18,16 +18,14 @@ class R6Search extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         async function searchid(id: string) {
             return new Promise<string>((resolve, reject) => {
-
                 var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id + ' && sel =1';
                 connection.query(exp, function (err: any, result: any) {
-                    console.log(JSON.stringify(result));
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
                         session.send("数据库中查无此人，请先\".记录\"")
                         reject()
                     }
-                    else if (JSON.stringify(result).search('r6id')) {
+                    else if (JSON.stringify(result).search('r6id') !== -1) {
                         var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]
                         resolve(r6id);
                     } else {
