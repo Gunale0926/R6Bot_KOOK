@@ -9,11 +9,10 @@ var connection = mysql.createConnection({
     database: 'bot_db'
 });
 class R6Active extends AppCommand {
-    code = 'active'; // 只是用作标记
-    trigger = 'active'; // 用于触发的文字
-    help = '.r6 active+KEY'; // 帮助文字
-    intro = '激活测试权限';
-    response : 'pm';
+    code = 'team'; // 只是用作标记
+    trigger = 'team'; // 用于触发的文字
+    help = '.r6 team + 组队的要求（例如：排位 2500分左右）'; // 帮助文字
+    intro = '发布组队';
     func: AppFunc<BaseSession> = async (session) => {
         
     }

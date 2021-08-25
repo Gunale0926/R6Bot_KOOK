@@ -8,7 +8,7 @@ var rankable: boolean;
 class R6Status extends AppCommand {
     code = 'status'; // 只是用作标记
     trigger = 'status'; // 用于触发的文字
-    help = '`.r6 status\n缩写".状态"`'; // 帮助文字
+    help = '.r6 status\n缩写".状态"'; // 帮助文字
     intro = '查询BANDIT频道内玩家排位信息和状态';
     func: AppFunc<BaseSession> = async (session) => {
         if (!List.length)
