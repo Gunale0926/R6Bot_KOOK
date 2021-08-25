@@ -103,5 +103,9 @@ dist
 # TernJS port file
 .tern-port
 
-src/configs/auth*
+lib/
+tools/
+tool.sh
+_deprecated
 .DS_Store
+*.env
