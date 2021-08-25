@@ -23,10 +23,14 @@ class R6Search extends AppCommand {
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
+                        reject()
                     }
-                    else {
+                    else if (result.toString().search(/(\S*)/)) {
+                        console.log(result.toString());
                         var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]
                         resolve(r6id);
+                    } else {
+                        session.send("数据库中查无此人，请先\".记录\"")
                     }
 
                 });
@@ -58,13 +62,21 @@ class R6Search extends AppCommand {
                             var arg4 = kd;
                             var arg5 = imglink;
                             var arg6 = '#B2B6BB';
-                            if (rank.search(/COPPER/) === 0) { arg6 = "#B30B0D"; }
-                            if (rank.search(/BRONZE/) === 0) { arg6 = "#C98B3B"; }
-                            if (rank.search(/SILVER/) === 0) { arg6 = "#B0B0B0"; }
-                            if (rank.search(/GOLD/) === 0) { arg6 = "#EED01E"; }
-                            if (rank.search(/PLATINUM/) === 0) { arg6 = "#5BB9B3"; }
-                            if (rank.search(/DIAMOND/) === 0) { arg6 = "#BD9FF6"; }
-                            if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; }
+                            var rankcn;
+                            if (rank.search(/COPPER/) === 0) { arg6 = "#B30B0D"; rankcn = "紫铜"; arg3 = arg3.replace('COPPER', ''); }
+                            if (rank.search(/BRONZE/) === 0) { arg6 = "#C98B3B"; rankcn = "青铜"; arg3 = arg3.replace('BRONZE', ''); }
+                            if (rank.search(/SILVER/) === 0) { arg6 = "#B0B0B0"; rankcn = "白银"; arg3 = arg3.replace('SILVER', ''); }
+                            if (rank.search(/GOLD/) === 0) { arg6 = "#EED01E"; rankcn = "黄金"; arg3 = arg3.replace('GOLD', ''); }
+                            if (rank.search(/PLATINUM/) === 0) { arg6 = "#5BB9B3"; rankcn = "白金"; arg3 = arg3.replace('PLATINUM', ''); }
+                            if (rank.search(/DIAMOND/) === 0) { arg6 = "#BD9FF6"; rankcn = "钻石"; arg3 = arg3.replace('DIAMOND', ''); }
+                            if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; rankcn = "冠军"; arg3 = arg3.replace('CHAMPION', ''); }
+                            if (arg3 === 'I') arg3 = rankcn + '1';
+                            if (arg3 === 'II') arg3 = rankcn + '2';
+                            if (arg3 === 'III') arg3 = rankcn + '3';
+                            if (arg3 === 'IV') arg3 = rankcn + '4';
+                            if (arg3 === 'V') arg3 = rankcn + '5';
+                            if (arg3 === '') arg3 = rankcn;
+                            if (arg3.search(/NoRank/) === 0) arg3 = "未定级";
                             var card: any = [{ "type": "card", "theme": "secondary", "color": arg6, "size": "sm", "modules": [{ "type": "section", "text": { "type": "kmarkdown", "content": "                 **" + arg1 + "**" }, "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" } }] }, { "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [{ "type": "section", "text": { "type": "paragraph", "cols": 3, "fields": [{ "type": "kmarkdown", "content": "**MMR**\n" + arg2 }, { "type": "kmarkdown", "content": "**段位**\n" + arg3 }, { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }] } }] }]
                             var immr = parseInt(mmr)
                             avmmr = avmmr + immr;
