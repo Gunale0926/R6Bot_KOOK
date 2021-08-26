@@ -94,13 +94,20 @@ bot.event.on('system', (event) => {
             console.log('LIST:' + List)
         }()
     }
-})
-bot.event.on('system', (event) => {
     if (event.type == 'exited_channel' && event.body.channel_id == '2494099237896157') {
         //console.log(event)
         var del = async function () {
             await deleteList(await searchid(event.body.user_id));
             console.log('LIST:' + List)
+        }()
+    }
+    if (event.type == 'buttonClick') {
+        var done = async function () {
+            var channelId:string
+            var clkusr: string;
+            clkusr = await event.userId;
+            if(event.value == 'BANDIT') channelId='2494099237896157'
+            await bot.API.channel.moveUser(channelId, [clkusr])
         }()
     }
 })

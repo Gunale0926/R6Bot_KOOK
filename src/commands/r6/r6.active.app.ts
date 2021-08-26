@@ -1,4 +1,4 @@
-import { AppCommand, AppFunc, BaseSession } from '../..';
+import { AppCommand, AppFunc, BaseSession,Card} from '../..';
 import { bot } from 'tests/init';
 var mysql = require('mysql');
 var tabname = 'cdklist'
@@ -15,6 +15,8 @@ class R6Active extends AppCommand {
     intro = '激活测试权限';
     response: 'pm' = 'pm';
     func: AppFunc<BaseSession> = async (session) => {
+        if (session.args.length == 0)
+            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         async function searchkey(cdk: string) {
             return new Promise<string>((resolve, reject) => {
                 var exp = 'SELECT act FROM ' + tabname + ' WHERE cdk="' + cdk + '" && act=0';
@@ -38,7 +40,7 @@ class R6Active extends AppCommand {
         async function recordkey(cdk: string) {
             return new Promise<void>((resolve, reject) => {
                 var today = new Date();
-                var exp = 'UPDATE ' + tabname + ' SET act=1, actdate="' + today.toISOString().substring(0, 10) +'", id=' + session.userId + ' WHERE cdk="' + cdk + "\"";
+                var exp = 'UPDATE ' + tabname + ' SET act=1, actdate="' + today.toISOString().substring(0, 10) + '", id=' + session.userId + ' WHERE cdk="' + cdk + "\"";
                 console.log(exp)
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
@@ -48,8 +50,8 @@ class R6Active extends AppCommand {
                     }
                     else {
                         session.send('激活成功！');
-                        session.user.grantRole(373739,session.guildId);//赞助者
-                        session.user.grantRole(373758,session.guildId);//内测
+                        session.user.grantRole(373739, session.guildId);//赞助者
+                        session.user.grantRole(373758, session.guildId);//内测
                         resolve()
                     }
                 })

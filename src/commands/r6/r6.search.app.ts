@@ -16,6 +16,8 @@ class R6Search extends AppCommand {
     help = '.r6 search+@你要查询的人\n或者\n.r6 search+ID\n(缩写".查询")'; // 帮助文字
     intro = '查询ID';
     func: AppFunc<BaseSession> = async (session) => {
+        if (session.args.length == 0)
+            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         async function searchid(id: string) {
             return new Promise<string>((resolve, reject) => {
                 var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id + ' && sel =1';

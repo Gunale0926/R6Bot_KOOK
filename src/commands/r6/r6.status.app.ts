@@ -11,14 +11,15 @@ class R6Status extends AppCommand {
     help = '.r6 status\n缩写".状态"'; // 帮助文字
     intro = '查询BANDIT频道内玩家排位信息和状态';
     func: AppFunc<BaseSession> = async (session) => {
+        if (session.args.length == 0)
+            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         if (!List.length)
             return session.reply(this.help);
         ok = 0;
         xmmr = 0;
         nmmr = 9999;
         avmmr = 0
-        num=0;
-        console.log('LIST:' + List)
+        num = 0;
         for (var i = 0; i <= 4; i++)
             if (List[i] !== null)
                 num++;
@@ -26,21 +27,19 @@ class R6Status extends AppCommand {
             for (var i = 0; i <= 4; i++) {
                 if (List[i] !== null) {
                     var r6id = List[i];
-                    console.log(num + ' ' + r6id)
                     await send(await get(r6id))
                 }
             }
             setTimeout(() => {
-            var sub=async function() {
-                await final()
-            }()
+                var sub = async function () {
+                    await final()
+                }()
             }, 1000);
         }()
 
         async function get(r6id: string) {
             return new Promise<string>((resolve, reject) => {
                 var urln = url + r6id;
-                console.log(r6id);
                 https.get(urln, function (res: any) {
                     var html: string = '';
                     res.on('data', function (data: any) {
@@ -96,7 +95,6 @@ class R6Status extends AppCommand {
         async function final() {
             return new Promise<void>((resolve, reject) => {
                 if (ok == num) {
-                    console.log('Finally!');
                     avmmr = avmmr / num;
                     if (xmmr - nmmr > 700) rankable = false;
                     else rankable = true;

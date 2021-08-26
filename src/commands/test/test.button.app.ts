@@ -10,7 +10,7 @@ class TestButton extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         // console.debug(JSON.stringify([getCard()]));
         // if (!session.args.length) return session.replyCard(getCard());
-        console.log(session);
+        //console.log(session);
 
         // if (session instanceof GuildSession) {
         //     console.log(await session.user.full());
