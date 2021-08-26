@@ -4,8 +4,9 @@ var clkusr: string[];
 class R6Team extends AppCommand {
     code = 'team'; // 只是用作标记s
     trigger = 'team'; // 用于触发的文字
-    help = '.r6 team + 频道名称（干员英文名）+模式+要求（例如：.组队 BANDIT 排位 2500分左右 KD0.5以上）'; // 帮助文字
+    help = '注意：请私聊机器人此指令".r6 team + 频道名称（干员英文名）+模式+要求"(缩写.组队)（例如：.组队 BANDIT 排位 2500分左右 KD0.5以上）'; // 帮助文字
     intro = '发布组队';
+    response: 'pm' = 'pm';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))

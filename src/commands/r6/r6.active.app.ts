@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
 class R6Active extends AppCommand {
     code = 'active'; // 只是用作标记
     trigger = 'active'; // 用于触发的文字
-    help = '.r6 active+KEY'; // 帮助文字
+    help = '.r6 active+KEY（注意：请私聊机器人此指令！！！）'; // 帮助文字
     intro = '激活测试权限';
     response: 'pm' = 'pm';
     func: AppFunc<BaseSession> = async (session) => {
