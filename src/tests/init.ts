@@ -28,12 +28,14 @@ import { r6Applyrole } from '../commands/r6/r6.applyrole.app';
 import { r6Record } from '../commands/r6/r6.record.app';
 import { r6Search } from '../commands/r6/r6.search.app';
 import { r6Status } from '../commands/r6/r6.status.app';
+import { r6Team } from '../commands/r6/r6.team.app';
 
 bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu);
-bot.addAlias(r6Status, "状态");
+bot.addAlias(r6Status, "状态")
 bot.addAlias(r6Search, "查询")
 bot.addAlias(r6Record, "记录")
 bot.addAlias(r6Applyrole, "申请角色")
+bot.addAlias(r6Team, "组队")
 bot.connect();
 bot.logger.debug('system init success');
 bot.messageSource.on('message', (e) => {

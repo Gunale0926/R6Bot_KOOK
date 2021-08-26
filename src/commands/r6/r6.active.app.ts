@@ -13,7 +13,7 @@ class R6Active extends AppCommand {
     trigger = 'active'; // 用于触发的文字
     help = '.r6 active+KEY（注意：请私聊机器人此指令！！！）'; // 帮助文字
     intro = '激活测试权限';
-    response: 'pm' = 'pm';
+    response: 'both';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))

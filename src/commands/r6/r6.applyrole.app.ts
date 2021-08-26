@@ -15,19 +15,17 @@ class R6Applyrole extends AppCommand {
             for (var i = 0; i < response.length; i++) {
                 if (response[i].name == session.args[0] && response[i].position >= 3 && response[i].position <= 44) {
                     var rid = response[i].roleId
-                    session.user.grantRole(372468, session.guildId)
+                    bot.API.guild.userList(session.guildId)
                         .then(function (res) {
                             if (res) {
-                                for (var j = 0; j < res.roles.length; j++) {
-                                    if (res.roles[j] == 35688) {
+                                for (var j = 0; j < res.items.length; j++) {
+                                    if (res.items[i].roles[j] == 35688) {
                                         session.send("请勿重复申请")
-                                        session.user.revokeRole(372468, session.guildId)
                                         return;
                                     }
                                 }
                                 session.user.grantRole(rid, session.guildId)
                                 session.user.grantRole(35688, session.guildId)
-                                session.user.revokeRole(372468, session.guildId)
                                 session.send("申请成功");
                                 return;
                             }
