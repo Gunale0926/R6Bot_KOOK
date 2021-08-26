@@ -1,11 +1,6 @@
 import { MenuCommand } from '../..';
 import { Card } from '../../core/card'
-import { r6Status } from './apex.status.app';
-import { r6Record } from './apex.record.app';
 import { apexSearch } from './apex.search.app'
-import { r6Active } from './apex.active.app'
-import { r6Applyrole } from './apex.applyrole.app'
-import { r6Team } from './apex.team.app'
 class R6Menu extends MenuCommand {
     code = 'r6';
     trigger = 'r6';
@@ -15,4 +10,4 @@ class R6Menu extends MenuCommand {
     useCardMenu = true; // 使用卡片菜单
 }
 
-export const r6Menu = new R6Menu(r6Status, r6Record, apexSearch, r6Active, r6Applyrole, r6Team);
+export const r6Menu = new R6Menu(apexSearch);

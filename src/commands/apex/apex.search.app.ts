@@ -2,7 +2,7 @@ import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 var mysql = require('mysql');
 var tabname = 'usrlib'
 var https = require('https');
-var url = "https://r6.tracker.network/profile/pc/";
+var url = "https://tracker.gg/apex/profile/origin/";
 var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num = 0;
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
 class ApexSearch extends AppCommand {
     code = 'search'; // 只是用作标记
     trigger = 'search'; // 用于触发的文字
-    help = '.r6 search+@你要查询的人\n或者\n.r6 search+ID\n(缩写".查询")'; // 帮助文字
+    help = '.apex search+@你要查询的人\n或者\n.apex search+ID\n(缩写".查询")';
     intro = '查询ID';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
@@ -39,7 +39,7 @@ class ApexSearch extends AppCommand {
         }
         async function get(r6id: string) {
             return new Promise<string>((resolve, reject) => {
-                var urln = url + r6id;
+                var urln = url + r6id+'/overview';
                 https.get(urln, function (res: any) {
                     var html: string = '';
                     res.on('data', function (data: any) {
@@ -51,13 +51,23 @@ class ApexSearch extends AppCommand {
                         }
                         else {
                             html = html.replace(/\n/g, '');
-                            var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
+                            //html = html.replace(/ /g, '');
+                            var level = html.match('Level</span> <!----> <span class="value" data-v-(.*?)>')[1];
+                            var reg=new RegExp('Level</span> <!----> <span class="value" data-v-'+level+'>(.*?)</span> <!---->','');
+                            level=html.match(reg)[1].replace(',', '');
+
+                            var mmr=html.match('Apex Predator</div> <div class="rating__value" data-v-********>(.*?)<sup data-v-')[1].replace(',', '');
+
+                            var kills=html.match('Kills</span> <!----> <span class="value" data-v-(.*?)>')[1];
+                            var reg2=new RegExp('Kills</span> <!----> <span class="value" data-v-'+kills+'>(.*?)</span> <!---->');
+                            kills=html.match(reg2)[1].replace(',', '');
+                            
                             var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
                             var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
                             var imglink = session.user.avatar
-                            var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
+                            var namer = html.match('<title>(.*?)&#x27;')[1];
                             var arg1 = namer;
-                            var arg2 = mmr;
+                            var arg2 = level;
                             var arg3 = rank.replace(' ', '');
                             var arg4 = kd;
                             var arg5 = imglink;
