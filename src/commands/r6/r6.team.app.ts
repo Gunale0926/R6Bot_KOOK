@@ -4,7 +4,7 @@ var clkusr: string[];
 class R6Team extends AppCommand {
     code = 'team'; // 只是用作标记s
     trigger = 'team'; // 用于触发的文字
-    help = '.r6 team + 频道干员名+模式+要求（例如：.组队 BANDIT 排位 2500分左右 KD0.5以上）'; // 帮助文字
+    help = '.r6 team + 频道名称（干员英文名）+模式+要求（例如：.组队 BANDIT 排位 2500分左右 KD0.5以上）'; // 帮助文字
     intro = '发布组队';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
@@ -15,7 +15,7 @@ class R6Team extends AppCommand {
         if (session.args[0].search('DOC') !== -1 || session.args[0].search('ROOK') !== -1 || session.args[0].search('MUTE') !== -1 || session.args[0].search('ECHO') !== -1 || session.args[0].search('ORYX') !== -1 || session.args[0].search('JAGER') !== -1 || session.args[0].search('SLEDGE') !== -1 || session.args[0].search('BANDIT') !== -1 || session.args[0].search('HIBANA') !== -1){
             await bot.API.message.create(10, '9948172504885907', card.toString())
             await bot.API.message.create(10, '9948172504885907', getCard().toString())
-        }else return session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
+        }else return session.sendCard(new Card().addTitle("频道名称输入不正确！"));
         function getCard() {
             return new Card({
                 type: 'card',
