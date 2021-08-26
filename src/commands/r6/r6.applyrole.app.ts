@@ -16,19 +16,23 @@ class R6Applyrole extends AppCommand {
                 if (response[i].name == session.args[0] && response[i].position >= 3 && response[i].position <= 44) {
                     var rid = response[i].roleId
                     bot.API.guild.userList(session.guildId)
-                        .then(function (res) {
-                            if (res) {
-                                for (var j = 0; j < res.items.length; j++) {
-                                    if (res.items[i].roles[j] == 35688) {
-                                        session.send("请勿重复申请")
-                                        return;
+                        .then(function (response) {
+                            console.log(response);
+                            for (var j = 0; j < response.items.length; j++) {
+                                if (response.items[j].id==session.userId) {
+                                    for (var k = 0; k < response.items[j].roles.length; k++) {
+                                        if(response.items[j].roles[k]==35688){
+                                            session.send('请勿重复申请！')
+                                            return;
+                                        }
                                     }
+                                    
                                 }
-                                session.user.grantRole(rid, session.guildId)
-                                session.user.grantRole(35688, session.guildId)
-                                session.send("申请成功");
-                                return;
                             }
+                            session.user.grantRole(rid, session.guildId)
+                            session.user.grantRole(35688, session.guildId)
+                            session.send("申请成功");
+                            return;
                         })
                 }
             }
