@@ -17,7 +17,6 @@ class R6Applyrole extends AppCommand {
                     var rid = response[i].roleId
                     bot.API.guild.userList(session.guildId)
                         .then(function (response) {
-                            console.log(response);
                             for (var j = 0; j < response.items.length; j++) {
                                 if (response.items[j].id==session.userId) {
                                     for (var k = 0; k < response.items[j].roles.length; k++) {

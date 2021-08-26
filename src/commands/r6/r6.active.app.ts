@@ -41,7 +41,6 @@ class R6Active extends AppCommand {
             return new Promise<void>((resolve, reject) => {
                 var today = new Date();
                 var exp = 'UPDATE ' + tabname + ' SET act=1, actdate="' + today.toISOString().substring(0, 10) + '", id=' + session.userId + ' WHERE cdk="' + cdk + "\"";
-                console.log(exp)
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[UPDATE ERROR] - ', err.message);
@@ -55,6 +54,7 @@ class R6Active extends AppCommand {
                             await session.send('激活成功！');
                             resolve()
                         }()
+
                     }
                 })
             })

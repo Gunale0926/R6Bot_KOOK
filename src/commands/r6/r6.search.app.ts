@@ -40,7 +40,6 @@ class R6Search extends AppCommand {
         async function get(r6id: string) {
             return new Promise<string>((resolve, reject) => {
                 var urln = url + r6id;
-                console.log(r6id);
                 https.get(urln, function (res: any) {
                     var html: string = '';
                     res.on('data', function (data: any) {
