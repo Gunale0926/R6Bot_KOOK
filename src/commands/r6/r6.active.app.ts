@@ -13,7 +13,7 @@ class R6Active extends AppCommand {
     trigger = 'active'; // 用于触发的文字
     help = '.r6 active+KEY（注意：请私聊机器人此指令！！！）'; // 帮助文字
     intro = '激活测试权限';
-    response: 'both';
+    response: 'both'='both';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
@@ -49,10 +49,12 @@ class R6Active extends AppCommand {
                         reject()
                     }
                     else {
-                        session.send('激活成功！');
                         //session.user.grantRole(373739, session.guildId);//赞助者
-                        session.user.grantRole(373758, session.guildId);//内测
-                        resolve()
+                        var doo = async function () {
+                            await session.user.grantRole(373758, '3128617072930683');//内测
+                            await session.send('激活成功！');
+                            resolve()
+                        }()
                     }
                 })
             })
