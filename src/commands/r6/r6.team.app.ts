@@ -32,7 +32,7 @@ class R6Team extends AppCommand {
         async function main() {
             if (session.args.length == 0)
                 session.sendCard(new Card().addTitle(r6Team.code).addText(r6Team.intro).addText(r6Team.help))
-            var card = new Card().addTitle('频道: ' + session.args[0] + ' 模式：' + session.args[1])
+            var card = new Card().addTitle('频道: ' + session.args[0] + ' 模式：' + session.args[1]).addText('发布者：' + session.user.nickname)
             for (var i = 2; i < session.args.length; i++)
                 card.addText(session.args[i])
             if (session.args[0].search('DOC') !== -1 || session.args[0].search('ROOK') !== -1 || session.args[0].search('MUTE') !== -1 || session.args[0].search('ECHO') !== -1 || session.args[0].search('ORYX') !== -1 || session.args[0].search('JAGER') !== -1 || session.args[0].search('SLEDGE') !== -1 || session.args[0].search('BANDIT') !== -1 || session.args[0].search('HIBANA') !== -1) {
