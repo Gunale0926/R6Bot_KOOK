@@ -50,7 +50,7 @@ class R6Active extends AppCommand {
                     }
                     else {
                         session.send('激活成功！');
-                        session.user.grantRole(373739, session.guildId);//赞助者
+                        //session.user.grantRole(373739, session.guildId);//赞助者
                         session.user.grantRole(373758, session.guildId);//内测
                         resolve()
                     }

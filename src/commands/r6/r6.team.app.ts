@@ -8,6 +8,7 @@ class R6Team extends AppCommand {
     intro = '发布组队';
     response: 'pm' = 'pm';
     func: AppFunc<BaseSession> = async (session) => {
+        if(session.userId)
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         var card = new Card().addTitle('频道: ' + session.args[0] + ' 模式：' + session.args[1])
