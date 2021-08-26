@@ -11,8 +11,6 @@ class R6Status extends AppCommand {
     help = '.r6 status\n缩写".状态"'; // 帮助文字
     intro = '查询BANDIT频道内玩家排位信息和状态';
     func: AppFunc<BaseSession> = async (session) => {
-        if (session.args.length == 0)
-            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         if (!List.length)
             return session.reply(this.help);
         ok = 0;
