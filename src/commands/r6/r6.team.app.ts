@@ -38,7 +38,7 @@ class R6Team extends AppCommand {
             if (session.args[0].search('DOC') !== -1 || session.args[0].search('ROOK') !== -1 || session.args[0].search('MUTE') !== -1 || session.args[0].search('ECHO') !== -1 || session.args[0].search('ORYX') !== -1 || session.args[0].search('JAGER') !== -1 || session.args[0].search('SLEDGE') !== -1 || session.args[0].search('BANDIT') !== -1 || session.args[0].search('HIBANA') !== -1) {
                 await bot.API.message.create(10, '9948172504885907', card.toString())
                 await bot.API.message.create(10, '9948172504885907', getCard().toString())
-                session.send("请在组队频道查询！")
+                await session.send("发送成功，请在组队频道查询")
             } else return session.sendCard(new Card().addTitle("频道名称输入不正确！"));
             function getCard() {
                 return new Card({
