@@ -3,7 +3,7 @@ import { bot } from 'tests/init';
 var mysql = require('mysql');
 var tabname = 'cdklist'
 var connection = mysql.createConnection({
-    host: 'localhost',
+    host: '127.0.0.1',
     user: 'root',
     password: '',
     database: 'bot_db'
@@ -24,7 +24,6 @@ class R6Active extends AppCommand {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
                         session.send("参数错误")
-                        reject()
                     }
                     else if (JSON.stringify(result).search('"act":0') !== -1) {
                         //var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]
@@ -45,7 +44,6 @@ class R6Active extends AppCommand {
                     if (err) {
                         console.log('[UPDATE ERROR] - ', err.message);
                         session.send("参数错误")
-                        reject()
                     }
                     else {
                         //session.user.grantRole(373739, session.guildId);//赞助者

@@ -2,7 +2,7 @@ import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 var mysql = require('mysql');
 var tabname = 'usrlib'
 var connection = mysql.createConnection({
-    host: 'localhost',
+    host: '127.0.0.1',
     user: 'root',
     password: '',
     database: 'bot_db'

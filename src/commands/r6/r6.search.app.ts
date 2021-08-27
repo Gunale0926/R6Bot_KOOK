@@ -5,7 +5,7 @@ var https = require('https');
 var url = "https://r6.tracker.network/profile/pc/";
 var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num = 0;
 var connection = mysql.createConnection({
-    host: 'localhost',
+    host: '127.0.0.1',
     user: 'root',
     password: '',
     database: 'bot_db'
@@ -25,7 +25,6 @@ class R6Search extends AppCommand {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
                         session.send("数据库中查无此人，请先\".记录\"")
-                        reject()
                     }
                     else if (JSON.stringify(result).search('r6id') !== -1) {
                         var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]

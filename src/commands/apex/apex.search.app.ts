@@ -1,6 +1,6 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 var mysql = require('mysql');
-var tabname = 'usrlib'
+var tabname = 'apexlib'
 var https = require('https');
 var url = "https://r6.tracker.network/profile/pc/";
 var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num = 0;
@@ -20,16 +20,16 @@ class ApexSearch extends AppCommand {
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         async function searchid(id: string) {
             return new Promise<string>((resolve, reject) => {
-                var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id + ' && sel =1';
+                var exp = 'SELECT apexid FROM ' + tabname + ' WHERE id=' + id + ' && sel =1';
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
                         session.send("数据库中查无此人，请先\".记录\"")
                         reject()
                     }
-                    else if (JSON.stringify(result).search('r6id') !== -1) {
-                        var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]
-                        resolve(r6id);
+                    else if (JSON.stringify(result).search('apexid') !== -1) {
+                        var apexid = JSON.stringify(result).match('"apex":"(.*?)"}')[1]
+                        resolve(apexid);
                     } else {
                         session.send("数据库中查无此人，请先\".记录\"")
                     }
