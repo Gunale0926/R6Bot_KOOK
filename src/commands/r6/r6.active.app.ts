@@ -30,11 +30,6 @@ class R6Active extends AppCommand {
                             } else flag++
                         }
                         if (flag == response.items[i].roles.length) {
-                            var forbidden = async function () {
-                                return await session.send("已经激活过！");
-                            }()
-                        }
-                        else {
                             var main = async function () {
                                 await recordkey(await searchkey(session.args[0]))
                             }()

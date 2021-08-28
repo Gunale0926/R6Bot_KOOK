@@ -38,7 +38,7 @@ bot.addAlias(r6Search, "查询")
 bot.addAlias(r6Record, "记录")
 bot.addAlias(r6Applyrole, "申请角色")
 bot.addAlias(r6Team, "组队")
-bot.addAlias(r6Active,"激活")
+bot.addAlias(r6Active, "激活")
 bot.logger.debug('system init success');
 bot.messageSource.on('message', (e) => {
     //bot.logger.debug(`received:`, e);
