@@ -1,7 +1,7 @@
 import { MenuCommand } from '../..';
 import { Card } from '../../core/card'
 import { apexSearch } from './apex.search.app'
-import { apexRecord } from './r6.record.app';
+import { apexRecord } from './apex.record.app';
 class ApexMenu extends MenuCommand {
     code = 'apex';
     trigger = 'apex';

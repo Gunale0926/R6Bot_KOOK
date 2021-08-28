@@ -32,13 +32,13 @@ import { r6Team } from '../commands/r6/r6.team.app';
 import { apexMenu } from '../commands/apex/apex.menu';
 
 bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu, apexMenu);
+bot.connect();
 bot.addAlias(r6Status, "状态")
 bot.addAlias(r6Search, "查询")
 bot.addAlias(r6Record, "记录")
 bot.addAlias(r6Applyrole, "申请角色")
 bot.addAlias(r6Team, "组队")
 bot.addAlias(r6Active,"激活")
-bot.connect();
 bot.logger.debug('system init success');
 bot.messageSource.on('message', (e) => {
     //bot.logger.debug(`received:`, e);

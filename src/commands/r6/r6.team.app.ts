@@ -1,6 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot } from 'tests/init';
-var flag: number = 0;
 class R6Team extends AppCommand {
     code = 'team'; // 只是用作标记s
     trigger = 'team'; // 用于触发的文字
@@ -8,7 +7,7 @@ class R6Team extends AppCommand {
     intro = '发布组队';
     response: 'both';
     func: AppFunc<BaseSession> = async (session) => {
-        flag = 0;
+        var flag = 0;
         bot.API.guild.userList('3128617072930683')//r6小队频道id
             .then(function (response) {
                 for (var i = 0; i < response.items.length; i++) {
@@ -19,7 +18,7 @@ class R6Team extends AppCommand {
                             } else flag++
                         }
                         if (flag == response.items[i].roles.length) {
-                            var doo = async function () {
+                            var forbidden = async function () {
                                 return await session.send("没有权限");
                             }()
                         }
