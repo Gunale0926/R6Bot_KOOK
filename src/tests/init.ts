@@ -14,7 +14,7 @@ export const bot = new KBotify({
     verifyToken: process.env.VERIFY,
     key: process.env.KEY,
     ignoreDecryptError: false,
-    //debug: true,
+    debug: true,
 });
 
 
