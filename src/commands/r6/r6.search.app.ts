@@ -60,7 +60,7 @@ class R6Search extends AppCommand {
                 });
             })
         }
-        async function get(r6id: string,vip:boolean) {
+        async function get(r6id: string, vip: boolean) {
             return new Promise<void>((resolve, reject) => {
                 var urln = url + r6id;
                 https.get(urln, function (res: any) {
@@ -79,8 +79,17 @@ class R6Search extends AppCommand {
                             var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
                             var imglink = session.user.avatar
                             var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
-                            if (vip == true) var arg1 = namer + ':crown:';
-                            else var arg1 = namer;
+                            var arg1: string = '';
+                            for (var i = 0; i < (35 - namer.length) / 2; i++) {
+                                arg1 += ' ';
+                            }
+                            arg1 += namer;
+                            if (vip == true) {
+                                for (var i = 0; i < (35 - namer.length) / 2; i++) {
+                                    arg1 += ' ';
+                                }
+                                arg1 += ':crown:'
+                            }
                             var arg2 = mmr;
                             var arg3 = rank.replace(' ', '');
                             var arg4 = kd;
@@ -101,7 +110,7 @@ class R6Search extends AppCommand {
                             if (arg3 === 'V') arg3 = rankcn + '5';
                             if (arg3 === '') arg3 = rankcn;
                             if (arg3.search(/NoRank/) === 0) arg3 = "未定级";
-                            var card = [{ "type": "card", "theme": "secondary", "color": arg6, "size": "sm", "modules": [{ "type": "section", "text": { "type": "kmarkdown", "content": "                 **" + arg1 + "**" }, "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" } }] }, { "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [{ "type": "section", "text": { "type": "paragraph", "cols": 3, "fields": [{ "type": "kmarkdown", "content": "**MMR**\n" + arg2 }, { "type": "kmarkdown", "content": "**段位**\n" + arg3 }, { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }] } }] }]
+                            var card = [{ "type": "card", "theme": "secondary", "color": arg6, "size": "sm", "modules": [{ "type": "section", "text": { "type": "kmarkdown", "content": "**" + arg1 + "**" }, "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" } }] }, { "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [{ "type": "section", "text": { "type": "paragraph", "cols": 3, "fields": [{ "type": "kmarkdown", "content": "**MMR**\n" + arg2 }, { "type": "kmarkdown", "content": "**段位**\n" + arg3 }, { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }] } }] }]
                             var immr = parseInt(mmr)
                             avmmr = avmmr + immr;
                             if (xmmr < immr) xmmr = immr;
@@ -122,10 +131,10 @@ class R6Search extends AppCommand {
             if (session.args[0]) {
                 if (session.args[0].search('#(.*?)') !== -1) {
                     var id = session.args[0].match(/#(\S*)/)[1];
-                    await get(await searchid(id),vip)
+                    await get(await searchid(id), vip)
                 }
                 else if (session.args[0])
-                    await get(session.args[0],vip)
+                    await get(session.args[0], vip)
             }
         }
     }
