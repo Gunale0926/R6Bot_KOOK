@@ -1,4 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
+import { bot } from 'tests/init';
 var mysql = require('mysql');
 var tabname = 'usrlib'
 var https = require('https');
@@ -18,6 +19,29 @@ class R6Search extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
+        var flag = 0;
+        bot.API.guild.userList('3128617072930683')//r6小队频道id
+            .then(function (response) {
+                for (var i = 0; i < response.items.length; i++) {
+                    if (response.items[i].id == session.userId) {
+                        for (var j = 0; j < response.items[i].roles.length; j++) {
+                            if (response.items[i].roles[j] == 373739) {//赞助用户组
+                                break;
+                            } else flag++
+                        }
+                        if (flag == response.items[i].roles.length) {
+                            var forbidden = async function () {
+                                await main(false)
+                            }()
+                        }
+                        else {
+                            var permission = async function () {
+                                await main(true)
+                            }()
+                        }
+                    }
+                }
+            })
         async function searchid(id: string) {
             return new Promise<string>((resolve, reject) => {
                 var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id + ' && sel =1';
@@ -36,8 +60,8 @@ class R6Search extends AppCommand {
                 });
             })
         }
-        async function get(r6id: string) {
-            return new Promise<string>((resolve, reject) => {
+        async function get(r6id: string,vip:boolean) {
+            return new Promise<void>((resolve, reject) => {
                 var urln = url + r6id;
                 https.get(urln, function (res: any) {
                     var html: string = '';
@@ -55,7 +79,8 @@ class R6Search extends AppCommand {
                             var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
                             var imglink = session.user.avatar
                             var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
-                            var arg1 = namer;
+                            if (vip == true) var arg1 = namer + ':crown:';
+                            else var arg1 = namer;
                             var arg2 = mmr;
                             var arg3 = rank.replace(' ', '');
                             var arg4 = kd;
@@ -76,12 +101,15 @@ class R6Search extends AppCommand {
                             if (arg3 === 'V') arg3 = rankcn + '5';
                             if (arg3 === '') arg3 = rankcn;
                             if (arg3.search(/NoRank/) === 0) arg3 = "未定级";
-                            var card: any = [{ "type": "card", "theme": "secondary", "color": arg6, "size": "sm", "modules": [{ "type": "section", "text": { "type": "kmarkdown", "content": "                 **" + arg1 + "**" }, "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" } }] }, { "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [{ "type": "section", "text": { "type": "paragraph", "cols": 3, "fields": [{ "type": "kmarkdown", "content": "**MMR**\n" + arg2 }, { "type": "kmarkdown", "content": "**段位**\n" + arg3 }, { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }] } }] }]
+                            var card = [{ "type": "card", "theme": "secondary", "color": arg6, "size": "sm", "modules": [{ "type": "section", "text": { "type": "kmarkdown", "content": "                 **" + arg1 + "**" }, "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" } }] }, { "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [{ "type": "section", "text": { "type": "paragraph", "cols": 3, "fields": [{ "type": "kmarkdown", "content": "**MMR**\n" + arg2 }, { "type": "kmarkdown", "content": "**段位**\n" + arg3 }, { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }] } }] }]
                             var immr = parseInt(mmr)
                             avmmr = avmmr + immr;
                             if (xmmr < immr) xmmr = immr;
                             if (nmmr > immr) nmmr = immr;
-                            resolve(JSON.stringify(card));//成功返回
+                            var send = async function () {
+                                await session.sendCard(JSON.stringify(card));
+                            }()
+                            resolve();//成功返回
                         }
                     });
                 }).on('error', function () {
@@ -90,27 +118,16 @@ class R6Search extends AppCommand {
                 })
             })
         }
-        async function send(card: string) {
-            return new Promise<void>((resolve, reject) => {
-                var send = async function () {
-                    await session.sendCard(card);
-                    resolve()
-                }()
-            })
-        }
-        async function main() {
+        async function main(vip: boolean) {
             if (session.args[0]) {
                 if (session.args[0].search('#(.*?)') !== -1) {
                     var id = session.args[0].match(/#(\S*)/)[1];
-                    await send(await get(await searchid(id)));
+                    await get(await searchid(id),vip)
                 }
                 else if (session.args[0])
-                    await send(await get(session.args[0]))
+                    await get(session.args[0],vip)
             }
-            else
-                session.sendCard(new Card().addText(r6Search.help).toString())
         }
-        main()
     }
 
 }
