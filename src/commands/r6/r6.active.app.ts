@@ -21,24 +21,29 @@ class R6Active extends AppCommand {
         bot.API.guild.userList('3128617072930683')//r6小队频道id
             .then(function (response) {
                 var flag: boolean = true;
-                for (var i = 0; i < response.items.length; i++) {
-                    if (response.items[i].id == session.userId) {
-                        for (var j = 0; j < response.items[i].roles.length; j++) {
-                            if (response.items[i].roles[j] == 373758) {//内测用户组
-                                flag = false
-                                break;
+                var checkaccess = async function () {
+                    for (var i = 0; i < response.items.length; i++) {
+                        if (response.items[i].id == session.userId) {
+                            for (var j = 0; j < response.items[i].roles.length; j++) {
+                                if (response.items[i].roles[j] == 373758) {//内测用户组
+                                    flag = false
+                                    break;
+                                }
                             }
                         }
+                        break;
                     }
-                    break;
-                }
-                var permission = async function () {
-                    if (flag == true)
-                        await recordkey(await searchkey(session.args[0]))
-                    else
-                        session.send("已经激活了内测用户组！")
-
                 }()
+                    .then(function () {
+                        var permission = async function () {
+                            if (flag == true)
+                                await recordkey(await searchkey(session.args[0]))
+                            else
+                                session.send("已经激活了内测用户组！")
+
+                        }()
+                    })
+
             })
             .catch(error => { console.log(error) })
         async function searchkey(cdk: string) {
