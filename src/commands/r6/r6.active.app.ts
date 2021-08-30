@@ -20,24 +20,27 @@ class R6Active extends AppCommand {
         var flag = 0;
         bot.API.guild.userList('3128617072930683')//r6小队频道id
             .then(function (response) {
+                var flag: boolean = true;
                 for (var i = 0; i < response.items.length; i++) {
                     if (response.items[i].id == session.userId) {
                         for (var j = 0; j < response.items[i].roles.length; j++) {
                             if (response.items[i].roles[j] == 373758) {//内测用户组
-                                var forbidden = async function () {
-                                    return await session.send("已经激活了内测用户组！");
-                                }()
-                            } else flag++
-                        }
-                        if (flag == response.items[i].roles.length) {
-                            var main = async function () {
-                                await recordkey(await searchkey(session.args[0]))
-                            }()
+                                flag = false
+                                break;
+                            }
                         }
                     }
+                    break;
                 }
+                var permission = async function () {
+                    if (flag == true)
+                        await recordkey(await searchkey(session.args[0]))
+                    else
+                        session.send("已经激活了内测用户组！")
+
+                }()
             })
-        .catch(error => { console.log(error)})
+            .catch(error => { console.log(error) })
         async function searchkey(cdk: string) {
             return new Promise<string>((resolve, reject) => {
                 var exp = 'SELECT act FROM ' + tabname + ' WHERE cdk="' + cdk + '" && act=0';
@@ -69,7 +72,7 @@ class R6Active extends AppCommand {
                         //session.user.grantRole(373739, session.guildId);//赞助者
                         var active = async function () {
                             await session.user.grantRole(373758, '3128617072930683');//内测
-                            await session.send('激活成功！');
+                            await session.send('激活成功，感谢支持');
                             resolve()
                         }()
 
