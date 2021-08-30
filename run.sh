@@ -5,10 +5,10 @@ do
     stillRunning=$(ps -ef|grep "$proc_name"|grep -v "grep")
     if [ "$stillRunning" ]
     then
-        sleep 10
+        sleep 5
     else
         cd /root/kBotify-template-main
         nohup npm test &
     fi
-    sleep 10
+    sleep 5
  done
