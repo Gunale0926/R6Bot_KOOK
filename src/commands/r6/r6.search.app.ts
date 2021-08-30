@@ -21,6 +21,7 @@ class R6Search extends AppCommand {
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         bot.API.guild.userList('3128617072930683')//r6小队频道id
             .then(function (response) {
+                var flag = 0;
                 for (var i = 0; i < response.items.length; i++) {
                     if (response.items[i].id == session.userId) {
                         for (var j = 0; j < response.items[i].roles.length; j++) {
@@ -28,13 +29,15 @@ class R6Search extends AppCommand {
                                 var permission = async function () {
                                     return await main(true)
                                 }()
-                            }
+                            } else flag++;
+                        }
+                        if (flag == response.items[i].roles.length) {
+                            var forbidden = async function () {
+                                return await main(false)
+                            }()
                         }
                     }
                 }
-                var forbidden = async function () {
-                    return await main(false)
-                }()
             })
         async function searchid(id: string) {
             return new Promise<string>((resolve, reject) => {
