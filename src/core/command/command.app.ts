@@ -224,7 +224,7 @@ export abstract class AppCommand implements BaseCommand {
     ): Promise<any> {
         const args = session.args;
         const msg = session.msg;
-        kBotifyLogger.debug('running command: ', session.cmdString, args);
+        kBotifyLogger.debug('running command: ', session.cmdString, msg, args);
         if (!this.client) {
             throw new Error(
                 "'Command used before assigning a bot instance or message sender.'"

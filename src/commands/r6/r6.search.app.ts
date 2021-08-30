@@ -19,28 +19,22 @@ class R6Search extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
-        var flag = 0;
         bot.API.guild.userList('3128617072930683')//r6小队频道id
             .then(function (response) {
                 for (var i = 0; i < response.items.length; i++) {
                     if (response.items[i].id == session.userId) {
                         for (var j = 0; j < response.items[i].roles.length; j++) {
                             if (response.items[i].roles[j] == 373739) {//赞助用户组
-                                break;
-                            } else flag++
-                        }
-                        if (flag == response.items[i].roles.length) {
-                            var forbidden = async function () {
-                                await main(false)
-                            }()
-                        }
-                        else {
-                            var permission = async function () {
-                                await main(true)
-                            }()
+                                var permission = async function () {
+                                    return await main(true)
+                                }()
+                            }
                         }
                     }
                 }
+                var forbidden = async function () {
+                    return await main(false)
+                }()
             })
         async function searchid(id: string) {
             return new Promise<string>((resolve, reject) => {
@@ -132,9 +126,11 @@ class R6Search extends AppCommand {
                 if (session.args[0].search('#(.*?)') !== -1) {
                     var id = session.args[0].match(/#(\S*)/)[1];
                     await get(await searchid(id), vip)
+                    return;
                 }
                 else if (session.args[0])
                     await get(session.args[0], vip)
+                return;
             }
         }
     }
