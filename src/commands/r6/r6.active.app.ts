@@ -70,11 +70,17 @@ class R6Active extends AppCommand {
                         session.send("参数错误")
                     }
                     else {
-                        
+
                         var active = async function () {
-                            await session.user.grantRole(373758, '3128617072930683');//内测
-                            await session.user.grantRole(373739, session.guildId);//赞助者
-                            await session.send('激活成功，感谢支持');
+                            if (cdk.charAt(cdk.length - 1) != 'F') {
+                                await session.user.grantRole(373739, '3128617072930683');//赞助者
+                                await session.user.grantRole(373758, '3128617072930683');//内测
+                                await session.send('激活成功，感谢支持');
+                            }
+                            else {
+                                await session.user.grantRole(373758, '3128617072930683');//内测
+                                await session.send('激活免费激活码成功');
+                            }
                             resolve()
                         }()
 
