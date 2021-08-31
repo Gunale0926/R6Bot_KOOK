@@ -70,9 +70,10 @@ class R6Active extends AppCommand {
                         session.send("参数错误")
                     }
                     else {
-                        //session.user.grantRole(373739, session.guildId);//赞助者
+                        
                         var active = async function () {
                             await session.user.grantRole(373758, '3128617072930683');//内测
+                            await session.user.grantRole(373739, session.guildId);//赞助者
                             await session.send('激活成功，感谢支持');
                             resolve()
                         }()
