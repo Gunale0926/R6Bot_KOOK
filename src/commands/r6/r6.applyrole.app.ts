@@ -16,7 +16,6 @@ class R6Applyrole extends AppCommand {
             })
         }()
         async function giverole(num:number) {
-            console.log('IN: '+num);
             if (num <= 1) {
                 session.user.grantRole(rid, session.guildId)
                 session.user.grantRole(35688, session.guildId)
