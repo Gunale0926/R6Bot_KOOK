@@ -1,16 +1,10 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot } from 'tests/init';
-var mysql = require('mysql');
+import{ connection } from '../../tests/init'
 var tabname = 'usrlib'
 var https = require('https');
 var url = "https://r6.tracker.network/profile/pc/";
 var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num = 0;
-var connection = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: '',
-    database: 'bot_db'
-});
 class R6Search extends AppCommand {
     code = 'search'; // 只是用作标记
     trigger = 'search'; // 用于触发的文字

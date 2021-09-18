@@ -1,13 +1,7 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot } from 'tests/init';
-var mysql = require('mysql');
 var tabname = 'cdklist'
-var connection = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: '',
-    database: 'bot_db'
-});
+import{ connection } from '../../tests/init'
 class R6Active extends AppCommand {
     code = 'active'; // 只是用作标记
     trigger = 'active'; // 用于触发的文字

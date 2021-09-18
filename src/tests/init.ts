@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import * as dotenv from 'dotenv';
 import { KBotify } from '..';
-
-
 dotenv.config();
-
 // mod .env-template file
 export const bot = new KBotify({
     mode: 'websocket',
@@ -16,7 +12,6 @@ export const bot = new KBotify({
     ignoreDecryptError: false,
     debug: false,
 });
-
 
 import { echoMenu } from 'commands/echo/echo.menu';
 import { echoKmd } from 'commands/echo/echo.kmd.app';
@@ -46,10 +41,10 @@ bot.messageSource.on('message', (e) => {
 var mysql = require('mysql');
 var tabname = 'usrlib'
 var list: string[] = [null, null, null, null, null]
-var connection = mysql.createConnection({
-    host: '127.0.0.1',
+export var connection = mysql.createConnection({
+    host: 'localhost',
     user: 'root',
-    password: '',
+    password: '20060926Abc',
     database: 'bot_db'
 });
 async function searchid(id: string) {
