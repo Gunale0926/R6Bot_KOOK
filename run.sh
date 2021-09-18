@@ -1,5 +1,5 @@
 #!/bin/sh
-proc_name="node /root/kBotify-template-main/node_modules/.bin/ts-node -r tsconfig-paths/register src/tests/init.ts" #进程名字
+proc_name="node /usr/bin/npx ts-node -r tsconfig-paths/register src/tests/init.ts" #进程名字
 while :
 do
     stillRunning=$(ps -ef|grep "$proc_name"|grep -v "grep")
@@ -7,7 +7,7 @@ do
     then
         sleep 5
     else
-        cd /root/kBotify-template-main
+        cd /root/r6bot
         nohup npm test &
     fi
     sleep 5
