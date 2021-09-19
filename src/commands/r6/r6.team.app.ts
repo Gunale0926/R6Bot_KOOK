@@ -1,6 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot } from 'tests/init';
-var flag: number = 0;
 class R6Team extends AppCommand {
     code = 'team'; // 只是用作标记s
     trigger = 'team'; // 用于触发的文字
@@ -8,7 +7,7 @@ class R6Team extends AppCommand {
     intro = '发布组队';
     response: 'both';
     func: AppFunc<BaseSession> = async (session) => {
-        flag = 0;
+        var flag = 0;
         bot.API.guild.userList('3128617072930683')//r6小队频道id
             .then(function (response) {
                 for (var i = 0; i < response.items.length; i++) {
@@ -19,7 +18,7 @@ class R6Team extends AppCommand {
                             } else flag++
                         }
                         if (flag == response.items[i].roles.length) {
-                            var doo = async function () {
+                            var forbidden = async function () {
                                 return await session.send("没有权限");
                             }()
                         }
@@ -30,14 +29,16 @@ class R6Team extends AppCommand {
                 }
             })
         async function main() {
-            if (session.args.length == 0)
+            if (session.args.length == 0){
                 session.sendCard(new Card().addTitle(r6Team.code).addText(r6Team.intro).addText(r6Team.help))
+                return;
+            }
             var card = new Card().addTitle('频道: ' + session.args[0] + ' 模式：' + session.args[1]).addText('发布者：' + session.user.nickname)
             for (var i = 2; i < session.args.length; i++)
                 card.addText(session.args[i])
             if (session.args[0].search('DOC') !== -1 || session.args[0].search('ROOK') !== -1 || session.args[0].search('MUTE') !== -1 || session.args[0].search('ECHO') !== -1 || session.args[0].search('ORYX') !== -1 || session.args[0].search('JAGER') !== -1 || session.args[0].search('SLEDGE') !== -1 || session.args[0].search('BANDIT') !== -1 || session.args[0].search('HIBANA') !== -1) {
-                await bot.API.message.create(10, '9948172504885907', card.toString())
-                await bot.API.message.create(10, '9948172504885907', getCard().toString())
+                await bot.API.message.create(10, '3028698496410440', card.toString())
+                await bot.API.message.create(10, '3028698496410440', getCard().addTitle('点击按钮之前请先进入挂机语音频道').toString())
                 await session.send("发送成功，请在组队频道查询")
             } else return session.sendCard(new Card().addTitle("频道名称输入不正确！"));
             function getCard() {

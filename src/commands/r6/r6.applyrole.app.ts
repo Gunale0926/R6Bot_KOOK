@@ -6,35 +6,51 @@ class R6Applyrole extends AppCommand {
     help = '.r6 applyrole+角色'; // 帮助文字
     intro = '申请角色';
     func: AppFunc<BaseSession> = async (session) => {
+        var rid: any;
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         var main = async function () {
-            await give(await bot.API.guildRole.index(session.guildId));
+            await give(await bot.API.guildRole.index(session.guildId))
+            .then(function(num){
+                giverole(num);
+            })
         }()
+        async function giverole(num:number) {
+            if (num <= 1) {
+                session.user.grantRole(rid, session.guildId)
+                session.user.grantRole(35688, session.guildId)
+                session.send("申请成功");
+                return;
+            } else {
+                session.send('最多只能申请两个！')
+                return;
+            }
+        }
         async function give(response: any) {
-            for (var i = 0; i < response.length; i++) {
-                if (response[i].name == session.args[0] && response[i].position >= 3 && response[i].position <= 44) {
-                    var rid = response[i].roleId
-                    bot.API.guild.userList(session.guildId)
-                        .then(function (response) {
-                            for (var j = 0; j < response.items.length; j++) {
-                                if (response.items[j].id==session.userId) {
-                                    for (var k = 0; k < response.items[j].roles.length; k++) {
-                                        if(response.items[j].roles[k]==35688){
-                                            session.send('请勿重复申请！')
-                                            return;
+            var num = 0;
+            return new Promise<number>((resolve, reject) => {
+                for (var i = 0; i < response.length; i++) {
+                    if (response[i].name == session.args[0] && response[i].position >= 4 && response[i].position <= 51) {
+                        rid = response[i].roleId
+                        bot.API.guild.userList(session.guildId)
+                            .then(function (usres) {
+                                for (var j = 0; j < usres.items.length; j++) {
+                                    if (usres.items[j].id == session.userId) {
+                                        for (var k = 0; k < usres.items[j].roles.length; k++) {
+                                            for (var z = 0; z < response.length; z++) {
+                                                if (usres.items[j].roles[k] == response[z].roleId && response[z].position >= 4 && response[z].position <= 51) {
+                                                    num++;
+                                                }
+                                                
+                                            }
                                         }
                                     }
-                                    
                                 }
-                            }
-                            session.user.grantRole(rid, session.guildId)
-                            session.user.grantRole(35688, session.guildId)
-                            session.send("申请成功");
-                            return;
-                        })
+                                resolve(num)
+                            })
+                    }
                 }
-            }
+            })
         }
     }
 }

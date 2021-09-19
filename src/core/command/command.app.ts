@@ -221,10 +221,10 @@ export abstract class AppCommand implements BaseCommand {
 
     private async run(
         session: BaseSession | GuildSession
-    ): Promise<ResultTypes> {
+    ): Promise<any> {
         const args = session.args;
         const msg = session.msg;
-        kBotifyLogger.debug('running command: ', session.cmdString, args);
+        kBotifyLogger.debug('running command: ', session.cmdString, msg, args);
         if (!this.client) {
             throw new Error(
                 "'Command used before assigning a bot instance or message sender.'"
@@ -239,11 +239,10 @@ export abstract class AppCommand implements BaseCommand {
             }
 
             const result = await this.func(session as any);
-            //if (typeof result === 'string' || !result) {
-            //    return result ? result : ResultTypes.SUCCESS;
-            //}
-
-            //return result.resultType;
+            if (typeof result === 'string' || !result) {
+                return result ? result : ResultTypes.SUCCESS;
+            }
+            return result.resultType;
         } catch (error) {
             kBotifyLogger.error(error);
 
@@ -252,4 +251,4 @@ export abstract class AppCommand implements BaseCommand {
     }
 }
 
-export {};
+export { };

@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import * as dotenv from 'dotenv';
 import { KBotify } from '..';
-
-
 dotenv.config();
-
 // mod .env-template file
 export const bot = new KBotify({
     mode: 'websocket',
@@ -14,9 +10,8 @@ export const bot = new KBotify({
     verifyToken: process.env.VERIFY,
     key: process.env.KEY,
     ignoreDecryptError: false,
-    //debug: true,
+    debug: false,
 });
-
 
 import { echoMenu } from 'commands/echo/echo.menu';
 import { echoKmd } from 'commands/echo/echo.kmd.app';
@@ -29,14 +24,16 @@ import { r6Record } from '../commands/r6/r6.record.app';
 import { r6Search } from '../commands/r6/r6.search.app';
 import { r6Status } from '../commands/r6/r6.status.app';
 import { r6Team } from '../commands/r6/r6.team.app';
+import { apexMenu } from '../commands/apex/apex.menu';
 
-bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu);
+bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu, apexMenu);
+bot.connect();
 bot.addAlias(r6Status, "状态")
 bot.addAlias(r6Search, "查询")
 bot.addAlias(r6Record, "记录")
 bot.addAlias(r6Applyrole, "申请角色")
 bot.addAlias(r6Team, "组队")
-bot.connect();
+bot.addAlias(r6Active, "激活")
 bot.logger.debug('system init success');
 bot.messageSource.on('message', (e) => {
     //bot.logger.debug(`received:`, e);
@@ -44,10 +41,10 @@ bot.messageSource.on('message', (e) => {
 var mysql = require('mysql');
 var tabname = 'usrlib'
 var list: string[] = [null, null, null, null, null]
-var connection = mysql.createConnection({
+export var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: '20060926Abc',
     database: 'bot_db'
 });
 async function searchid(id: string) {

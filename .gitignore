@@ -108,4 +108,4 @@ tools/
 tool.sh
 _deprecated
 .DS_Store
-*.env
+*.out
