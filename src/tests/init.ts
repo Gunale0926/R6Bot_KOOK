@@ -106,13 +106,15 @@ bot.event.on('system', (event) => {
             var clkusr: string;
             clkusr = await event.userId;
             if (event.value == 'DOC') channelId = '8574655462452796'
+            if (event.value == 'FUZW') channelId = '7228978838660995'
             if (event.value == 'ROOK') channelId = '8666873622418147'
             if (event.value == 'MUTE') channelId = '3671071360478648'
-            if (event.value == 'ECHO') channelId = '5709143680196310'
             if (event.value == 'ORYX') channelId = '8099740112545843'
             if (event.value == 'JAGER') channelId = '9853214616287407'
-            if (event.value == 'SLEDGE') channelId = '3345997813861884'
-            if (event.value == 'BANDIT') channelId = '2494099237896157'
+            if (event.value == 'SLEDGE') channelId = '4522198069417620'
+            if (event.value == 'WAMAI') channelId = '1505924438841986'
+            if (event.value == 'TWITCH') channelId = '7769514269829865'
+            if (event.value == 'MOZZIE') channelId = '2494099237896157'
             if (event.value == 'HIBANA') channelId = '3205552061241304'
             await bot.API.channel.moveUser(channelId, [clkusr])
         }()
