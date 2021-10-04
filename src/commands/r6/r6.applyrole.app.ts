@@ -30,7 +30,7 @@ class R6Applyrole extends AppCommand {
             var num = 0;
             return new Promise<number>((resolve, reject) => {
                 for (var i = 0; i < response.length; i++) {
-                    if (response[i].name == session.args[0] && response[i].position >= 4 && response[i].position <= 51) {
+                    if (response[i].name == session.args[0] && response[i].position >= 4 && response[i].position <= 52) {
                         rid = response[i].roleId
                         bot.API.guild.userList(session.guildId)
                             .then(function (usres) {

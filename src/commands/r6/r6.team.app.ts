@@ -7,29 +7,9 @@ class R6Team extends AppCommand {
     intro = '发布组队';
     response: 'both';
     func: AppFunc<BaseSession> = async (session) => {
-        var flag = 0;
-        bot.API.guild.userList('3128617072930683')//r6小队频道id
-            .then(function (response) {
-                for (var i = 0; i < response.items.length; i++) {
-                    if (response.items[i].id == session.userId) {
-                        for (var j = 0; j < response.items[i].roles.length; j++) {
-                            if (response.items[i].roles[j] == 373758) {//内测用户组
-                                break;
-                            } else flag++
-                        }
-                        if (flag == response.items[i].roles.length) {
-                            var forbidden = async function () {
-                                return await session.send("没有权限");
-                            }()
-                        }
-                        else {
-                            main()
-                        }
-                    }
-                }
-            })
+        main()
         async function main() {
-            if (session.args.length == 0){
+            if (session.args.length == 0) {
                 session.sendCard(new Card().addTitle(r6Team.code).addText(r6Team.intro).addText(r6Team.help))
                 return;
             }
