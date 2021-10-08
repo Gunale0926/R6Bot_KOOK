@@ -38,7 +38,7 @@ class R6Applyrole extends AppCommand {
                                     if (usres.items[j].id == session.userId) {
                                         for (var k = 0; k < usres.items[j].roles.length; k++) {
                                             for (var z = 0; z < response.length; z++) {
-                                                if (usres.items[j].roles[k] == response[z].roleId && response[z].position >= 4 && response[z].position <= 51) {
+                                                if (usres.items[j].roles[k] == response[z].roleId && response[z].position >= 8 && response[z].position <= 60) {
                                                     num++;
                                                 }
                                                 
