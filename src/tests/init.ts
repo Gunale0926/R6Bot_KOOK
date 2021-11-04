@@ -222,15 +222,18 @@ bot.event.on('system', (event) => {
                 }
             ])*/
             console.log(list)
+            var cardbind: string = '['
             for (var j = 0; j < 5; j++) {
                 if (list[itm].userid[j] != '') {
                     var r6id = List[itm].userid[j];
-                    num++
-                    var cards = await get(r6id)
-                    var cardbind: object = Object.assign(cards, cardbind);
+                    num++;
+                    var cardstr = JSON.stringify(await get(r6id));
+                    cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
                 }
             }
-            if (!cardbind){
+            cardbind = cardbind.substring(0, cardbind.length - 1)
+            cardbind += ']'
+            if (num == 0) {
                 await send([
                     {
                         "type": "card",
@@ -248,8 +251,8 @@ bot.event.on('system', (event) => {
                     }
                 ], list[itm].msgid)
                 return 0;
-            }  
-            await send(cardbind, list[itm].msgid);
+            }
+            await send(JSON.parse(cardbind), list[itm].msgid);
             await final()
         }()
         async function send(card: object, id: string) {
