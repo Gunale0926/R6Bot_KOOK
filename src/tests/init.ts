@@ -101,17 +101,13 @@ export var connection = mysql.createConnection({
 
 async function searchid(id: string) {
     return new Promise<string>((resolve, reject) => {
-        var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id + ' && sel =1';
+        var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
         connection.query(exp, function (err: any, result: any) {
             if (err) {
                 console.log('[SELECT ERROR] - ', err.message);
             }
-            result = JSON.parse(JSON.stringify(result))
-            if (JSON.stringify(result).search('"r6id":"(.*?)"}') !== -1) {
-                var r6id: string = JSON.stringify(result).match('"r6id":"(.*?)"}')[1];
-                resolve(r6id);
-
-            }
+            if (result[0])
+                resolve(result[0].r6id);
         });
     })
 }
@@ -147,17 +143,16 @@ async function deleteList(chnid: number, id: string) {
     })
 }
 bot.event.on('system', (event) => {
+    //console.log(event)
     if (event.type == 'joined_channel') {
-        //console.log(event)
         var write = async function () {
-            await writeList(event.body.channel_id, await searchid(event.body.user_id))
+            await writeList(event.body.channel_id, event.body.user_id)
             await sendall(event.body.channel_id);
         }()
     }
     if (event.type == 'exited_channel') {
-        //console.log(event)
         var del = async function () {
-            await deleteList(event.body.channel_id, await searchid(event.body.user_id));
+            await deleteList(event.body.channel_id, event.body.user_id);
             await sendall(event.body.channel_id);
         }()
 
@@ -184,7 +179,7 @@ bot.event.on('system', (event) => {
     async function sendall(inputid: number) {
         var https = require('https');
         var url = "https://r6.tracker.network/profile/pc/";
-        var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, itm: number = 0;
+        var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, itm: number = 0, tmp: number = 0;
         var name: string;
         var rankable: boolean;
         var main = async function () {
@@ -198,13 +193,17 @@ bot.event.on('system', (event) => {
                 }
             }
             var cardbind: string = '['
-            for (var i = 0; i < num; i++) {
-                var r6id = List[itm].userid[i];
-                var cardstr = JSON.stringify(await get(r6id, i));
-                cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
+            for (var i = 0; i < 5; i++) {
+                if (list[itm].userid[i] != '') {
+                    tmp++;
+                    var r6id = await searchid(list[itm].userid[i]);
+                    var cardstr = JSON.stringify(await get(r6id, tmp));
+                    cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
+                }
             }
             cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
             if (num == 0) {
+                console.log(name + ' 0');
                 await send([
                     {
                         "type": "card",
@@ -225,17 +224,16 @@ bot.event.on('system', (event) => {
             }
             await send(JSON.parse(cardbind), list[itm].msgid);
         }()
+
         async function send(card: object, id: string) {
-            return new Promise<void>((resolve) => {
-                var send = async function () {
-                    //await bot.API.message.create(10, "2408081738284872", JSON.stringify(card));
-                    await bot.API.message.update(id, JSON.stringify(card));
-                    resolve()
-                }()
+            return new Promise<void>(async (resolve) => {
+                //await bot.API.message.create(10, "2408081738284872", JSON.stringify(card));
+                await bot.API.message.update(id, JSON.stringify(card));
+                resolve()
             })
         }
         async function get(r6id: string, first: number) {
-            return new Promise<object>((resolve, reject) => {
+            return new Promise<object>(async (resolve, reject) => {
                 var urln = url + r6id;
                 https.get(urln, function (res: any) {
                     var html: string = '';
@@ -270,7 +268,7 @@ bot.event.on('system', (event) => {
                             if (xmmr - nmmr <= 1000)
                                 rankable = true;
                             else rankable = false;
-                            if (first == 0)
+                            if (first == 1)
                                 var card: object = [{
                                     "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [{
                                         "type": "section",
@@ -295,7 +293,7 @@ bot.event.on('system', (event) => {
                                         }
                                     }]
                                 }]
-                            else if (first == num - 1)
+                            else if (first == num)
                                 var card: object = [{
                                     "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [
                                         {
