@@ -214,7 +214,7 @@ bot.event.on('system', (event) => {
                           "type": "section",
                           "text": {
                             "type": "kmarkdown",
-                            "content": "**频道无人**\n点击按钮前请先进入挂机频道"
+                            "content": "**"+name+"频道无人**\n点击按钮前请先进入挂机频道"
                           },
                           "mode": "right",
                           "accessory": {
