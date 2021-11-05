@@ -36,64 +36,6 @@ bot.messageSource.on('message', (e) => {
 });
 var mysql = require('mysql');
 var tabname = 'usrlib'
-/*
-var list = [{
-    chnname: 'DOC',
-    chnid: 8574655462452796,
-    userid: ['', '', '', '', ''],
-    msgid: 'd97df35a-0211-40a2-ac36-f471daa47ea1'
-}, {
-    chnname: 'FUZE',
-    chnid: 7228978838660995,
-    userid: ['', '', '', '', ''],
-    msgid: '99f7c006-a892-4830-acb4-bc59a4c1d47f'
-}, {
-    chnname: 'ROOK',
-    chnid: 8666873622418147,
-    userid: ['', '', '', '', ''],
-    msgid: '5ae91a26-c5d1-485a-9c59-c44e1591ebfe'
-}, {
-    chnname: 'MUTE',
-    chnid: 3671071360478648,
-    userid: ['', '', '', '', ''],
-    msgid: 'd9d8cfde-cfcf-404e-845b-3daf9750836f'
-}, {
-    chnname: 'ORYX',
-    chnid: 8099740112545843,
-    userid: ['', '', '', '', ''],
-    msgid: '49f8906e-646c-46af-88e7-af22220d5981'
-}, {
-    chnname: 'JAGER',
-    chnid: 9853214616287407,
-    userid: ['', '', '', '', ''],
-    msgid: '7306b0cb-2203-44dc-b4c2-61692705b807'
-}, {
-    chnname: 'SLEDGE',
-    chnid: 4522198069417620,
-    userid: ['', '', '', '', ''],
-    msgid: '6bab0d0e-49f9-4f27-9b94-06ce5f6e1238'
-}, {
-    chnname: 'WAMAI',
-    chnid: 1505924438841986,
-    userid: ['', '', '', '', ''],
-    msgid: '07d8aafa-670d-4ec5-9841-54ef5229bd2a'
-}, {
-    chnname: 'TWITCH',
-    chnid: 7769514269829865,
-    userid: ['', '', '', '', ''],
-    msgid: '0d657402-23d2-4df0-b690-aed2a31c19f4'
-}, {
-    chnname: 'MOZZIE',
-    chnid: 2494099237896157,
-    userid: ['', '', '', '', ''],
-    msgid: '1293b9d7-a7d8-47f0-9764-bd9e13210997'
-}, {
-    chnname: 'HIBANA',
-    chnid: 3205552061241304,
-    userid: ['', '', '', '', ''],
-    msgid: '4d3a441f-8ce6-43a9-a851-5c6a6c3cb4bf'
-}];
-*/
 var list = [{
     chnname: 'DOC',
     chnid: 8574655462452796,
