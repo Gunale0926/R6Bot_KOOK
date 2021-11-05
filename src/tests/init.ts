@@ -148,13 +148,13 @@ bot.event.on('system', (event) => {
     if (event.type == 'joined_channel') {
         var write = async function () {
             await writeList(event.body.channel_id, event.body.user_id)
-            await sendall(event.body.channel_id);
+            sendall(event.body.channel_id);
         }()
     }
     if (event.type == 'exited_channel') {
         var del = async function () {
             await deleteList(event.body.channel_id, event.body.user_id);
-            await sendall(event.body.channel_id);
+            sendall(event.body.channel_id);
         }()
 
     }
