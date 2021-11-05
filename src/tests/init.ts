@@ -23,6 +23,7 @@ import { r6Record } from '../commands/r6/r6.record.app';
 import { r6Search } from '../commands/r6/r6.search.app';
 import { r6Team } from '../commands/r6/r6.team.app';
 import { apexMenu } from '../commands/apex/apex.menu';
+import Application from 'koa';
 bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu, apexMenu);
 bot.connect();
 bot.addAlias(r6Search, "查询")
@@ -203,23 +204,33 @@ bot.event.on('system', (event) => {
             }
             cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
             if (num == 0) {
-                console.log(name + ' 0');
                 await send([
                     {
-                        "type": "card",
-                        "theme": "secondary",
-                        "size": "lg",
-                        "modules": [
-                            {
-                                "type": "section",
-                                "text": {
-                                    "type": "kmarkdown",
-                                    "content": "**" + name + "频道无人**"
-                                }
+                      "type": "card",
+                      "theme": "secondary",
+                      "size": "lg",
+                      "modules": [
+                        {
+                          "type": "section",
+                          "text": {
+                            "type": "kmarkdown",
+                            "content": "**频道无人**\n点击按钮前请先进入挂机频道"
+                          },
+                          "mode": "right",
+                          "accessory": {
+                            "type": "button",
+                            "theme": "primary",
+                            "value": list[itm].chnname,
+                            "click": "return-val",
+                            "text": {
+                              "type": "plain-text",
+                              "content": "加入"
                             }
-                        ]
+                          }
+                        }
+                      ]
                     }
-                ], list[itm].msgid)
+                  ], list[itm].msgid)
                 return 0;
             }
             await send(JSON.parse(cardbind), list[itm].msgid);
@@ -252,7 +263,6 @@ bot.event.on('system', (event) => {
                             var arg2 = mmr;
                             var arg3 = rank.replace(' ', '');
                             var arg4 = kd;
-                            var arg5 = imglink;
                             var arg6 = '#B2B6BB';
                             if (rank.search(/COPPER/) === 0) { arg6 = "#B30B0D"; }
                             if (rank.search(/BRONZE/) === 0) { arg6 = "#C98B3B"; }
@@ -270,11 +280,23 @@ bot.event.on('system', (event) => {
                             else rankable = false;
                             if (first == 1)
                                 var card: object = [{
-                                    "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [{
+                                    "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
+                                    "modules": [{
                                         "type": "section",
                                         "text": {
                                             "type": "kmarkdown",
-                                            "content": "**频道：" + name + "**"
+                                            "content": "**频道：" + name + "**\n点击按钮前请先进入挂机频道"
+                                        },
+                                        "mode": "right",
+                                        "accessory": {
+                                          "type": "button",
+                                          "theme": "primary",
+                                          "value": list[itm].chnname,
+                                          "click": "return-val",
+                                          "text": {
+                                            "type": "plain-text",
+                                            "content": "加入"
+                                          }
                                         }
                                     },
                                     {
