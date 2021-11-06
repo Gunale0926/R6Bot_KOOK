@@ -177,7 +177,6 @@ bot.event.on('system', (event) => {
 var i: number = 0;
 setInterval(function () {
     if (i < Object.keys(list).length) {
-        console.log(list[i].chnid);
         sendall(list[i].chnid);
         i++
     } else i = 0;
@@ -244,8 +243,8 @@ async function sendall(inputid: number) {
     async function send(card: object, id: string) {
         return new Promise<void>(async (resolve) => {
             //await bot.API.message.create(10, "2408081738284872", JSON.stringify(card));
-            //await bot.API.message.update(id, JSON.stringify(card));
-            console.log(card);
+            await bot.API.message.update(id, JSON.stringify(card));
+            //console.log(card);
             resolve()
         })
     }
