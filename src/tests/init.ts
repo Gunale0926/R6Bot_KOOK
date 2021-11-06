@@ -143,20 +143,16 @@ async function deleteList(chnid: number, id: string) {
         }
     })
 }
+
 bot.event.on('system', (event) => {
     //console.log(event)
     if (event.type == 'joined_channel') {
-        var write = async function () {
-            await writeList(event.body.channel_id, event.body.user_id)
-            sendall(event.body.channel_id);
-        }()
+        writeList(event.body.channel_id, event.body.user_id)
+        sendall(event.body.channel_id);
     }
     if (event.type == 'exited_channel') {
-        var del = async function () {
-            await deleteList(event.body.channel_id, event.body.user_id);
-            sendall(event.body.channel_id);
-        }()
-
+        deleteList(event.body.channel_id, event.body.user_id);
+        sendall(event.body.channel_id);
     }
     if (event.type == 'buttonClick') {
         var done = async function () {
@@ -177,131 +173,197 @@ bot.event.on('system', (event) => {
             await bot.API.channel.moveUser(channelId, [clkusr])
         }()
     }
-    async function sendall(inputid: number) {
-        var https = require('https');
-        var url = "https://r6.tracker.network/profile/pc/";
-        var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, itm: number = 0, tmp: number = 0;
-        var name: string;
-        var rankable: boolean;
-        var main = async function () {
-            for (itm = 0; itm < Object.keys(list).length; itm++) {
-                if (list[itm].chnid == inputid) {
-                    name = list[itm].chnname;
-                    for (var j = 0; j < 5; j++)
-                        if (list[itm].userid[j] != '')
-                            num++;
-                    break;
-                }
+})
+var i: number = 0;
+setInterval(function () {
+    if (i < Object.keys(list).length) {
+        console.log(list[i].chnid);
+        sendall(list[i].chnid);
+        i++
+    } else i = 0;
+}, 2000);
+async function sendall(inputid: number) {
+    var https = require('https');
+    var url = "https://r6.tracker.network/profile/pc/";
+    var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, itm: number = 0, tmp: number = 0;
+    var name: string;
+    var rankable: boolean;
+    var main = async function () {
+        for (itm = 0; itm < Object.keys(list).length; itm++) {
+            if (list[itm].chnid == inputid) {
+                name = list[itm].chnname;
+                for (var j = 0; j < 5; j++)
+                    if (list[itm].userid[j] != '')
+                        num++;
+                break;
             }
-            var cardbind: string = '['
-            for (var i = 0; i < 5; i++) {
-                if (list[itm].userid[i] != '') {
-                    tmp++;
-                    var r6id = await searchid(list[itm].userid[i]);
-                    var cardstr = JSON.stringify(await get(r6id, tmp));
-                    cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
-                }
-            }
-            cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
-            if (num == 0) {
-                await send([
-                    {
-                      "type": "card",
-                      "theme": "secondary",
-                      "size": "lg",
-                      "modules": [
-                        {
-                          "type": "section",
-                          "text": {
-                            "type": "kmarkdown",
-                            "content": "**"+name+"频道无人**\n点击按钮前请先进入挂机频道"
-                          },
-                          "mode": "right",
-                          "accessory": {
-                            "type": "button",
-                            "theme": "primary",
-                            "value": list[itm].chnname,
-                            "click": "return-val",
-                            "text": {
-                              "type": "plain-text",
-                              "content": "加入"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ], list[itm].msgid)
-                return 0;
-            }
-            await send(JSON.parse(cardbind), list[itm].msgid);
-        }()
-
-        async function send(card: object, id: string) {
-            return new Promise<void>(async (resolve) => {
-                //await bot.API.message.create(10, "2408081738284872", JSON.stringify(card));
-                await bot.API.message.update(id, JSON.stringify(card));
-                resolve()
-            })
         }
-        async function get(r6id: string, first: number) {
-            return new Promise<object>(async (resolve, reject) => {
-                var urln = url + r6id;
-                https.get(urln, function (res: any) {
-                    var html: string = '';
-                    res.on('data', function (data: any) {
-                        html += data;
-                    });
-                    res.on('end', function () {
-                        if (html.indexOf("RankedKDRatio") !== -1) {
-                            html = html.replace(/\n/g, '');
-                            var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
-                            var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
-                            var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
-                            var imglink = '';//session.user.avatar
-                            var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
-                            var arg1 = namer;
-                            var arg2 = mmr;
-                            var arg3 = rank.replace(' ', '');
-                            var arg4 = kd;
-                            var arg6 = '#B2B6BB';
-                            if (rank.search(/COPPER/) === 0) { arg6 = "#B30B0D"; }
-                            if (rank.search(/BRONZE/) === 0) { arg6 = "#C98B3B"; }
-                            if (rank.search(/SILVER/) === 0) { arg6 = "#B0B0B0"; }
-                            if (rank.search(/GOLD/) === 0) { arg6 = "#EED01E"; }
-                            if (rank.search(/PLATINUM/) === 0) { arg6 = "#5BB9B3"; }
-                            if (rank.search(/DIAMOND/) === 0) { arg6 = "#BD9FF6"; }
-                            if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; }
-                            var immr = parseInt(mmr)
-                            avmmr += immr;
-                            if (xmmr < immr) xmmr = immr;
-                            if (nmmr > immr) nmmr = immr;
-                            if (xmmr - nmmr <= 1000)
-                                rankable = true;
-                            else rankable = false;
-                            if (first == 1)
-                                var card: object = [{
-                                    "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
-                                    "modules": [{
-                                        "type": "section",
+        var cardbind: string = '['
+        for (var i = 0; i < 5; i++) {
+            if (list[itm].userid[i] != '') {
+                tmp++;
+                var r6id = await searchid(list[itm].userid[i]);
+                var cardstr = JSON.stringify(await get(r6id, tmp));
+                cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
+            }
+        }
+        cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
+        if (num == 0) {
+            await send([
+                {
+                    "type": "card",
+                    "theme": "secondary",
+                    "size": "lg",
+                    "modules": [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "kmarkdown",
+                                "content": "**" + name + "频道无人**\n点击按钮前请先进入挂机频道"
+                            },
+                            "mode": "right",
+                            "accessory": {
+                                "type": "button",
+                                "theme": "primary",
+                                "value": list[itm].chnname,
+                                "click": "return-val",
+                                "text": {
+                                    "type": "plain-text",
+                                    "content": "加入"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ], list[itm].msgid)
+            return 0;
+        }
+        await send(JSON.parse(cardbind), list[itm].msgid);
+    }()
+
+    async function send(card: object, id: string) {
+        return new Promise<void>(async (resolve) => {
+            //await bot.API.message.create(10, "2408081738284872", JSON.stringify(card));
+            //await bot.API.message.update(id, JSON.stringify(card));
+            console.log(card);
+            resolve()
+        })
+    }
+    async function get(r6id: string, first: number) {
+        return new Promise<object>(async (resolve, reject) => {
+            var urln = url + r6id;
+            https.get(urln, function (res: any) {
+                var html: string = '';
+                res.on('data', function (data: any) {
+                    html += data;
+                });
+                res.on('end', function () {
+                    if (html.indexOf("RankedKDRatio") !== -1) {
+                        html = html.replace(/\n/g, '');
+                        var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
+                        var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
+                        var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
+                        var imglink = '';//session.user.avatar
+                        var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
+                        var arg1 = namer;
+                        var arg2 = mmr;
+                        var arg3 = rank.replace(' ', '');
+                        var arg4 = kd;
+                        var arg6 = '#B2B6BB';
+                        if (rank.search(/COPPER/) === 0) { arg6 = "#B30B0D"; }
+                        if (rank.search(/BRONZE/) === 0) { arg6 = "#C98B3B"; }
+                        if (rank.search(/SILVER/) === 0) { arg6 = "#B0B0B0"; }
+                        if (rank.search(/GOLD/) === 0) { arg6 = "#EED01E"; }
+                        if (rank.search(/PLATINUM/) === 0) { arg6 = "#5BB9B3"; }
+                        if (rank.search(/DIAMOND/) === 0) { arg6 = "#BD9FF6"; }
+                        if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; }
+                        var immr = parseInt(mmr)
+                        avmmr += immr;
+                        if (xmmr < immr) xmmr = immr;
+                        if (nmmr > immr) nmmr = immr;
+                        if (xmmr - nmmr <= 1000)
+                            rankable = true;
+                        else rankable = false;
+                        if (first == 1)
+                            var card: object = [{
+                                "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
+                                "modules": [{
+                                    "type": "section",
+                                    "text": {
+                                        "type": "kmarkdown",
+                                        "content": "**频道：" + name + "**\n点击按钮前请先进入挂机频道"
+                                    },
+                                    "mode": "right",
+                                    "accessory": {
+                                        "type": "button",
+                                        "theme": "primary",
+                                        "value": list[itm].chnname,
+                                        "click": "return-val",
                                         "text": {
-                                            "type": "kmarkdown",
-                                            "content": "**频道：" + name + "**\n点击按钮前请先进入挂机频道"
-                                        },
-                                        "mode": "right",
-                                        "accessory": {
-                                          "type": "button",
-                                          "theme": "primary",
-                                          "value": list[itm].chnname,
-                                          "click": "return-val",
-                                          "text": {
                                             "type": "plain-text",
                                             "content": "加入"
-                                          }
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "divider"
+                                }, {
+                                    "type": "section",
+                                    "text": { "type": "kmarkdown", "content": "**" + arg1 + "**" }, "mode": "left"
+                                }, {
+                                    "type": "section", "text": {
+                                        "type": "paragraph",
+                                        "cols": 3, "fields": [{
+                                            "type": "kmarkdown", "content": "**MMR**\n" + arg2
+                                        },
+                                        { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
+                                        { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }]
+                                    }
+                                }]
+                            }]
+                        else if (first == num)
+                            var card: object = [{
+                                "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [
+                                    {
+                                        "type": "section",
+                                        "text": { "type": "kmarkdown", "content": "**" + arg1 + "**" }, "mode": "left"
+                                    }, {
+                                        "type": "section", "text": {
+                                            "type": "paragraph",
+                                            "cols": 3, "fields": [{
+                                                "type": "kmarkdown", "content": "**MMR**\n" + arg2
+                                            },
+                                            { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
+                                            { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }]
+                                        }
+                                    }, {
+                                        "type": "divider"
+                                    }, {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "plain-text",
+                                            "content": "Average MMR:" + avmmr / num
                                         }
                                     },
                                     {
-                                        "type": "divider"
-                                    }, {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "plain-text",
+                                            "content": "MMR Max Difference:" + (xmmr - nmmr)
+                                        }
+                                    },
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "plain-text",
+                                            "content": "是否可以排位：" + rankable
+                                        }
+                                    }]
+                            }]
+                        else
+                            var card: object = [{
+                                "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [
+                                    {
                                         "type": "section",
                                         "text": { "type": "kmarkdown", "content": "**" + arg1 + "**" }, "mode": "left"
                                     }, {
@@ -314,69 +376,12 @@ bot.event.on('system', (event) => {
                                             { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }]
                                         }
                                     }]
-                                }]
-                            else if (first == num)
-                                var card: object = [{
-                                    "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [
-                                        {
-                                            "type": "section",
-                                            "text": { "type": "kmarkdown", "content": "**" + arg1 + "**" }, "mode": "left"
-                                        }, {
-                                            "type": "section", "text": {
-                                                "type": "paragraph",
-                                                "cols": 3, "fields": [{
-                                                    "type": "kmarkdown", "content": "**MMR**\n" + arg2
-                                                },
-                                                { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
-                                                { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }]
-                                            }
-                                        }, {
-                                            "type": "divider"
-                                        }, {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "plain-text",
-                                                "content": "Average MMR:" + avmmr / num
-                                            }
-                                        },
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "plain-text",
-                                                "content": "MMR Max Difference:" + (xmmr - nmmr)
-                                            }
-                                        },
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "plain-text",
-                                                "content": "是否可以排位：" + rankable
-                                            }
-                                        }]
-                                }]
-                            else
-                                var card: object = [{
-                                    "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [
-                                        {
-                                            "type": "section",
-                                            "text": { "type": "kmarkdown", "content": "**" + arg1 + "**" }, "mode": "left"
-                                        }, {
-                                            "type": "section", "text": {
-                                                "type": "paragraph",
-                                                "cols": 3, "fields": [{
-                                                    "type": "kmarkdown", "content": "**MMR**\n" + arg2
-                                                },
-                                                { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
-                                                { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }]
-                                            }
-                                        }]
-                                }]
-                            resolve(card);
-                        }
-                    });
-                })
+                            }]
+                        resolve(card);
+                    }
+                });
             })
-        }
+        })
     }
-})
+}
 export var List = list;
