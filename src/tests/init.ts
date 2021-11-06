@@ -195,6 +195,7 @@ bot.event.on('system', (event) => {
             for (var i = 0; i < Object.keys(list).length; i++) {
                 if (list[i].chnid == event.body.channel_id) {
                     list[i].card = JSON.stringify(await getall(i));
+                    send(list[i].card, list[i].msgid);
                     break;
                 }
             }
@@ -204,6 +205,7 @@ bot.event.on('system', (event) => {
             for (var i = 0; i < Object.keys(list).length; i++) {
                 if (list[i].chnid == event.body.channel_id) {
                     list[i].card = JSON.stringify(await getall(i));
+                    send(list[i].card, list[i].msgid);
                     break;
                 }
             }
@@ -213,7 +215,8 @@ bot.event.on('system', (event) => {
         for (var i = 0; i < Object.keys(list).length; i++)
             if (event.value == list[i].chnname)
                 break;
-        bot.API.channel.moveUser(String(list[i].chnid), event.userId)
+        bot.API.channel.moveUser(String(list[i].chnid),[event.userId])
+        console.log(event)
     }
 })
 setup()
@@ -227,12 +230,12 @@ setup()
                 .then(async function (response: any) {
                     for (var i = 0; i < Object.keys(list).length; i++) {
                         if (list[i].card != response.data.data.items[i].content) {
-                            await send(list[i].card, list[i].msgid);
+                            send(list[i].card, list[i].msgid);
                         }
 
                     }
                 })
-        }, 2000);
+        }, 10000);
     })
 async function getall(itm: number) {
     var url = "https://r6.tracker.network/profile/pc/";
