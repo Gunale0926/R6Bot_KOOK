@@ -24,6 +24,8 @@ import { r6Search } from '../commands/r6/r6.search.app';
 import { r6Team } from '../commands/r6/r6.team.app';
 import { apexMenu } from '../commands/apex/apex.menu';
 import Application from 'koa';
+import { AttachmentBase } from 'kaiheila-bot-root';
+import { resolveLevel } from 'bunyan';
 bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu, apexMenu);
 bot.connect();
 bot.addAlias(r6Search, "查询")
@@ -35,71 +37,110 @@ bot.logger.debug('system init success');
 bot.messageSource.on('message', (e) => {
     //bot.logger.debug(`received:`, e);
 });
+var https = require('https');
 var mysql = require('mysql');
+var fs = require('fs')
 var tabname = 'usrlib'
 var list = [{
     chnname: 'DOC',
     chnid: 8574655462452796,
     userid: ['', '', '', '', ''],
-    msgid: 'a6c80cd1-be62-401b-b83f-aef234762867'
+    msgid: 'a6c80cd1-be62-401b-b83f-aef234762867',
+    card: {}
 }, {
     chnname: 'FUZE',
     chnid: 7228978838660995,
     userid: ['', '', '', '', ''],
-    msgid: '7596e222-1c34-4f23-acf0-2aa14014e4f6'
+    msgid: '7596e222-1c34-4f23-acf0-2aa14014e4f6',
+    card: {}
 }, {
     chnname: 'ROOK',
     chnid: 8666873622418147,
     userid: ['', '', '', '', ''],
-    msgid: '54ce872a-5ce1-4af3-affb-74b138dc24ce'
+    msgid: '54ce872a-5ce1-4af3-affb-74b138dc24ce',
+    card: {}
 }, {
     chnname: 'MUTE',
     chnid: 3671071360478648,
     userid: ['', '', '', '', ''],
-    msgid: 'ac701ca6-e650-4556-a407-603172d31288'
+    msgid: 'ac701ca6-e650-4556-a407-603172d31288',
+    card: {}
 }, {
     chnname: 'ORYX',
     chnid: 8099740112545843,
     userid: ['', '', '', '', ''],
-    msgid: '5d64a9f8-ff2e-41e0-8a97-507a90cf5053'
+    msgid: '5d64a9f8-ff2e-41e0-8a97-507a90cf5053',
+    card: {}
 }, {
     chnname: 'JAGER',
     chnid: 9853214616287407,
     userid: ['', '', '', '', ''],
-    msgid: 'ee472f52-f5a3-47bd-a395-e96e99d21ff4'
+    msgid: 'ee472f52-f5a3-47bd-a395-e96e99d21ff4',
+    card: {}
 }, {
     chnname: 'SLEDGE',
     chnid: 4522198069417620,
     userid: ['', '', '', '', ''],
-    msgid: '34c0ccc8-4092-4ee6-be43-0354b678a8cd'
+    msgid: '34c0ccc8-4092-4ee6-be43-0354b678a8cd',
+    card: {}
 }, {
     chnname: 'WAMAI',
     chnid: 1505924438841986,
     userid: ['', '', '', '', ''],
-    msgid: '51bc3fd8-cb52-44a8-8533-d6f3b9f2f52b'
+    msgid: '51bc3fd8-cb52-44a8-8533-d6f3b9f2f52b',
+    card: {}
 }, {
     chnname: 'TWITCH',
     chnid: 7769514269829865,
     userid: ['', '', '', '', ''],
-    msgid: '1312d0b8-25d6-4e19-abfe-55577738ba60'
+    msgid: '1312d0b8-25d6-4e19-abfe-55577738ba60',
+    card: {}
 }, {
     chnname: 'MOZZIE',
     chnid: 2494099237896157,
     userid: ['', '', '', '', ''],
-    msgid: '678d38d4-9b7b-4a2d-846e-4621a756f0c4'
+    msgid: '678d38d4-9b7b-4a2d-846e-4621a756f0c4',
+    card: {}
 }, {
     chnname: 'HIBANA',
     chnid: 3205552061241304,
     userid: ['', '', '', '', ''],
-    msgid: '38421844-f17b-484a-b6e4-e0d79c99320d'
+    msgid: '38421844-f17b-484a-b6e4-e0d79c99320d',
+    card: {}
 }];
+setup();
+function setup(){
+    bot.axios.get("v3/message/list", {
+        params: {
+            target_id: '2408081738284872',
+        }
+    })
+        .then(function (response: any) {
+            for (var i = 0; i < Object.keys(list).length; i++)
+                list[i].card = response.data.data.items[i].content
+        })
+}
 export var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '20060926Abc',
     database: 'bot_db'
 });
-
+var getJson = async function () {
+    return new Promise<any>(async (resolve, reject) => {
+        let data = '',
+            json_data: any;
+        let req = https.get("https://www.kaiheila.cn/api/guilds/3128617072930683/widget.json", function (res: any) {
+            res.on('data', function (stream: any) {
+                data += stream;
+            });
+            res.on('end', function () {
+                json_data = JSON.parse(data);
+                resolve(json_data);
+            });
+        });
+    });
+}
 async function searchid(id: string) {
     return new Promise<string>((resolve, reject) => {
         var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
@@ -146,108 +187,53 @@ async function deleteList(chnid: number, id: string) {
 
 bot.event.on('system', (event) => {
     //console.log(event)
-    if (event.type == 'joined_channel') {
-        writeList(event.body.channel_id, event.body.user_id)
-        sendall(event.body.channel_id);
-    }
-    if (event.type == 'exited_channel') {
-        deleteList(event.body.channel_id, event.body.user_id);
-        sendall(event.body.channel_id);
-    }
+    var eventmonitor = async function () {
+        if (event.type == 'joined_channel') {
+            writeList(event.body.channel_id, event.body.user_id)
+            for (var i = 0; i < Object.keys(list).length; i++) {
+                if (list[i].chnid == event.body.channel_id) {
+                    list[i].card = await getall(event.body.channel_id, i);
+                    break;
+                }
+            }
+        }
+        if (event.type == 'exited_channel') {
+            deleteList(event.body.channel_id, event.body.user_id);
+            for (var i = 0; i < Object.keys(list).length; i++) {
+                if (list[i].chnid == event.body.channel_id) {
+                    list[i].card = await getall(event.body.channel_id, i);
+                    break;
+                }
+            }
+        }
+    }()
     if (event.type == 'buttonClick') {
-        var done = async function () {
-            var channelId: string
-            var clkusr: string;
-            clkusr = await event.userId;
-            if (event.value == 'DOC') channelId = '8574655462452796'
-            if (event.value == 'FUZW') channelId = '7228978838660995'
-            if (event.value == 'ROOK') channelId = '8666873622418147'
-            if (event.value == 'MUTE') channelId = '3671071360478648'
-            if (event.value == 'ORYX') channelId = '8099740112545843'
-            if (event.value == 'JAGER') channelId = '9853214616287407'
-            if (event.value == 'SLEDGE') channelId = '4522198069417620'
-            if (event.value == 'WAMAI') channelId = '1505924438841986'
-            if (event.value == 'TWITCH') channelId = '7769514269829865'
-            if (event.value == 'MOZZIE') channelId = '2494099237896157'
-            if (event.value == 'HIBANA') channelId = '3205552061241304'
-            await bot.API.channel.moveUser(channelId, [clkusr])
-        }()
+        for (var i = 0; i < Object.keys(list).length; i++)
+            if (event.value == list[i].chnname)
+                break;
+        bot.API.channel.moveUser(String(list[i].chnid), event.userId)
     }
 })
-var i: number = 0;
-setInterval(function () {
-    if (i < Object.keys(list).length) {
-        sendall(list[i].chnid);
-        i++
-    } else i = 0;
+var i = 0;
+setInterval(async function () {
+    bot.axios.get("v3/message/list", {
+        params: {
+            target_id: '2408081738284872',
+        }
+    })
+        .then(function (response: any) {
+            for (var i = 0; i < Object.keys(list).length; i++) {
+                if (list[i].card != response.data.data.items[i].content)
+                    var func = async function () {
+                        send(list[i].card, list[i].chnid);
+                    }()
+            }
+        })
 }, 2000);
-async function sendall(inputid: number) {
-    var https = require('https');
+async function getall(inputid: number, itm: number) {
     var url = "https://r6.tracker.network/profile/pc/";
     var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, itm: number = 0, tmp: number = 0;
-    var name: string;
     var rankable: boolean;
-    var main = async function () {
-        for (itm = 0; itm < Object.keys(list).length; itm++) {
-            if (list[itm].chnid == inputid) {
-                name = list[itm].chnname;
-                for (var j = 0; j < 5; j++)
-                    if (list[itm].userid[j] != '')
-                        num++;
-                break;
-            }
-        }
-        var cardbind: string = '['
-        for (var i = 0; i < 5; i++) {
-            if (list[itm].userid[i] != '') {
-                tmp++;
-                var r6id = await searchid(list[itm].userid[i]);
-                var cardstr = JSON.stringify(await get(r6id, tmp));
-                cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
-            }
-        }
-        cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
-        if (num == 0) {
-            await send([
-                {
-                    "type": "card",
-                    "theme": "secondary",
-                    "size": "lg",
-                    "modules": [
-                        {
-                            "type": "section",
-                            "text": {
-                                "type": "kmarkdown",
-                                "content": "**" + name + "频道无人**\n点击按钮前请先进入挂机频道"
-                            },
-                            "mode": "right",
-                            "accessory": {
-                                "type": "button",
-                                "theme": "primary",
-                                "value": list[itm].chnname,
-                                "click": "return-val",
-                                "text": {
-                                    "type": "plain-text",
-                                    "content": "加入"
-                                }
-                            }
-                        }
-                    ]
-                }
-            ], list[itm].msgid)
-            return 0;
-        }
-        await send(JSON.parse(cardbind), list[itm].msgid);
-    }()
-
-    async function send(card: object, id: string) {
-        return new Promise<void>(async (resolve) => {
-            //await bot.API.message.create(10, "2408081738284872", JSON.stringify(card));
-            await bot.API.message.update(id, JSON.stringify(card));
-            //console.log(card);
-            resolve()
-        })
-    }
     async function get(r6id: string, first: number) {
         return new Promise<object>(async (resolve, reject) => {
             var urln = url + r6id;
@@ -290,7 +276,7 @@ async function sendall(inputid: number) {
                                     "type": "section",
                                     "text": {
                                         "type": "kmarkdown",
-                                        "content": "**频道：" + name + "**\n点击按钮前请先进入挂机频道"
+                                        "content": "**频道：" + list[itm].chnname + "**\n点击按钮前请先进入挂机频道"
                                     },
                                     "mode": "right",
                                     "accessory": {
@@ -382,5 +368,62 @@ async function sendall(inputid: number) {
             })
         })
     }
+    return new Promise<object>((resolve, reject) => {
+        var main = async function () {
+            for (var j = 0; j < 5; j++)
+                if (list[itm].userid[j] != '')
+                    num++;
+
+            var cardbind: string = '['
+            for (var i = 0; i < 5; i++) {
+                if (list[itm].userid[i] != '') {
+                    tmp++;
+                    var r6id = await searchid(list[itm].userid[i]);
+                    var cardstr = JSON.stringify(await get(r6id, tmp));
+                    cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
+                }
+            }
+            cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
+            if (num == 0) {
+                resolve([
+                    {
+                        "type": "card",
+                        "theme": "secondary",
+                        "size": "lg",
+                        "modules": [
+                            {
+                                "type": "section",
+                                "text": {
+                                    "type": "kmarkdown",
+                                    "content": "**" + list[itm].chnname + "频道无人**\n点击按钮前请先进入挂机频道"
+                                },
+                                "mode": "right",
+                                "accessory": {
+                                    "type": "button",
+                                    "theme": "primary",
+                                    "value": list[itm].chnname,
+                                    "click": "return-val",
+                                    "text": {
+                                        "type": "plain-text",
+                                        "content": "加入"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ])
+                return 0;
+            }
+            resolve(JSON.parse(cardbind));
+        }()
+    })
+}
+async function send(card: object, id: number) {
+    return new Promise<void>(async (resolve) => {
+        //await bot.API.message.create(10, "2408081738284872", JSON.stringify(card));
+        await bot.API.message.update(String(id), JSON.stringify(card));
+        //console.log(JSON.stringify(card));
+        resolve()
+    })
 }
 export var List = list;
