@@ -447,7 +447,7 @@ async function getall(itm: number) {
 async function send(card: string, id: string) {
     return new Promise<void>(async (resolve) => {
         //await bot.API.message.create(10, "2408081738284872", card);
-        //await bot.API.message.update(id, card);
+        await bot.API.message.update(id, card);
         //console.log(card);
         resolve()
     })
