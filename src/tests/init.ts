@@ -216,7 +216,6 @@ bot.event.on('system', (event) => {
             if (event.value == list[i].chnname)
                 break;
         bot.API.channel.moveUser(String(list[i].chnid),[event.userId])
-        console.log(event)
     }
 })
 setup()

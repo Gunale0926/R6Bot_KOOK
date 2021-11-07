@@ -9,9 +9,10 @@ class R6Active extends AppCommand {
     intro = '激活测试权限';
     response: 'both' = 'both';
     func: AppFunc<BaseSession> = async (session) => {
-        if (session.args.length == 0)
-            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
-        var flag = 0;
+        if (session.args.length == 0) {
+            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
+            return;
+        }
         bot.API.guild.userList('3128617072930683')//r6小队频道id
             .then(function (response) {
                 var flag: boolean = true;

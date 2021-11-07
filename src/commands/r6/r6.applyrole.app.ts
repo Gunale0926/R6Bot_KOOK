@@ -7,16 +7,20 @@ class R6Applyrole extends AppCommand {
     intro = '申请角色';
     func: AppFunc<BaseSession> = async (session) => {
         var rid: any;
-        if (session.args.length == 0)
-            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
-        var main = async function () {
-            await give(await bot.API.guildRole.index(session.guildId))
-            .then(function(num){
+        if (session.args.length == 0) {
+            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
+            return;
+        }
+        if (session.guildId != '3128617072930683') {
+            session.sendCard(new Card().addTitle("只能在Rainbow Six小队频道使用"));
+            return;
+        }
+        await give(await bot.API.guildRole.index(session.guildId))
+            .then(function (num) {
                 giverole(num);
             })
-        }()
-        async function giverole(num:number) {
-            if (num <= 1) {
+        async function giverole(num: number) {
+            if (num < 2) {
                 session.user.grantRole(rid, session.guildId)
                 session.user.grantRole(35688, session.guildId)
                 session.send("申请成功");
@@ -41,7 +45,7 @@ class R6Applyrole extends AppCommand {
                                                 if (usres.items[j].roles[k] == response[z].roleId && response[z].position >= 8 && response[z].position <= 60) {
                                                     num++;
                                                 }
-                                                
+
                                             }
                                         }
                                     }
