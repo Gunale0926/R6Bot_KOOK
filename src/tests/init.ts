@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as dotenv from 'dotenv';
-import { Card, KBotify } from '..';
+import { BaseSession, Card, GuildSession, KBotify } from '..';
 dotenv.config();
 // mod .env-template file
 export const bot = new KBotify({
@@ -186,9 +186,28 @@ async function deleteList(chnid: number, id: string) {
         }
     })
 }
-
+bot.message.on('text', (message) => {
+    if (message.type == 1 && message.channelId == '1459838591677870' && !new RegExp("[\\u4E00-\\u9FFF]+", "g").test(message.content)) {
+        recordid(message.authorId, message.content);
+        function recordid(id: string, r6id: string) {
+            var exp = 'INSERT INTO ' + tabname + '(id,r6id,sel) VALUES("' + id + '","' + r6id + '",1)'
+            connection.query(exp, function (err: any, result: any) {
+                if (err) {
+                    exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
+                    connection.query(exp, function (err: any, result: any) {
+                        if (!err) {
+                            bot.API.message.create(1, message.channelId, '(该消息仅自己可见）自动更新了ID： ' + id + ' ' + r6id,'',message.authorId);
+                        }
+                    })
+                }
+                else {
+                    bot.API.message.create(1, message.channelId, '(该消息仅自己可见）自动记录了ID： ' + id + ' ' + r6id,'',message.authorId);
+                }
+            })
+        }
+    }
+})
 bot.event.on('system', (event) => {
-    //console.log(event)
     var eventmonitor = async function () {
         if (event.type == 'joined_channel') {
             writeList(event.body.channel_id, event.body.user_id)
@@ -215,7 +234,7 @@ bot.event.on('system', (event) => {
         for (var i = 0; i < Object.keys(list).length; i++)
             if (event.value == list[i].chnname)
                 break;
-        bot.API.channel.moveUser(String(list[i].chnid),[event.userId])
+        bot.API.channel.moveUser(String(list[i].chnid), [event.userId])
     }
 })
 setup()
@@ -423,12 +442,12 @@ async function getall(itm: number) {
             })
         })
     }
-    
+
 }
 async function send(card: string, id: string) {
     return new Promise<void>(async (resolve) => {
         //await bot.API.message.create(10, "2408081738284872", card);
-        await bot.API.message.update(id, card);
+        //await bot.API.message.update(id, card);
         //console.log(card);
         resolve()
     })

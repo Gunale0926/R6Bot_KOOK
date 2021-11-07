@@ -12,7 +12,7 @@ class R6Record extends AppCommand {
         else
             await recordid(session.userId, session.args[0])
         async function recordid(id: string, r6id: string) {
-            return new Promise((resolve, reject) => {
+            return new Promise<void>((resolve, reject) => {
                 var exp = 'INSERT INTO ' + tabname + '(id,r6id,sel) VALUES("' + id + '","' + r6id + '",1)'
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
@@ -24,12 +24,13 @@ class R6Record extends AppCommand {
                             }
                             else {
                                 session.send('更新了ID： ' + id + ' ' + r6id);
-                                resolve(result);
+                                resolve();
                             }
                         })
                     }
                     else {
                         session.send('记录了ID： ' + id + ' ' + r6id);
+                        resolve();
                     }
                 })
             })
