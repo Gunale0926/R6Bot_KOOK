@@ -188,7 +188,7 @@ async function getif(r6id: string) {
                 html += data;
             });
             res.on('end', function () {
-                if (html.indexOf("RankedKDRatio") !== -1) 
+                if (html.indexOf("RankedKDRatio") !== -1)
                     resolve(true)
                 else
                     resolve(false)
@@ -222,6 +222,7 @@ bot.message.on('text', async (message) => {
 bot.event.on('system', async (event) => {
     if (event.type == 'joined_channel') {
         writeList(event.body.channel_id, event.body.user_id)
+
         for (var i = 0; i < Object.keys(list).length; i++) {
             if (list[i].chnid == event.body.channel_id) {
                 list[i].card = JSON.stringify(await getall(i));
@@ -273,18 +274,30 @@ setup()
                     }
                 })
         }, 10000);
-    })
+    })*/
 var i = 0;
 setInterval(async function () {
     if (i < Object.keys(list).length) {
-        list[i].card = JSON.stringify(await getall(i));
-        send(list[i].card, list[i].msgid);
-        i++;
+        getJson()
+            .then(async json => {
+                for (var j = 0; j < Object.keys(json.channels).length; j++)
+                    if (list[i].chnid == json.channels[j].id) {
+                        var tmp = list[i].userid
+                        if (json.channels[j].users)
+                            for (var k = 0; k < Object.keys(json.channels[j].users).length; k++) {
+                                list[i].userid[k] = json.channels[j].users[k].id;
+                            }
+                        if (list[i].userid != tmp)
+                            send(JSON.stringify(await getall(i)),list[i].msgid)
+                        i++;
+                        break;
+                    }
+            })
     }
     else
         i = 0;
-}, 5000);
-*/
+}, 1000);
+
 async function getall(itm: number) {
     var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, tmp: number = 0;
     var rankable: boolean;
