@@ -222,7 +222,6 @@ bot.message.on('text', async (message) => {
 bot.event.on('system', async (event) => {
     if (event.type == 'joined_channel') {
         writeList(event.body.channel_id, event.body.user_id)
-
         for (var i = 0; i < Object.keys(list).length; i++) {
             if (list[i].chnid == event.body.channel_id) {
                 list[i].card = JSON.stringify(await getall(i));
@@ -275,23 +274,25 @@ setup()
                 })
         }, 10000);
     })*/
-var i = 0;
+let i = 0;
 setInterval(async function () {
     if (i < Object.keys(list).length) {
         getJson()
             .then(async json => {
-                for (var j = 0; j < Object.keys(json.channels).length; j++)
+                var tmp: any = JSON.stringify(list[i].userid);
+                for (let j = 0; j < Object.keys(json.channels).length; j++)
                     if (list[i].chnid == json.channels[j].id) {
-                        var tmp = list[i].userid
                         if (json.channels[j].users)
-                            for (var k = 0; k < Object.keys(json.channels[j].users).length; k++) {
+                            for (let k = 0; k < Object.keys(json.channels[j].users).length; k++) {
                                 list[i].userid[k] = json.channels[j].users[k].id;
                             }
-                        if (list[i].userid != tmp)
-                            send(JSON.stringify(await getall(i)),list[i].msgid)
-                        i++;
+                        i++
                         break;
                     }
+                if (JSON.stringify(list[i-1].userid) != tmp) {
+                    list[i-1].card = JSON.stringify(await getall(i-1));
+                    send(list[i-1].card, list[i-1].msgid);
+                }
             })
     }
     else
@@ -490,7 +491,7 @@ async function send(card: string, id: string) {
     return new Promise<void>(async (resolve) => {
         //await bot.API.message.create(10, "2408081738284872", card);
         await bot.API.message.update(id, card);
-        //console.log(card);
+        console.log(card);
         resolve()
     })
 }
