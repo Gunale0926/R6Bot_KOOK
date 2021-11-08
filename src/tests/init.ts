@@ -108,20 +108,6 @@ var list = [{
     msgid: '38421844-f17b-484a-b6e4-e0d79c99320d',
     card: ''
 }];
-async function setup() {
-    return new Promise<void>(async (resolve, reject) => {
-        bot.axios.get("v3/message/list", {
-            params: {
-                target_id: '2408081738284872',
-            }
-        })
-            .then(function (response: any) {
-                for (var i = 0; i < Object.keys(list).length; i++)
-                    list[i].card = response.data.data.items[i].content
-                resolve()
-            })
-    })
-}
 export var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -186,6 +172,12 @@ async function deleteList(chnid: number, id: string) {
         }
     })
 }
+bot.message.on('buttonEvent', (event) => {
+    for (var i = 0; i < Object.keys(list).length; i++)
+        if (event.content == list[i].chnname)
+            break;
+    bot.API.channel.moveUser(String(list[i].chnid), [event.userId])
+})
 bot.message.on('text', (message) => {
     if (message.type == 1 && message.channelId == '1459838591677870' && !new RegExp("[\\u4E00-\\u9FFF]+", "g").test(message.content)) {
         recordid(message.authorId, message.content);
@@ -196,47 +188,55 @@ bot.message.on('text', (message) => {
                     exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
                     connection.query(exp, function (err: any, result: any) {
                         if (!err) {
-                            bot.API.message.create(1, message.channelId, '(该消息仅自己可见）自动更新了ID： ' + id + ' ' + r6id,'',message.authorId);
+                            bot.API.message.create(1, message.channelId, '(该消息仅自己可见）自动更新了ID： ' + id + ' ' + r6id, '', message.authorId);
                         }
                     })
                 }
                 else {
-                    bot.API.message.create(1, message.channelId, '(该消息仅自己可见）自动记录了ID： ' + id + ' ' + r6id,'',message.authorId);
+                    bot.API.message.create(1, message.channelId, '(该消息仅自己可见）自动记录了ID： ' + id + ' ' + r6id, '', message.authorId);
                 }
             })
         }
     }
 })
-bot.event.on('system', (event) => {
-    var eventmonitor = async function () {
-        if (event.type == 'joined_channel') {
-            writeList(event.body.channel_id, event.body.user_id)
-            for (var i = 0; i < Object.keys(list).length; i++) {
-                if (list[i].chnid == event.body.channel_id) {
-                    list[i].card = JSON.stringify(await getall(i));
-                    send(list[i].card, list[i].msgid);
-                    break;
-                }
-            }
-        }
-        if (event.type == 'exited_channel') {
-            deleteList(event.body.channel_id, event.body.user_id);
-            for (var i = 0; i < Object.keys(list).length; i++) {
-                if (list[i].chnid == event.body.channel_id) {
-                    list[i].card = JSON.stringify(await getall(i));
-                    send(list[i].card, list[i].msgid);
-                    break;
-                }
-            }
-        }
-    }()
-    if (event.type == 'buttonClick') {
-        for (var i = 0; i < Object.keys(list).length; i++)
-            if (event.value == list[i].chnname)
+
+bot.event.on('system', async (event) => {
+    if (event.type == 'joined_channel') {
+        writeList(event.body.channel_id, event.body.user_id)
+        for (var i = 0; i < Object.keys(list).length; i++) {
+            if (list[i].chnid == event.body.channel_id) {
+                list[i].card = JSON.stringify(await getall(i));
+                send(list[i].card, list[i].msgid);
                 break;
-        bot.API.channel.moveUser(String(list[i].chnid), [event.userId])
+            }
+        }
+    }
+    if (event.type == 'exited_channel') {
+        deleteList(event.body.channel_id, event.body.user_id);
+        for (var i = 0; i < Object.keys(list).length; i++) {
+            if (list[i].chnid == event.body.channel_id) {
+                list[i].card = JSON.stringify(await getall(i));
+                send(list[i].card, list[i].msgid);
+                break;
+            }
+        }
     }
 })
+/*
+async function setup() {
+    return new Promise<void>(async (resolve, reject) => {
+        bot.axios.get("v3/message/list", {
+            params: {
+                target_id: '2408081738284872',
+            }
+        })
+            .then(function (response: any) {
+                for (var i = 0; i < Object.keys(list).length; i++)
+                    list[i].card = response.data.data.items[i].content
+                resolve()
+            })
+    })
+}
 setup()
     .then(function () {
         setInterval(async function () {
@@ -255,6 +255,18 @@ setup()
                 })
         }, 10000);
     })
+*/
+var i = 0;
+setInterval(async function () {
+    if (i < Object.keys(list).length) {
+        list[i].card = JSON.stringify(await getall(i));
+        send(list[i].card, list[i].msgid);
+        i++;
+    }
+    else
+        i = 0;
+}, 5000);
+
 async function getall(itm: number) {
     var url = "https://r6.tracker.network/profile/pc/";
     var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, tmp: number = 0;
