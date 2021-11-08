@@ -39,8 +39,9 @@ bot.messageSource.on('message', (e) => {
 });
 var https = require('https');
 var mysql = require('mysql');
-var fs = require('fs')
-var tabname = 'usrlib'
+var fs = require('fs');
+var tabname = 'usrlib';
+var url = "https://r6.tracker.network/profile/pc/";
 var list = [{
     chnname: 'DOC',
     chnid: 8574655462452796,
@@ -178,9 +179,27 @@ bot.message.on('buttonEvent', (event) => {
             break;
     bot.API.channel.moveUser(String(list[i].chnid), [event.userId])
 })
-bot.message.on('text', (message) => {
+async function getif(r6id: string) {
+    return new Promise<boolean>(async (resolve, reject) => {
+        var urln = url + r6id;
+        https.get(urln, function (res: any) {
+            var html: string = '';
+            res.on('data', function (data: any) {
+                html += data;
+            });
+            res.on('end', function () {
+                if (html.indexOf("RankedKDRatio") !== -1) 
+                    resolve(true)
+                else
+                    resolve(false)
+            })
+        })
+    })
+}
+bot.message.on('text', async (message) => {
     if (message.type == 1 && message.channelId == '1459838591677870' && !new RegExp("[\\u4E00-\\u9FFF]+", "g").test(message.content)) {
-        recordid(message.authorId, message.content);
+        if (await getif(message.content))
+            recordid(message.authorId, message.content);
         function recordid(id: string, r6id: string) {
             var exp = 'INSERT INTO ' + tabname + '(id,r6id,sel) VALUES("' + id + '","' + r6id + '",1)'
             connection.query(exp, function (err: any, result: any) {
@@ -188,12 +207,12 @@ bot.message.on('text', (message) => {
                     exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
                     connection.query(exp, function (err: any, result: any) {
                         if (!err) {
-                            bot.API.message.create(1, message.channelId, '(该消息仅自己可见）自动更新了ID： ' + id + ' ' + r6id, '', message.authorId);
+                            bot.API.message.create(1, message.channelId, '查询到此ID并更新：' + r6id, '', message.authorId);
                         }
                     })
                 }
                 else {
-                    bot.API.message.create(1, message.channelId, '(该消息仅自己可见）自动记录了ID： ' + id + ' ' + r6id, '', message.authorId);
+                    bot.API.message.create(1, message.channelId, '查询到此ID并记录：' + r6id, '', message.authorId);
                 }
             })
         }
@@ -255,7 +274,6 @@ setup()
                 })
         }, 10000);
     })
-*/
 var i = 0;
 setInterval(async function () {
     if (i < Object.keys(list).length) {
@@ -266,9 +284,8 @@ setInterval(async function () {
     else
         i = 0;
 }, 5000);
-
+*/
 async function getall(itm: number) {
-    var url = "https://r6.tracker.network/profile/pc/";
     var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, tmp: number = 0;
     var rankable: boolean;
     return new Promise<any>((resolve, reject) => {
