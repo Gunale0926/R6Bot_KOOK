@@ -191,8 +191,6 @@ setInterval(async function () {
                     }
                 break;
             }
-        console.log('n:' + JSON.stringify(list[i].userid))
-        console.log('o:' + tmp)
         if (JSON.stringify(list[i].userid) != tmp) {
             send(i)
         }
@@ -400,11 +398,10 @@ async function getall(itm: number) {
 }
 async function send(itm: number) {
     list[itm].card = await getall(itm)
-    console.log(JSON.stringify(list[itm].card));
     bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
     //bot.API.message.create(10, "2408081738284872", list[itm].card);
 }
-/*
+
 async function writeList(chnid: number, id: string) {
     return new Promise<void>((resolve, reject) => {
         for (var i = 0; i < Object.keys(list).length; i++) {
@@ -440,8 +437,7 @@ bot.event.on('system', async (event) => {
         writeList(event.body.channel_id, event.body.user_id)
         for (var i = 0; i < Object.keys(list).length; i++) {
             if (list[i].chnid == event.body.channel_id) {
-                list[i].card = JSON.stringify(await getall(i));
-                send(list[i].card, list[i].msgid);
+                send(i);
                 break;
             }
         }
@@ -450,13 +446,13 @@ bot.event.on('system', async (event) => {
         deleteList(event.body.channel_id, event.body.user_id);
         for (var i = 0; i < Object.keys(list).length; i++) {
             if (list[i].chnid == event.body.channel_id) {
-                list[i].card = JSON.stringify(await getall(i));
-                send(list[i].card, list[i].msgid);
+                send(i);
                 break;
             }
         }
     }
 })
+/*
 async function setup() {
     return new Promise<void>(async (resolve, reject) => {
         bot.axios.get("v3/message/list", {
