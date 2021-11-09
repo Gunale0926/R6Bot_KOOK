@@ -213,11 +213,13 @@ async function getall(itm: number) {
         }
         var cardbind: string = '[';
         for (let usrid of list[itm].userid) {
-            if (usrid != '' && await searchid(usrid) != null) {
-                tmp++;
+            if (usrid != '') {
                 var r6id = await searchid(usrid);
-                var cardstr = JSON.stringify(await get(r6id, tmp));
-                cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
+                if (r6id != null) {
+                    tmp++;
+                    var cardstr = JSON.stringify(await get(r6id, tmp));
+                    cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
+                }
             }
         }
         cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
@@ -226,7 +228,6 @@ async function getall(itm: number) {
     async function get(r6id: string, first: number) {
         return new Promise<object | void>(async (resolve, reject) => {
             var urln = url + r6id;
-            console.log(urln)
             https.get(urln, function (res: any) {
                 var html: string = '';
                 res.on('data', function (data: any) {
@@ -362,7 +363,8 @@ async function getall(itm: number) {
 }
 async function send(itm: number) {
     list[itm].card = await getall(itm)
-    bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
+    console.log(list[itm].card)
+    //bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
     //bot.API.message.create(10, "2408081738284872", list[itm].card);
 }
 
