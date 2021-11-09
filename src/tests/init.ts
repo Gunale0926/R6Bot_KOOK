@@ -192,18 +192,7 @@ async function getall(itm: number) {
                             "type": "section",
                             "text": {
                                 "type": "kmarkdown",
-                                "content": "**" + list[itm].chnname + "频道无人**\n点击按钮前请先进入挂机频道"
-                            },
-                            "mode": "right",
-                            "accessory": {
-                                "type": "button",
-                                "theme": "primary",
-                                "value": list[itm].chnname,
-                                "click": "return-val",
-                                "text": {
-                                    "type": "plain-text",
-                                    "content": "加入"
-                                }
+                                "content": "**" + list[itm].chnname + "频道无人**"
                             }
                         }
                     ]
@@ -226,7 +215,7 @@ async function getall(itm: number) {
         resolve(JSON.parse(cardbind));
     })
     async function get(r6id: string, first: number) {
-        return new Promise<object | void>(async (resolve, reject) => {
+        return new Promise<object>(async (resolve, reject) => {
             var urln = url + r6id;
             https.get(urln, function (res: any) {
                 var html: string = '';
@@ -267,18 +256,7 @@ async function getall(itm: number) {
                                     "type": "section",
                                     "text": {
                                         "type": "kmarkdown",
-                                        "content": "**频道：" + list[itm].chnname + "**\n点击按钮前请先进入挂机频道"
-                                    },
-                                    "mode": "right",
-                                    "accessory": {
-                                        "type": "button",
-                                        "theme": "primary",
-                                        "value": list[itm].chnname,
-                                        "click": "return-val",
-                                        "text": {
-                                            "type": "plain-text",
-                                            "content": "加入"
-                                        }
+                                        "content": "**频道：" + list[itm].chnname + "**"
                                     }
                                 },
                                 {
@@ -354,7 +332,7 @@ async function getall(itm: number) {
                                     }]
                             }]
                         resolve(card);
-                    } else resolve()
+                    }
                 });
             })
 
@@ -363,7 +341,7 @@ async function getall(itm: number) {
 }
 async function send(itm: number) {
     list[itm].card = await getall(itm)
-    console.log(list[itm].card)
+    console.log(JSON.stringify(list[itm].card))
     bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
     //bot.API.message.create(10, "2408081738284872", list[itm].card);
 }
