@@ -115,18 +115,6 @@ export var connection = mysql.createConnection({
     password: '20060926Abc',
     database: 'bot_db'
 });
-async function searchid(id: string) {
-    return new Promise<string>((resolve, reject) => {
-        var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
-        connection.query(exp, function (err: any, result: any) {
-            if (err) {
-                console.log('[SELECT ERROR] - ', err.message);
-            }
-            if (result[0])
-                resolve(result[0].r6id);
-        });
-    })
-}
 bot.message.on('buttonEvent', (event) => {
     for (var i = 0; i < Object.keys(list).length; i++)
         if (event.content == list[i].chnname)
@@ -172,93 +160,8 @@ bot.message.on('text', async (message) => {
         }
     }
 })
-/*
-async function writeList(chnid: number, id: string) {
-    return new Promise<void>((resolve, reject) => {
-        for (var i = 0; i < Object.keys(list).length; i++) {
-            if (list[i].chnid == chnid) {
-                for (var j = 0; j < 5; j++) {
-                    if (list[i].userid[j] == '') {
-                        list[i].userid[j] = id;
-                        resolve();
-                        break;
-                    }
-                }
-            }
-        }
-    })
-}
-async function deleteList(chnid: number, id: string) {
-    return new Promise<void>((resolve, reject) => {
-        for (var i = 0; i < Object.keys(list).length; i++) {
-            if (list[i].chnid == chnid) {
-                for (var j = 0; j < 5; j++) {
-                    if (list[i].userid[j] == id) {
-                        list[i].userid[j] = '';
-                        resolve();
-                        break;
-                    }
-                }
-            }
-        }
-    })
-}
-bot.event.on('system', async (event) => {
-    if (event.type == 'joined_channel') {
-        writeList(event.body.channel_id, event.body.user_id)
-        for (var i = 0; i < Object.keys(list).length; i++) {
-            if (list[i].chnid == event.body.channel_id) {
-                list[i].card = JSON.stringify(await getall(i));
-                send(list[i].card, list[i].msgid);
-                break;
-            }
-        }
-    }
-    if (event.type == 'exited_channel') {
-        deleteList(event.body.channel_id, event.body.user_id);
-        for (var i = 0; i < Object.keys(list).length; i++) {
-            if (list[i].chnid == event.body.channel_id) {
-                list[i].card = JSON.stringify(await getall(i));
-                send(list[i].card, list[i].msgid);
-                break;
-            }
-        }
-    }
-})
-async function setup() {
-    return new Promise<void>(async (resolve, reject) => {
-        bot.axios.get("v3/message/list", {
-            params: {
-                target_id: '2408081738284872',
-            }
-        })
-            .then(function (response: any) {
-                for (var i = 0; i < Object.keys(list).length; i++)
-                    list[i].card = response.data.data.items[i].content
-                resolve()
-            })
-    })
-}
-setup()
-    .then(function () {
-        setInterval(async function () {
-            bot.axios.get("v3/message/list", {
-                params: {
-                    target_id: '2408081738284872',
-                }
-            })
-                .then(async function (response: any) {
-                    for (var i = 0; i < Object.keys(list).length; i++) {
-                        if (list[i].card != response.data.data.items[i].content) {
-                            send(list[i].card, list[i].msgid);
-                        }
-
-                    }
-                })
-        }, 10000);
-    })*/
-var getJson = async function () {
-    return new Promise<any>(async (resolve, reject) => {
+async function getJson() {
+    return new Promise<object | void>(async (resolve, reject) => {
         let data = '',
             json_data: any;
         let req = https.get("https://www.kaiheila.cn/api/guilds/3128617072930683/widget.json", function (res: any) {
@@ -288,32 +191,34 @@ setInterval(async function () {
                     }
                 break;
             }
+        console.log('n:' + JSON.stringify(list[i].userid))
+        console.log('o:' + tmp)
         if (JSON.stringify(list[i].userid) != tmp) {
-            console.log('updating:')
-            console.log(list[i])
             send(i)
         }
     }
 }, 5000)
 
-
+async function searchid(id: string) {
+    return new Promise<any>(async (resolve, reject) => {
+        var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
+        connection.query(exp, function (err: any, result: any) {
+            if (err) {
+                console.log('[SELECT ERROR] - ', err.message);
+            }
+            else if (result[0])
+                resolve(result[0].r6id);
+            else resolve(null)
+        });
+    });
+}
 async function getall(itm: number) {
     var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, tmp: number = 0;
     var rankable: boolean;
-    return new Promise<any>(async (resolve, reject) => {
-        for (var j = 0; j < 5; j++)
-            if (list[itm].userid[j] != '')
-                num++;
-        var cardbind: string = '['
-        for (var i = 0; i < 5; i++) {
-            if (list[itm].userid[i] != '') {
-                tmp++;
-                var r6id = await searchid(list[itm].userid[i]);
-                var cardstr = JSON.stringify(await get(r6id, tmp));
-                cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
-            }
-        }
-        cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
+    return new Promise<any | void>(async (resolve) => {
+        for (let usrid of list[itm].userid)
+            if (usrid != '' && await searchid(usrid) != null)
+                num++
         if (num == 0) {
             resolve([
                 {
@@ -344,12 +249,22 @@ async function getall(itm: number) {
             ])
             return;
         }
+        var cardbind: string = '[';
+        for (let usrid of list[itm].userid) {
+            if (usrid != '' && await searchid(usrid) != null) {
+                tmp++;
+                var r6id = await searchid(usrid);
+                var cardstr = JSON.stringify(await get(r6id, tmp));
+                cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
+            }
+        }
+        cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
         resolve(JSON.parse(cardbind));
-        return;
     })
     async function get(r6id: string, first: number) {
-        return new Promise<object>(async (resolve, reject) => {
+        return new Promise<object | void>(async (resolve, reject) => {
             var urln = url + r6id;
+            console.log(urln)
             https.get(urln, function (res: any) {
                 var html: string = '';
                 res.on('data', function (data: any) {
@@ -476,17 +391,101 @@ async function getall(itm: number) {
                                     }]
                             }]
                         resolve(card);
-                    }
+                    } else resolve()
                 });
             })
+
         })
     }
-
 }
 async function send(itm: number) {
     list[itm].card = await getall(itm)
-    //await bot.API.message.create(10, "2408081738284872", list[itm].card);
-    await bot.API.message.update(list[itm].msgid, list[itm].card);
-    //console.log(list[itm].card);
+    console.log(JSON.stringify(list[itm].card));
+    bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
+    //bot.API.message.create(10, "2408081738284872", list[itm].card);
 }
-export var List = list;
+/*
+async function writeList(chnid: number, id: string) {
+    return new Promise<void>((resolve, reject) => {
+        for (var i = 0; i < Object.keys(list).length; i++) {
+            if (list[i].chnid == chnid) {
+                for (var j = 0; j < 5; j++) {
+                    if (list[i].userid[j] == '') {
+                        list[i].userid[j] = id;
+                        resolve();
+                        break;
+                    }
+                }
+            }
+        }
+    })
+}
+async function deleteList(chnid: number, id: string) {
+    return new Promise<void>((resolve, reject) => {
+        for (var i = 0; i < Object.keys(list).length; i++) {
+            if (list[i].chnid == chnid) {
+                for (var j = 0; j < 5; j++) {
+                    if (list[i].userid[j] == id) {
+                        list[i].userid[j] = '';
+                        resolve();
+                        break;
+                    }
+                }
+            }
+        }
+    })
+}
+bot.event.on('system', async (event) => {
+    if (event.type == 'joined_channel') {
+        writeList(event.body.channel_id, event.body.user_id)
+        for (var i = 0; i < Object.keys(list).length; i++) {
+            if (list[i].chnid == event.body.channel_id) {
+                list[i].card = JSON.stringify(await getall(i));
+                send(list[i].card, list[i].msgid);
+                break;
+            }
+        }
+    }
+    if (event.type == 'exited_channel') {
+        deleteList(event.body.channel_id, event.body.user_id);
+        for (var i = 0; i < Object.keys(list).length; i++) {
+            if (list[i].chnid == event.body.channel_id) {
+                list[i].card = JSON.stringify(await getall(i));
+                send(list[i].card, list[i].msgid);
+                break;
+            }
+        }
+    }
+})
+async function setup() {
+    return new Promise<void>(async (resolve, reject) => {
+        bot.axios.get("v3/message/list", {
+            params: {
+                target_id: '2408081738284872',
+            }
+        })
+            .then(function (response: any) {
+                for (var i = 0; i < Object.keys(list).length; i++)
+                    list[i].card = response.data.data.items[i].content
+                resolve()
+            })
+    })
+}
+setup()
+    .then(function () {
+        setInterval(async function () {
+            bot.axios.get("v3/message/list", {
+                params: {
+                    target_id: '2408081738284872',
+                }
+            })
+                .then(async function (response: any) {
+                    for (var i = 0; i < Object.keys(list).length; i++) {
+                        if (list[i].card != response.data.data.items[i].content) {
+                            send(list[i].card, list[i].msgid);
+                        }
+
+                    }
+                })
+        }, 10000);
+    })*/
