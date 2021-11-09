@@ -115,21 +115,6 @@ export var connection = mysql.createConnection({
     password: '20060926Abc',
     database: 'bot_db'
 });
-var getJson = async function () {
-    return new Promise<any>(async (resolve, reject) => {
-        let data = '',
-            json_data: any;
-        let req = https.get("https://www.kaiheila.cn/api/guilds/3128617072930683/widget.json", function (res: any) {
-            res.on('data', function (stream: any) {
-                data += stream;
-            });
-            res.on('end', function () {
-                json_data = JSON.parse(data);
-                resolve(json_data);
-            });
-        });
-    });
-}
 async function searchid(id: string) {
     return new Promise<string>((resolve, reject) => {
         var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
@@ -140,37 +125,6 @@ async function searchid(id: string) {
             if (result[0])
                 resolve(result[0].r6id);
         });
-    })
-}
-
-async function writeList(chnid: number, id: string) {
-    return new Promise<void>((resolve, reject) => {
-        for (var i = 0; i < Object.keys(list).length; i++) {
-            if (list[i].chnid == chnid) {
-                for (var j = 0; j < 5; j++) {
-                    if (list[i].userid[j] == '') {
-                        list[i].userid[j] = id;
-                        resolve();
-                        break;
-                    }
-                }
-            }
-        }
-    })
-}
-async function deleteList(chnid: number, id: string) {
-    return new Promise<void>((resolve, reject) => {
-        for (var i = 0; i < Object.keys(list).length; i++) {
-            if (list[i].chnid == chnid) {
-                for (var j = 0; j < 5; j++) {
-                    if (list[i].userid[j] == id) {
-                        list[i].userid[j] = '';
-                        resolve();
-                        break;
-                    }
-                }
-            }
-        }
     })
 }
 bot.message.on('buttonEvent', (event) => {
@@ -218,7 +172,37 @@ bot.message.on('text', async (message) => {
         }
     }
 })
-
+/*
+async function writeList(chnid: number, id: string) {
+    return new Promise<void>((resolve, reject) => {
+        for (var i = 0; i < Object.keys(list).length; i++) {
+            if (list[i].chnid == chnid) {
+                for (var j = 0; j < 5; j++) {
+                    if (list[i].userid[j] == '') {
+                        list[i].userid[j] = id;
+                        resolve();
+                        break;
+                    }
+                }
+            }
+        }
+    })
+}
+async function deleteList(chnid: number, id: string) {
+    return new Promise<void>((resolve, reject) => {
+        for (var i = 0; i < Object.keys(list).length; i++) {
+            if (list[i].chnid == chnid) {
+                for (var j = 0; j < 5; j++) {
+                    if (list[i].userid[j] == id) {
+                        list[i].userid[j] = '';
+                        resolve();
+                        break;
+                    }
+                }
+            }
+        }
+    })
+}
 bot.event.on('system', async (event) => {
     if (event.type == 'joined_channel') {
         writeList(event.body.channel_id, event.body.user_id)
@@ -241,7 +225,6 @@ bot.event.on('system', async (event) => {
         }
     }
 })
-/*
 async function setup() {
     return new Promise<void>(async (resolve, reject) => {
         bot.axios.get("v3/message/list", {
@@ -274,82 +257,95 @@ setup()
                 })
         }, 10000);
     })*/
-let i = 0;
+var getJson = async function () {
+    return new Promise<any>(async (resolve, reject) => {
+        let data = '',
+            json_data: any;
+        let req = https.get("https://www.kaiheila.cn/api/guilds/3128617072930683/widget.json", function (res: any) {
+            res.on('data', function (stream: any) {
+                data += stream;
+            });
+            res.on('end', function () {
+                json_data = JSON.parse(data);
+                resolve(json_data);
+            });
+        });
+    });
+}
+var json: any
 setInterval(async function () {
-    if (i < Object.keys(list).length) {
-        getJson()
-            .then(async json => {
-                var tmp: any = JSON.stringify(list[i].userid);
-                for (let j = 0; j < Object.keys(json.channels).length; j++)
-                    if (list[i].chnid == json.channels[j].id) {
-                        if (json.channels[j].users)
-                            for (let k = 0; k < Object.keys(json.channels[j].users).length; k++) {
-                                list[i].userid[k] = json.channels[j].users[k].id;
-                            }
-                        i++
-                        break;
+    json = await getJson()
+    for (let i = 0; i < Object.keys(list).length; i++) {
+        var tmp: string = JSON.stringify(list[i].userid);
+        for (let j = 0; j < Object.keys(json.channels).length; j++)
+            if (list[i].chnid == json.channels[j].id) {
+                if (json.channels[j].users)
+                    for (let k = 0; k < 5; k++) {
+                        if (k < Object.keys(json.channels[j].users).length)
+                            list[i].userid[k] = json.channels[j].users[k].id;
+                        else
+                            list[i].userid[k] = '';
                     }
-                if (JSON.stringify(list[i-1].userid) != tmp) {
-                    list[i-1].card = JSON.stringify(await getall(i-1));
-                    send(list[i-1].card, list[i-1].msgid);
-                }
-            })
+                break;
+            }
+        if (JSON.stringify(list[i].userid) != tmp) {
+            console.log('updating:')
+            console.log(list[i])
+            send(i)
+        }
     }
-    else
-        i = 0;
-}, 1000);
+}, 5000)
+
 
 async function getall(itm: number) {
     var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, tmp: number = 0;
     var rankable: boolean;
-    return new Promise<any>((resolve, reject) => {
-        var main = async function () {
-            for (var j = 0; j < 5; j++)
-                if (list[itm].userid[j] != '')
-                    num++;
-            var cardbind: string = '['
-            for (var i = 0; i < 5; i++) {
-                if (list[itm].userid[i] != '') {
-                    tmp++;
-                    var r6id = await searchid(list[itm].userid[i]);
-                    var cardstr = JSON.stringify(await get(r6id, tmp));
-                    cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
-                }
+    return new Promise<any>(async (resolve, reject) => {
+        for (var j = 0; j < 5; j++)
+            if (list[itm].userid[j] != '')
+                num++;
+        var cardbind: string = '['
+        for (var i = 0; i < 5; i++) {
+            if (list[itm].userid[i] != '') {
+                tmp++;
+                var r6id = await searchid(list[itm].userid[i]);
+                var cardstr = JSON.stringify(await get(r6id, tmp));
+                cardbind = cardbind + cardstr.substring(1, cardstr.length - 1) + ',';
             }
-            cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
-            if (num == 0) {
-                resolve([
-                    {
-                        "type": "card",
-                        "theme": "secondary",
-                        "size": "lg",
-                        "modules": [
-                            {
-                                "type": "section",
+        }
+        cardbind = cardbind.substring(0, cardbind.length - 1) + ']';
+        if (num == 0) {
+            resolve([
+                {
+                    "type": "card",
+                    "theme": "secondary",
+                    "size": "lg",
+                    "modules": [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "kmarkdown",
+                                "content": "**" + list[itm].chnname + "频道无人**\n点击按钮前请先进入挂机频道"
+                            },
+                            "mode": "right",
+                            "accessory": {
+                                "type": "button",
+                                "theme": "primary",
+                                "value": list[itm].chnname,
+                                "click": "return-val",
                                 "text": {
-                                    "type": "kmarkdown",
-                                    "content": "**" + list[itm].chnname + "频道无人**\n点击按钮前请先进入挂机频道"
-                                },
-                                "mode": "right",
-                                "accessory": {
-                                    "type": "button",
-                                    "theme": "primary",
-                                    "value": list[itm].chnname,
-                                    "click": "return-val",
-                                    "text": {
-                                        "type": "plain-text",
-                                        "content": "加入"
-                                    }
+                                    "type": "plain-text",
+                                    "content": "加入"
                                 }
                             }
-                        ]
-                    }
-                ])
-                return;
-            }
-            resolve(JSON.parse(cardbind));
+                        }
+                    ]
+                }
+            ])
             return;
-        }()
+        }
+        resolve(JSON.parse(cardbind));
+        return;
     })
     async function get(r6id: string, first: number) {
         return new Promise<object>(async (resolve, reject) => {
@@ -487,12 +483,10 @@ async function getall(itm: number) {
     }
 
 }
-async function send(card: string, id: string) {
-    return new Promise<void>(async (resolve) => {
-        //await bot.API.message.create(10, "2408081738284872", card);
-        await bot.API.message.update(id, card);
-        console.log(card);
-        resolve()
-    })
+async function send(itm: number) {
+    list[itm].card = await getall(itm)
+    //await bot.API.message.create(10, "2408081738284872", list[itm].card);
+    await bot.API.message.update(list[itm].msgid, list[itm].card);
+    //console.log(list[itm].card);
 }
 export var List = list;
