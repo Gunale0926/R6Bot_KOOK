@@ -160,42 +160,6 @@ bot.message.on('text', async (message) => {
         }
     }
 })
-async function getJson() {
-    return new Promise<object | void>(async (resolve, reject) => {
-        let data = '',
-            json_data: any;
-        let req = https.get("https://www.kaiheila.cn/api/guilds/3128617072930683/widget.json", function (res: any) {
-            res.on('data', function (stream: any) {
-                data += stream;
-            });
-            res.on('end', function () {
-                json_data = JSON.parse(data);
-                resolve(json_data);
-            });
-        });
-    });
-}
-var json: any
-setInterval(async function () {
-    json = await getJson()
-    for (let i = 0; i < Object.keys(list).length; i++) {
-        var tmp: string = JSON.stringify(list[i].userid);
-        for (let j = 0; j < Object.keys(json.channels).length; j++)
-            if (list[i].chnid == json.channels[j].id) {
-                if (json.channels[j].users)
-                    for (let k = 0; k < 5; k++) {
-                        if (k < Object.keys(json.channels[j].users).length)
-                            list[i].userid[k] = json.channels[j].users[k].id;
-                        else
-                            list[i].userid[k] = '';
-                    }
-                break;
-            }
-        if (JSON.stringify(list[i].userid) != tmp) {
-            send(i)
-        }
-    }
-}, 5000)
 
 async function searchid(id: string) {
     return new Promise<any>(async (resolve, reject) => {
@@ -453,6 +417,43 @@ bot.event.on('system', async (event) => {
     }
 })
 /*
+async function getJson() {
+    return new Promise<object | void>(async (resolve, reject) => {
+        let data = '',
+            json_data: any;
+        let req = https.get("https://www.kaiheila.cn/api/guilds/3128617072930683/widget.json", function (res: any) {
+            res.on('data', function (stream: any) {
+                data += stream;
+            });
+            res.on('end', function () {
+                json_data = JSON.parse(data);
+                resolve(json_data);
+            });
+        });
+    });
+}
+var json: any
+setInterval(async function () {
+    json = await getJson()
+    for (let i = 0; i < Object.keys(list).length; i++) {
+        var tmp: string = JSON.stringify(list[i].userid);
+        for (let j = 0; j < Object.keys(json.channels).length; j++)
+            if (list[i].chnid == json.channels[j].id) {
+                if (json.channels[j].users)
+                    for (let k = 0; k < 5; k++) {
+                        if (k < Object.keys(json.channels[j].users).length)
+                            list[i].userid[k] = json.channels[j].users[k].id;
+                        else
+                            list[i].userid[k] = '';
+                    }
+                break;
+            }
+        if (JSON.stringify(list[i].userid) != tmp) {
+            send(i)
+        }
+    }
+}, 5000)
+
 async function setup() {
     return new Promise<void>(async (resolve, reject) => {
         bot.axios.get("v3/message/list", {
