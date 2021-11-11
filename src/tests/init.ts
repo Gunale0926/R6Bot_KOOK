@@ -1,3 +1,4 @@
+console.log(new Date().getTime())
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as dotenv from 'dotenv';
 import { BaseSession, Card, GuildSession, KBotify } from '..';
@@ -341,16 +342,16 @@ async function getall(itm: number) {
 }
 async function send(itm: number) {
     list[itm].card = await getall(itm)
-    console.log(JSON.stringify(list[itm].card))
+    //console.log(JSON.stringify(list[itm].card))
     bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
     //bot.API.message.create(10, "2408081738284872", list[itm].card);
 }
 
 async function writeList(chnid: number, id: string) {
     return new Promise<void>((resolve, reject) => {
-        for (var i = 0; i < Object.keys(list).length; i++) {
+        for (let i = 0; i < Object.keys(list).length; i++) {
             if (list[i].chnid == chnid) {
-                for (var j = 0; j < 5; j++) {
+                for (let j = 0; j < 5; j++) {
                     if (list[i].userid[j] == '') {
                         list[i].userid[j] = id;
                         resolve();
@@ -396,6 +397,7 @@ bot.event.on('system', async (event) => {
         }
     }
 })
+/*
 async function getJson() {
     return new Promise<object | void>(async (resolve, reject) => {
         let data = '',
@@ -411,7 +413,6 @@ async function getJson() {
         });
     });
 }
-
 async function def() {
     var json: any = await getJson()
     for (let i = 0; i < Object.keys(list).length; i++) {
@@ -419,11 +420,8 @@ async function def() {
         for (let j = 0; j < Object.keys(json.channels).length; j++)
             if (list[i].chnid == json.channels[j].id) {
                 if (json.channels[j].users)
-                    for (let k = 0; k < 5; k++) {
-                        if (k < Object.keys(json.channels[j].users).length)
-                            list[i].userid[k] = json.channels[j].users[k].id;
-                        else
-                            list[i].userid[k] = '';
+                    for (let k of json.channels[j].users) {
+                        writeList(list[i].chnid, k.id)
                     }
                 break;
             }
@@ -434,7 +432,6 @@ async function def() {
 }
 def()
 setInterval(function () { def() }, 60000)
-/*
 async function getJson() {
     return new Promise<object | void>(async (resolve, reject) => {
         let data = '',
