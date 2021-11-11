@@ -397,7 +397,7 @@ bot.event.on('system', async (event) => {
         }
     }
 })
-/*
+
 async function getJson() {
     return new Promise<object | void>(async (resolve, reject) => {
         let data = '',
@@ -421,7 +421,7 @@ async function def() {
             if (list[i].chnid == json.channels[j].id) {
                 if (json.channels[j].users)
                     for (let k of json.channels[j].users) {
-                        writeList(list[i].chnid, k.id)
+                        list[i].chnid = k.id
                     }
                 break;
             }
@@ -431,6 +431,7 @@ async function def() {
     }
 }
 def()
+/*
 setInterval(function () { def() }, 60000)
 async function getJson() {
     return new Promise<object | void>(async (resolve, reject) => {
