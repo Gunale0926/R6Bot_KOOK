@@ -421,7 +421,7 @@ async function def() {
             if (list[i].chnid == json.channels[j].id) {
                 if (json.channels[j].users)
                     for (let k of json.channels[j].users) {
-                        list[i].chnid = k.id
+                        list[i].userid = k.id
                     }
                 break;
             }
