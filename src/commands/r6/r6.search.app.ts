@@ -13,7 +13,7 @@ class R6Search extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
-        var exp = 'SELECT act FROM ' + tabname + ' WHERE id="' + session.userId + '" && act=1';
+        var exp = 'SELECT act FROM cdklist WHERE id="' + session.userId + '" && act=1';
         connection.query(exp, async function (err: any, result: any) {
             if (err) {
                 console.log('[SELECT ERROR] - ', err.message);
