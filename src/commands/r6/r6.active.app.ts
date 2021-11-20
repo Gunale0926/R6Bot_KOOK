@@ -36,7 +36,7 @@ class R6Active extends AppCommand {
                         console.log('[SELECT ERROR] - ', err.message);
                         session.send("参数错误")
                     }
-                    else if (result[0].act == 0) {
+                    else if (result[0]) {
                         resolve(true);
                     }
                     else {
