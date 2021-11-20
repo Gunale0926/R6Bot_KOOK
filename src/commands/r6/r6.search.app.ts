@@ -19,7 +19,8 @@ class R6Search extends AppCommand {
                 console.log('[SELECT ERROR] - ', err.message);
                 session.send("内部参数错误")
             }
-            else if (result[0].act == 1) {
+            else if (result[0]) {
+                console.log(result[0])
                 main()
             }
             else {

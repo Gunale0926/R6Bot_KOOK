@@ -19,7 +19,7 @@ class R6Active extends AppCommand {
                 console.log('[SELECT ERROR] - ', err.message);
                 session.send("内部参数错误")
             }
-            else if (result[0].act == 1) {
+            else if (result[0]) {
                 session.send("已经激活了内测用户组")
                 return;
             }
