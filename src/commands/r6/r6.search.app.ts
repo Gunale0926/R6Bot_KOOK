@@ -20,11 +20,11 @@ class R6Search extends AppCommand {
                 session.send("内部参数错误")
             }
             else if (result[0].act == 1) {
-                session.send("用户现在还不是赞助者，可前往[爱发电](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)支持！")
-                return;
+                main()
             }
             else {
-                main()
+                session.send("用户现在还不是赞助者，可前往[爱发电](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)支持！")
+                return;
             }
         });
         async function main() {
