@@ -1,6 +1,6 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot } from 'tests/init';
-import{ connection } from '../../tests/init'
+import { connection } from '../../tests/init'
 var tabname = 'usrlib'
 var https = require('https');
 var url = "https://r6.tracker.network/profile/pc/";
@@ -13,41 +13,53 @@ class R6Search extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
-        bot.API.guild.userList('3128617072930683')//r6小队频道id
-            .then(function (response) {
-                var flag = false;
-                for (var i = 0; i < response.items.length; i++) {
-                    if (response.items[i].id == session.userId) {
-                        for (var j = 0; j < response.items[i].roles.length; j++) {
-                            if (response.items[i].roles[j] == 373739) {//赞助用户组
-                                flag = true;
-                                break;
-                            }
-                        }
-                        break;
+        var exp = 'SELECT act FROM ' + tabname + ' WHERE id="' + session.userId + '" && act=1';
+        connection.query(exp, async function (err: any, result: any) {
+            if (err) {
+                console.log('[SELECT ERROR] - ', err.message);
+                session.send("内部参数错误")
+            }
+            else if (result[0].act == 1) {
+                session.send("用户现在还不是赞助者，可前往[爱发电](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)支持！")
+                return;
+            }
+            else {
+                main()
+            }
+        });
+        async function main() {
+            if (session.args[0]) {
+                if (session.args[0].search('#(.*?)') !== -1) {
+                    var id = session.args[0].match(/#(\S*)/)[1];
+                    var r6id = await searchid(id)
+                    if (r6id == null)
+                        session.send("数据库中查无此人，请先\".记录\"")
+                    else {
+                        get(r6id)
                     }
+                    return;
                 }
-                main(flag);
-            })
+                else if (session.args[0])
+                    get(session.args[0])
+                return;
+            }
+        }
         async function searchid(id: string) {
-            return new Promise<string>((resolve, reject) => {
-                var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id + ' && sel =1';
+            return new Promise<any>(async (resolve, reject) => {
+                var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
-                        session.send("数据库中查无此人，请先\".记录\"")
                     }
-                    else if (JSON.stringify(result).search('r6id') !== -1) {
-                        var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]
-                        resolve(r6id);
-                    } else {
-                        session.send("数据库中查无此人，请先\".记录\"")
+                    else if (result[0])
+                        resolve(result[0].r6id);
+                    else {
+                        resolve(null)
                     }
-
                 });
-            })
+            });
         }
-        async function get(r6id: string, vip: boolean) {
+        function get(r6id: string) {
             return new Promise<void>((resolve, reject) => {
                 var urln = url + r6id;
                 https.get(urln, function (res: any) {
@@ -71,12 +83,6 @@ class R6Search extends AppCommand {
                                 arg1 += ' ';
                             }
                             arg1 += namer;
-                            if (vip == true) {
-                                for (var i = 0; i < (35 - namer.length) / 2; i++) {
-                                    arg1 += ' ';
-                                }
-                                arg1 += ':crown:'
-                            }
                             var arg2 = mmr;
                             var arg3 = rank.replace(' ', '');
                             var arg4 = kd;
@@ -102,29 +108,13 @@ class R6Search extends AppCommand {
                             avmmr = avmmr + immr;
                             if (xmmr < immr) xmmr = immr;
                             if (nmmr > immr) nmmr = immr;
-                            var send = async function () {
-                                await session.sendCard(JSON.stringify(card));
-                            }()
-                            resolve();//成功返回
+                            session.sendCard(JSON.stringify(card));
                         }
                     });
                 }).on('error', function () {
                     session.send("ERROR");
-                    reject(-1);
                 })
             })
-        }
-        async function main(vip: boolean) {
-            if (session.args[0]) {
-                if (session.args[0].search('#(.*?)') !== -1) {
-                    var id = session.args[0].match(/#(\S*)/)[1];
-                    await get(await searchid(id), vip)
-                    return;
-                }
-                else if (session.args[0])
-                    await get(session.args[0], vip)
-                return;
-            }
         }
     }
 

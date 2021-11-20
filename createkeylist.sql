@@ -2,21 +2,12 @@ CREATE TABLE cdklist (
     num int PRIMARY KEY AUTO_INCREMENT,
     act boolean not null default false,
     cdk text not null,
-    id bigint,
-    actdate date
+    id bigint default null,
+    actdate date default null,
 );
-
-INSERT INTO cdklist(act,cdk) values(0,'HGNB-WT67-8NMJ'),(0,'98C4-T67Q-N8GJ'),(0,'W79N-8WYG-BRCJ'),(0,'TH32-245H-J3NJ'),(0,'LY7A-F9SU-2BVJ'),(0,'7Q9T-6V59-QB8J');
-INSERT INTO cdklist(act,cdk) values(0,'WN89-NRCY-723Z'),(0,'CN29-7R9C-R29Z'),(0,'MXNN-CYF7-W8CZ'),(0,'CXN2-8TVB-29AZ'),(0,'QTCB-NQDT-7BFZ')
-
+INSERT INTO cdklist(cdk) values('AFIY-278E-GF6P'),('2IUY-RGFY-ARWP'),('8UW9-Y78R-DCJP'),('47W9-EHRT-ASRP'),('9OSY-FGAS-DFGP'),('SD89-QCF4-S7FP'),('XY18-SRGO-EHUP'),('0XZB-HDF8-9EJP');
 create table usrlib(
 id bigint not null primary key,
 r6id tinytext not null,
-sel tinyint not null
-);
-
-create table apexlib(
-id bigint not null primary key,
-apexid tinytext not null,
 sel tinyint not null
 );

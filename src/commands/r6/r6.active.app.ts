@@ -1,7 +1,7 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot } from 'tests/init';
 var tabname = 'cdklist'
-import{ connection } from '../../tests/init'
+import { connection } from '../../tests/init'
 class R6Active extends AppCommand {
     code = 'active'; // 只是用作标记
     trigger = 'active'; // 用于触发的文字
@@ -13,8 +13,23 @@ class R6Active extends AppCommand {
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
             return;
         }
+        var exp = 'SELECT act FROM ' + tabname + ' WHERE id="' + session.userId + '" && act=1';
+        connection.query(exp, async function (err: any, result: any) {
+            if (err) {
+                console.log('[SELECT ERROR] - ', err.message);
+                session.send("内部参数错误")
+            }
+            else if (result[0].act == 1) {
+                session.send("已经激活了内测用户组")
+                return;
+            }
+            else {
+                if (await searchkey(session.args[0]) == true)
+                    recordkey(session.args[0])
+            }
+        });
         bot.API.guild.userList('3128617072930683')//r6小队频道id
-            .then(function (response) {
+            .then(async function (response) {
                 var flag: boolean = true;
                 for (var i = 0; i < response.items.length; i++) {
                     if (response.items[i].id == session.userId) {
@@ -27,30 +42,27 @@ class R6Active extends AppCommand {
                         break;
                     }
                 }
-                var permission = async function () {
-                    if (flag == true)
-                        await recordkey(await searchkey(session.args[0]))
+                if (flag == true)
+                    if (await searchkey(session.args[0]) == true)
+                        recordkey(session.args[0])
                     else
                         session.send("已经激活了内测用户组")
-
-                }()
-
             })
             .catch(error => { console.log(error) })
         async function searchkey(cdk: string) {
-            return new Promise<string>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
                 var exp = 'SELECT act FROM ' + tabname + ' WHERE cdk="' + cdk + '" && act=0';
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
                         session.send("参数错误")
                     }
-                    else if (JSON.stringify(result).search('"act":0') !== -1) {
-                        //var r6id = JSON.stringify(result).match('"r6id":"(.*?)"}')[1]
-                        resolve(cdk);
+                    else if (result[0].act == 0) {
+                        resolve(true);
                     }
                     else {
                         session.send("CDK错误或已经被激活！")
+                        resolve(false)
                     }
                 });
             })
@@ -65,19 +77,16 @@ class R6Active extends AppCommand {
                         session.send("参数错误")
                     }
                     else {
-
-                        var active = async function () {
-                            if (cdk.charAt(cdk.length - 1) != 'F') {
-                                await session.user.grantRole(373739, '3128617072930683');//赞助者
-                                await session.user.grantRole(373758, '3128617072930683');//内测
-                                await session.send('激活成功，感谢支持');
-                            }
-                            else {
-                                await session.user.grantRole(373758, '3128617072930683');//内测
-                                await session.send('激活免费激活码成功');
-                            }
-                            resolve()
-                        }()
+                        if (cdk.charAt(cdk.length - 1) != 'F') {
+                            session.user.grantRole(373739, '3128617072930683');//赞助者
+                            //session.user.grantRole(373758, '3128617072930683');//内测
+                            session.send('激活成功，感谢支持');
+                        }
+                        else {
+                            session.user.grantRole(373739, '3128617072930683');//赞助者
+                            session.send('激活赠送激活码成功');
+                        }
+                        resolve()
 
                     }
                 })

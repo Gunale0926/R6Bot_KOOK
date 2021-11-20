@@ -145,23 +145,34 @@ bot.message.on('text', async (message) => {
             recordid(message.authorId, message.content);
         function recordid(id: string, r6id: string) {
             var exp = 'INSERT INTO ' + tabname + '(id,r6id,sel) VALUES("' + id + '","' + r6id + '",1)'
-            connection.query(exp, function (err: any, result: any) {
+            connection.query(exp, function (err: any) {
                 if (err) {
                     exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
-                    connection.query(exp, function (err: any, result: any) {
+                    connection.query(exp, function (err: any) {
                         if (!err) {
-                            bot.API.message.create(1, message.channelId, '查询到此ID并更新：' + r6id, '', message.authorId);
+                            bot.API.message.create(1, message.channelId, '查询到此ID并更新了数据库：' + r6id, '', message.authorId);
+                            updateList(id)
                         }
                     })
                 }
                 else {
-                    bot.API.message.create(1, message.channelId, '查询到此ID并记录：' + r6id, '', message.authorId);
+                    bot.API.message.create(1, message.channelId, '查询到此ID并记录到了数据库：' + r6id, '', message.authorId);
+                    updateList(id)
                 }
             })
         }
     }
 })
-
+function updateList(id: string) {
+    for (let i = 0; i < Object.keys(list).length; i++) {
+        for (let j = 0; j < 5; j++) {
+            if (list[i].userid[j] == id) {
+                send(i);
+                return;
+            }
+        }
+    }
+}
 async function searchid(id: string) {
     return new Promise<any>(async (resolve, reject) => {
         var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
@@ -420,8 +431,11 @@ async function def() {
         for (let j = 0; j < Object.keys(json.channels).length; j++)
             if (list[i].chnid == json.channels[j].id) {
                 if (json.channels[j].users)
-                    for (let k in json.channels[j].users) {
-                        list[i].userid[Number(k)] = json.channels[j].users[Number(k)].id
+                    for (let k = 0; k < 5; k++) {
+                        if (k < Object.keys(json.channels[j].users).length)
+                            list[i].userid[k] = json.channels[j].users[k].id;
+                        else
+                            list[i].userid[k] = '';
                     }
                 break;
             }
@@ -431,6 +445,9 @@ async function def() {
     }
 }
 def()
+setInterval(function () {
+    def()
+}, 10 * 60 * 1000)
 /*
 setInterval(function () { def() }, 60000)
 async function getJson() {
