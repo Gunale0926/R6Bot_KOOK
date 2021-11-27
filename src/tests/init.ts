@@ -247,13 +247,20 @@ async function getall(itm: number) {
                         var arg3 = rank.replace(' ', '');
                         var arg4 = kd;
                         var arg6 = '#B2B6BB';
-                        if (rank.search(/COPPER/) === 0) { arg6 = "#B30B0D"; }
-                        if (rank.search(/BRONZE/) === 0) { arg6 = "#C98B3B"; }
-                        if (rank.search(/SILVER/) === 0) { arg6 = "#B0B0B0"; }
-                        if (rank.search(/GOLD/) === 0) { arg6 = "#EED01E"; }
-                        if (rank.search(/PLATINUM/) === 0) { arg6 = "#5BB9B3"; }
-                        if (rank.search(/DIAMOND/) === 0) { arg6 = "#BD9FF6"; }
-                        if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; }
+                        var rankcn;
+                        if (rank.search(/COPPER/) === 0) { arg6 = "#B30B0D"; rankcn = "紫铜"; arg3 = arg3.replace('COPPER', ''); }
+                        if (rank.search(/BRONZE/) === 0) { arg6 = "#C98B3B"; rankcn = "青铜"; arg3 = arg3.replace('BRONZE', ''); }
+                        if (rank.search(/SILVER/) === 0) { arg6 = "#B0B0B0"; rankcn = "白银"; arg3 = arg3.replace('SILVER', ''); }
+                        if (rank.search(/GOLD/) === 0) { arg6 = "#EED01E"; rankcn = "黄金"; arg3 = arg3.replace('GOLD', ''); }
+                        if (rank.search(/PLATINUM/) === 0) { arg6 = "#5BB9B3"; rankcn = "白金"; arg3 = arg3.replace('PLATINUM', ''); }
+                        if (rank.search(/DIAMOND/) === 0) { arg6 = "#BD9FF6"; rankcn = "钻石"; arg3 = arg3.replace('DIAMOND', ''); }
+                        if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; rankcn = "冠军"; arg3 = arg3.replace('CHAMPION', ''); }
+                        if (rank.search(/-/) === 0) { arg6 = "#B2B6BB"; arg3 = "未定级"; }
+                        if (arg3 === 'I') arg3 = rankcn += '1';
+                        if (arg3 === 'II') arg3 = rankcn + '2';
+                        if (arg3 === 'III') arg3 = rankcn + '3';
+                        if (arg3 === 'IV') arg3 = rankcn + '4';
+                        if (arg3 === 'V') arg3 = rankcn + '5';
                         var immr = parseInt(mmr)
                         avmmr += immr;
                         if (xmmr < immr) xmmr = immr;

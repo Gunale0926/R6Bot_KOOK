@@ -1,14 +1,12 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
-import { bot } from 'tests/init';
 import { connection } from '../../tests/init'
 var tabname = 'usrlib'
 var https = require('https');
 var url = "https://r6.tracker.network/profile/pc/";
-var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num = 0;
 class R6Search extends AppCommand {
     code = 'search'; // 只是用作标记
     trigger = 'search'; // 用于触发的文字
-    help = '.r6 search+@你要查询的人\n或者\n.r6 search+ID\n(缩写".查询")'; // 帮助文字
+    help = '`.查询 @某人`或`.查询 R6ID`查询某人ID和战绩'; // 帮助文字
     intro = '查询ID';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
@@ -74,7 +72,7 @@ class R6Search extends AppCommand {
                     });
                     res.on('end', function () {
                         if (html.indexOf("RankedKDRatio") == -1) {
-                            session.send("查无此人");
+                            session.send("查无此人，可输入`.r6`查看BOT帮助");
                         }
                         else {
                             html = html.replace(/\n/g, '');
@@ -97,13 +95,12 @@ class R6Search extends AppCommand {
                             if (rank.search(/PLATINUM/) === 0) { arg6 = "#5BB9B3"; rankcn = "白金"; arg3 = arg3.replace('PLATINUM', ''); }
                             if (rank.search(/DIAMOND/) === 0) { arg6 = "#BD9FF6"; rankcn = "钻石"; arg3 = arg3.replace('DIAMOND', ''); }
                             if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; rankcn = "冠军"; arg3 = arg3.replace('CHAMPION', ''); }
-                            if (arg3 === 'I') arg3 = rankcn + '1';
+                            if (rank.search(/-/) === 0) { arg6 = "#B2B6BB"; arg3 = "未定级"; }
+                            if (arg3 === 'I') arg3 = rankcn += '1';
                             if (arg3 === 'II') arg3 = rankcn + '2';
                             if (arg3 === 'III') arg3 = rankcn + '3';
                             if (arg3 === 'IV') arg3 = rankcn + '4';
                             if (arg3 === 'V') arg3 = rankcn + '5';
-                            if (arg3 === '') arg3 = rankcn;
-                            if (arg3.search(/NoRank/) === 0) arg3 = "未定级";
                             if (flag)
                                 var card = [{
                                     "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
@@ -135,9 +132,9 @@ class R6Search extends AppCommand {
                                                 { "type": "kmarkdown", "content": "**等级**\n" + level },
                                                 { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
                                                 { "type": "kmarkdown", "content": "**赛季KD**\n" + kd },
-                                                { "type": "kmarkdown", "content": "**MMR**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)"},
-                                                { "type": "kmarkdown", "content": "**胜率**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)"},
-                                                { "type": "kmarkdown", "content": "**游戏时长**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)"},
+                                                { "type": "kmarkdown", "content": "**MMR**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                                { "type": "kmarkdown", "content": "**胜率**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                                { "type": "kmarkdown", "content": "**游戏时长**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
                                             ]
                                         }
                                     }]
