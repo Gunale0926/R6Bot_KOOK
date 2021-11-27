@@ -13,6 +13,7 @@ class R6Search extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
+        var flag = false;
         var exp = 'SELECT act FROM cdklist WHERE id="' + session.userId + '" && act=1';
         connection.query(exp, async function (err: any, result: any) {
             if (err) {
@@ -21,11 +22,14 @@ class R6Search extends AppCommand {
             }
             else if (result[0]) {
                 console.log(result[0])
+                flag = true
                 main()
+
             }
             else {
-                session.send("用户现在还不是赞助者，可前往[爱发电](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)支持！")
-                return;
+                //session.send("前往[爱发电](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)支持后可使用高级版！")
+                flag = false
+                main()
             }
         });
         async function main() {
@@ -77,16 +81,12 @@ class R6Search extends AppCommand {
                             var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
                             var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
                             var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
-                            var imglink = session.user.avatar
+                            var imglink = session.user.avatar;
                             var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
-                            var arg1: string = '';
-                            for (var i = 0; i < (35 - namer.length) / 2; i++) {
-                                arg1 += ' ';
-                            }
-                            arg1 += namer;
-                            var arg2 = mmr;
+                            var level = html.match('<div class="trn-defstat__name">Level</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1];
+                            var WLratio = html.match('<div class="trn-defstat__value" data-stat="PVPWLRatio">(.*?)</div>')[1];
+                            var time = html.match('<div class="trn-defstat__value" data-stat="PVPTimePlayed">(.*?)</div>')[1];
                             var arg3 = rank.replace(' ', '');
-                            var arg4 = kd;
                             var arg5 = imglink;
                             var arg6 = '#B2B6BB';
                             var rankcn;
@@ -104,11 +104,44 @@ class R6Search extends AppCommand {
                             if (arg3 === 'V') arg3 = rankcn + '5';
                             if (arg3 === '') arg3 = rankcn;
                             if (arg3.search(/NoRank/) === 0) arg3 = "未定级";
-                            var card = [{ "type": "card", "theme": "secondary", "color": arg6, "size": "sm", "modules": [{ "type": "section", "text": { "type": "kmarkdown", "content": "**" + arg1 + "**" }, "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" } }] }, { "type": "card", "theme": "secondary", "color": arg6, "size": "lg", "modules": [{ "type": "section", "text": { "type": "paragraph", "cols": 3, "fields": [{ "type": "kmarkdown", "content": "**MMR**\n" + arg2 }, { "type": "kmarkdown", "content": "**段位**\n" + arg3 }, { "type": "kmarkdown", "content": "**赛季KD**\n" + arg4 }] } }] }]
-                            var immr = parseInt(mmr)
-                            avmmr = avmmr + immr;
-                            if (xmmr < immr) xmmr = immr;
-                            if (nmmr > immr) nmmr = immr;
+                            if (flag)
+                                var card = [{
+                                    "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
+                                    "modules": [{
+                                        "type": "section", "text": { "type": "kmarkdown", "content": "**:crown:" + namer + "**" },
+                                        "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" }
+                                    }, {
+                                        "type": "section", "text": {
+                                            "type": "paragraph", "cols": 3, "fields": [
+                                                { "type": "kmarkdown", "content": "**等级**\n" + level },
+                                                { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
+                                                { "type": "kmarkdown", "content": "**赛季KD**\n" + kd },
+                                                { "type": "kmarkdown", "content": "**MMR**\n" + mmr },
+                                                { "type": "kmarkdown", "content": "**胜率**\n" + WLratio },
+                                                { "type": "kmarkdown", "content": "**游戏时长**\n" + time },
+                                            ]
+                                        }
+                                    }]
+                                }]
+                            else
+                                var card = [{
+                                    "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
+                                    "modules": [{
+                                        "type": "section", "text": { "type": "kmarkdown", "content": "**" + namer + "**" },
+                                        "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" }
+                                    }, {
+                                        "type": "section", "text": {
+                                            "type": "paragraph", "cols": 3, "fields": [
+                                                { "type": "kmarkdown", "content": "**等级**\n" + level },
+                                                { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
+                                                { "type": "kmarkdown", "content": "**赛季KD**\n" + kd },
+                                                { "type": "kmarkdown", "content": "**MMR**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)"},
+                                                { "type": "kmarkdown", "content": "**胜率**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)"},
+                                                { "type": "kmarkdown", "content": "**游戏时长**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)"},
+                                            ]
+                                        }
+                                    }]
+                                }]
                             session.sendCard(JSON.stringify(card));
                         }
                     });
