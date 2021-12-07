@@ -4,8 +4,8 @@ var tabname = 'usrlib'
 class R6Record extends AppCommand {
     code = 'record'; // 只是用作标记
     trigger = 'record'; // 用于触发的文字
-    help = '.r6 record+r6id\n缩写".记录"'; // 帮助文字
-    intro = '记录r6id到数据库中';
+    help = '.r6 record+r6id\n缩写".绑定"'; // 帮助文字
+    intro = '绑定r6id到数据库中';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0)
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
@@ -23,13 +23,13 @@ class R6Record extends AppCommand {
                                 console.log('[INSERT ERROR] - ', err.message);
                             }
                             else {
-                                session.send('更新了ID： ' + id + ' ' + r6id);
+                                session.send('换绑了ID： ' + r6id);
                                 resolve();
                             }
                         })
                     }
                     else {
-                        session.send('记录了ID： ' + id + ' ' + r6id);
+                        session.send('绑定了ID： ' + r6id);
                         resolve();
                     }
                 })

@@ -6,11 +6,9 @@ var url = "https://r6.tracker.network/profile/pc/";
 class R6Search extends AppCommand {
     code = 'search'; // 只是用作标记
     trigger = 'search'; // 用于触发的文字
-    help = '`.查询 @某人`或`.查询 R6ID`查询某人ID和战绩'; // 帮助文字
+    help = '`.查询 @某人`或`.查询 R6ID`查询某人战绩'; // 帮助文字
     intro = '查询ID';
     func: AppFunc<BaseSession> = async (session) => {
-        if (session.args.length == 0)
-            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help))
         var flag = false;
         var exp = 'SELECT act FROM cdklist WHERE id="' + session.userId + '" && act=1';
         connection.query(exp, async function (err: any, result: any) {
@@ -22,7 +20,6 @@ class R6Search extends AppCommand {
                 console.log(result[0])
                 flag = true
                 main()
-
             }
             else {
                 //session.send("前往[爱发电](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)支持后可使用高级版！")
@@ -36,7 +33,7 @@ class R6Search extends AppCommand {
                     var id = session.args[0].match(/#(\S*)/)[1];
                     var r6id = await searchid(id)
                     if (r6id == null)
-                        session.send("数据库中查无此人，请先\".记录\"")
+                        session.send("此人未绑定R6ID，需先`.绑定 R6ID`")
                     else {
                         get(r6id)
                     }
@@ -44,6 +41,15 @@ class R6Search extends AppCommand {
                 }
                 else if (session.args[0])
                     get(session.args[0])
+                else {
+                    var r6id = await searchid(session.userId)
+                    if (r6id == null)
+                        session.send("您未绑定R6ID，`.绑定 R6ID`后直接输入`.查询`可直接查询自己的战绩")
+                    else {
+                        get(r6id)
+                    }
+                    return;
+                }
                 return;
             }
         }
@@ -72,7 +78,7 @@ class R6Search extends AppCommand {
                     });
                     res.on('end', function () {
                         if (html.indexOf("RankedKDRatio") == -1) {
-                            session.send("查无此人，可输入`.r6`查看BOT帮助");
+                            session.send("查无此人，请检查ID后重试");
                         }
                         else {
                             html = html.replace(/\n/g, '');

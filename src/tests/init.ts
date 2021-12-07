@@ -31,6 +31,7 @@ bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu, apexMenu);
 bot.connect();
 bot.addAlias(r6Search, "查询")
 bot.addAlias(r6Record, "记录")
+bot.addAlias(r6Record, "绑定")
 bot.addAlias(r6Applyrole, "申请角色")
 bot.addAlias(r6Team, "组队")
 bot.addAlias(r6Active, "激活")
@@ -150,13 +151,13 @@ bot.message.on('text', async (message) => {
                     exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
                     connection.query(exp, function (err: any) {
                         if (!err) {
-                            bot.API.message.create(1, message.channelId, '查询到此ID并更新了数据库：' + r6id, '', message.authorId);
+                            bot.API.message.create(1, message.channelId, '查询到此ID并换绑：' + r6id, '', message.authorId);
                             updateList(id)
                         }
                     })
                 }
                 else {
-                    bot.API.message.create(1, message.channelId, '查询到此ID并记录到了数据库：' + r6id, '', message.authorId);
+                    bot.API.message.create(1, message.channelId, '查询到此ID并绑定：' + r6id, '', message.authorId);
                     updateList(id)
                 }
             })
