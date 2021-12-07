@@ -41,14 +41,14 @@ class R6Search extends AppCommand {
                 }
                 else if (session.args[0])
                     get(session.args[0])
+                return;
+            }
+            else {
+                var r6id = await searchid(session.userId)
+                if (r6id == null)
+                    session.send("您未绑定R6ID，`.绑定 R6ID`后直接输入`.查询`可直接查询自己的战绩")
                 else {
-                    var r6id = await searchid(session.userId)
-                    if (r6id == null)
-                        session.send("您未绑定R6ID，`.绑定 R6ID`后直接输入`.查询`可直接查询自己的战绩")
-                    else {
-                        get(r6id)
-                    }
-                    return;
+                    get(r6id)
                 }
                 return;
             }
