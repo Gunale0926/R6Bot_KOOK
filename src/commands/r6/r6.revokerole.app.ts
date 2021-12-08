@@ -3,8 +3,8 @@ import { bot, pars } from 'tests/init';
 class R6Revokerole extends AppCommand {
     code = 'revokerole'; // 只是用作标记
     trigger = 'revokerole'; // 用于触发的文字
-    help = '`.申请角色 角色英文名（大写）`'; // 帮助文字
-    intro = '申请角色';
+    help = '`.撤销角色 角色英文名（大写）`'; // 帮助文字
+    intro = '撤销角色';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0) {
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));

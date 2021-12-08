@@ -54,7 +54,6 @@ bot.addAlias(r6Active, "激活");
 bot.logger.debug('system init success');
 var https = require('https');
 var mysql = require('mysql');
-var fs = require('fs');
 var tabname = 'usrlib';
 var url = "https://r6.tracker.network/profile/pc/";
 var list = [{
