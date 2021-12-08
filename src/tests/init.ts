@@ -1,4 +1,4 @@
-console.log(new Date().getTime())
+console.log('Startms:'+new Date().getTime())
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as dotenv from 'dotenv';
 import { BaseSession, Card, GuildSession, KBotify } from '..';
@@ -24,21 +24,19 @@ import { r6Record } from '../commands/r6/r6.record.app';
 import { r6Search } from '../commands/r6/r6.search.app';
 import { r6Team } from '../commands/r6/r6.team.app';
 import { apexMenu } from '../commands/apex/apex.menu';
-import Application from 'koa';
+/*import Application from 'koa';
 import { AttachmentBase } from 'kaiheila-bot-root';
-import { resolveLevel } from 'bunyan';
-bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu, apexMenu);
+import { resolveLevel } from 'bunyan';*/
+bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu);
+bot.addCommands(apexMenu);
 bot.connect();
-bot.addAlias(r6Search, "查询")
-bot.addAlias(r6Record, "记录")
-bot.addAlias(r6Record, "绑定")
-bot.addAlias(r6Applyrole, "申请角色")
-bot.addAlias(r6Team, "组队")
-bot.addAlias(r6Active, "激活")
+bot.addAlias(r6Search, "查询");
+bot.addAlias(r6Record, "记录");
+bot.addAlias(r6Record, "绑定");
+bot.addAlias(r6Applyrole, "申请角色");
+bot.addAlias(r6Team, "组队");
+bot.addAlias(r6Active, "激活");
 bot.logger.debug('system init success');
-bot.messageSource.on('message', (e) => {
-    //bot.logger.debug(`received:`, e);
-});
 var https = require('https');
 var mysql = require('mysql');
 var fs = require('fs');
@@ -117,6 +115,12 @@ export var connection = mysql.createConnection({
     password: '20060926Abc',
     database: 'bot_db'
 });
+async function send(itm: number) {
+    list[itm].card = await getall(itm)
+    //console.log(JSON.stringify(list[itm].card))
+    bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
+    //bot.API.message.create(10, "2408081738284872", list[itm].card);
+}
 bot.message.on('buttonEvent', (event) => {
     for (var i = 0; i < Object.keys(list).length; i++)
         if (event.content == list[i].chnname)
@@ -358,12 +362,6 @@ async function getall(itm: number) {
 
         })
     }
-}
-async function send(itm: number) {
-    list[itm].card = await getall(itm)
-    //console.log(JSON.stringify(list[itm].card))
-    bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
-    //bot.API.message.create(10, "2408081738284872", list[itm].card);
 }
 
 async function writeList(chnid: number, id: string) {

@@ -15,7 +15,7 @@ class R6Applyrole extends AppCommand {
             session.sendCard(new Card().addTitle("只能在Rainbow Six小队频道使用"));
             return;
         }
-        await give(await bot.API.guildRole.index(session.guildId))
+        give(await bot.API.guildRole.index(session.guildId))
             .then(function (num) {
                 giverole(num);
             })
@@ -32,9 +32,9 @@ class R6Applyrole extends AppCommand {
         }
         async function give(response: any) {
             var num = 0;
-            return new Promise<number>((resolve, reject) => {
+            return new Promise<number>((resolve) => {
                 for (var i = 0; i < response.length; i++) {
-                    if (response[i].name == session.args[0] && response[i].position >= 8 && response[i].position <= 60) {
+                    if (response[i].name == session.args[0] && response[i].position >= 7 && response[i].position <= 62) {
                         rid = response[i].roleId
                         bot.API.guild.userList(session.guildId)
                             .then(function (usres) {
@@ -42,7 +42,7 @@ class R6Applyrole extends AppCommand {
                                     if (usres.items[j].id == session.userId) {
                                         for (var k = 0; k < usres.items[j].roles.length; k++) {
                                             for (var z = 0; z < response.length; z++) {
-                                                if (usres.items[j].roles[k] == response[z].roleId && response[z].position >= 8 && response[z].position <= 60) {
+                                                if (usres.items[j].roles[k] == response[z].roleId && response[z].position >= 8 && response[z].position <= 62) {
                                                     num++;
                                                 }
 
