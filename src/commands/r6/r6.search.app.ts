@@ -84,7 +84,7 @@ class R6Search extends AppCommand {
                             html = html.replace(/\n/g, '');
                             var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
                             var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
-                            var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
+                            var kd = html.match('<small class="r6-quickseason__value trn-text--dimmed" style="font-size: 1.5rem;">K/D (.*?)</small>')[1];
                             var imglink = session.user.avatar;
                             var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
                             var level = html.match('<div class="trn-defstat__name">Level</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1];
