@@ -14,7 +14,7 @@ class R6Search extends AppCommand {
         connection.query(exp, async function (err: any, result: any) {
             if (err) {
                 console.log('[SELECT ERROR] - ', err.message);
-                session.send("内部参数错误")
+                session.send("INJECT")
             }
             else if (result[0]) {
                 console.log(result[0])
@@ -85,7 +85,8 @@ class R6Search extends AppCommand {
                             var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
                             var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
                             var kd = html.match('<div class="trn-defstat__name">K/D</div><div class="trn-defstat__value">(.*?)<small>')[1];
-                            var imglink = session.user.avatar;
+                            if (flag) var imglink = html.match('<div class="trn-profile-header__avatar trn-roundavatar trn-roundavatar--white "><img src="(.*?)" /></div>')[1];
+                            else var imglink = session.user.avatar;
                             var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
                             var level = html.match('<div class="trn-defstat__name">Level</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1];
                             var WLratio = html.match('<div class="trn-defstat__value" data-stat="PVPWLRatio">(.*?)</div>')[1];
