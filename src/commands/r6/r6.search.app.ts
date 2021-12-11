@@ -17,7 +17,6 @@ class R6Search extends AppCommand {
                 session.send("INJECT")
             }
             else if (result[0]) {
-                console.log(result[0])
                 flag = true
                 main()
             }
@@ -146,6 +145,7 @@ class R6Search extends AppCommand {
                                         }
                                     }]
                                 }]
+                            console.log(JSON.stringify(card))
                             session.sendCard(JSON.stringify(card));
                         }
                     });
