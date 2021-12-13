@@ -84,14 +84,18 @@ class R6Search extends AppCommand {
                             var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
                             var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
                             var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
-                            if (flag) var imglink = html.match('<div class="trn-profile-header__avatar trn-roundavatar trn-roundavatar--white "><img src="(.*?)" /></div>')[1];
-                            else var imglink = session.user.avatar;
+                            if (flag) var src = html.match('<div class="trn-profile-header__avatar trn-roundavatar trn-roundavatar--white "><img src="(.*?)" /></div>')[1];
+                            else var src = session.user.avatar;
                             var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
                             var level = html.match('<div class="trn-defstat__name">Level</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1];
                             var WLratio = html.match('<div class="trn-defstat__value" data-stat="PVPWLRatio">(.*?)</div>')[1];
                             var time = html.match('<div class="trn-defstat__value" data-stat="PVPTimePlayed">(.*?)</div>')[1];
+                            try {
+                                var skd = html.match('<div class="trn-defstat__name">K/D</div><div class="trn-defstat__value">(.*?)<small>')[1];
+                            } catch (error) {
+                                skd = 'N/A'
+                            }
                             var arg3 = rank.replace(' ', '');
-                            var arg5 = imglink;
                             var arg6 = '#B2B6BB';
                             var rankcn;
                             if (rank.search(/COPPER/) === 0) { arg6 = "#B30B0D"; rankcn = "紫铜"; arg3 = arg3.replace('COPPER', ''); }
@@ -112,16 +116,16 @@ class R6Search extends AppCommand {
                                     "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
                                     "modules": [{
                                         "type": "section", "text": { "type": "kmarkdown", "content": "**:crown:" + namer + "**" },
-                                        "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" }
+                                        "mode": "left", "accessory": { "type": "image", "src": src, "size": "lg" }
                                     }, {
                                         "type": "section", "text": {
                                             "type": "paragraph", "cols": 3, "fields": [
                                                 { "type": "kmarkdown", "content": "**等级**\n" + level },
                                                 { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
-                                                { "type": "kmarkdown", "content": "**KD**\n" + kd },
+                                                { "type": "kmarkdown", "content": "**总KD**\n" + kd },
+                                                { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
                                                 { "type": "kmarkdown", "content": "**MMR**\n" + mmr },
-                                                { "type": "kmarkdown", "content": "**胜率**\n" + WLratio },
-                                                { "type": "kmarkdown", "content": "**游戏时长**\n" + time },
+                                                { "type": "kmarkdown", "content": "**赛季KD**\n" + skd },
                                             ]
                                         }
                                     }]
@@ -131,16 +135,16 @@ class R6Search extends AppCommand {
                                     "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
                                     "modules": [{
                                         "type": "section", "text": { "type": "kmarkdown", "content": "**" + namer + "**" },
-                                        "mode": "left", "accessory": { "type": "image", "src": arg5, "size": "lg" }
+                                        "mode": "left", "accessory": { "type": "image", "src": src, "size": "lg" }
                                     }, {
                                         "type": "section", "text": {
                                             "type": "paragraph", "cols": 3, "fields": [
                                                 { "type": "kmarkdown", "content": "**等级**\n" + level },
                                                 { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
-                                                { "type": "kmarkdown", "content": "**KD**\n" + kd },
-                                                { "type": "kmarkdown", "content": "**MMR**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
-                                                { "type": "kmarkdown", "content": "**胜率**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
-                                                { "type": "kmarkdown", "content": "**游戏时长**\n(spl)[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                                { "type": "kmarkdown", "content": "**总KD**\n" + kd },
+                                                { "type": "kmarkdown", "content": "**多人游戏时长**\n(spl)[解锁(CNY10)](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                                { "type": "kmarkdown", "content": "**MMR**\n(spl)[解锁(CNY10)](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                                { "type": "kmarkdown", "content": "**赛季KD**\n(spl)[解锁(CNY10)](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
                                             ]
                                         }
                                     }]
