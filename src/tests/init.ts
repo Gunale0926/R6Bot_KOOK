@@ -241,7 +241,7 @@ async function getall(itm: number) {
     })
     async function get(r6id: string, first: number) {
         return new Promise<object>(async (resolve, reject) => {
-            var urln = url + r6id;
+            var urln = url + r6id + '/';
             https.get(urln, function (res: any) {
                 var html: string = '';
                 res.on('data', function (data: any) {
