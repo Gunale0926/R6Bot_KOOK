@@ -69,15 +69,16 @@ class R6Search extends AppCommand {
         }
         function get(r6id: string) {
             return new Promise<void>((resolve, reject) => {
-                var urln = url + r6id;
+                var urln = url + r6id + '/';
                 https.get(urln, function (res: any) {
                     var html: string = '';
                     res.on('data', function (data: any) {
                         html += data;
                     });
                     res.on('end', function () {
-                        if (html.indexOf("RankedKDRatio") == -1) {
+                        if (html.match("RankedKDRatio") == null) {
                             session.send("查无此人，请检查ID后重试");
+                            return;
                         }
                         else {
                             html = html.replace(/\n/g, '');
