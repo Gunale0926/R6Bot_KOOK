@@ -20,7 +20,7 @@ export const pars = {
 async function send(itm: number) {
     list[itm].card = await getall(itm)
     //console.log(JSON.stringify(list[itm].card))
-    //bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
+    bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
     //bot.API.message.create(10, "2408081738284872", list[itm].card);
 }
 import { echoMenu } from 'commands/echo/echo.menu';
