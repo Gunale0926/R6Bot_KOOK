@@ -14,7 +14,7 @@ export const bot = new KBotify({
     debug: false,
 });
 export const pars = {
-    head: 7,
+    head: 8,
     tail: 62
 }
 async function send(itm: number) {

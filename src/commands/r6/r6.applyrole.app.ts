@@ -3,11 +3,25 @@ import { bot, pars } from 'tests/init';
 class R6Applyrole extends AppCommand {
     code = 'applyrole'; // 只是用作标记
     trigger = 'applyrole'; // 用于触发的文字
-    help = '.r6 applyrole+角色'; // 帮助文字
+    help = '`.申请角色 角色`'; // 帮助文字
     intro = '申请角色';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0) {
-            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
+            session.sendCard(new Card().addTitle('申请角色').addText(this.help));
+            return;
+        }
+        if (session.args[0] == '列表') {
+            var response = await bot.API.guildRole.index(session.guildId);
+            var card = new Card().addTitle('可申请的角色列表');
+            var text: string = '';
+            var num: number = 0;
+            for (var i = 0; i < response.length; i++) {
+                if (response[i].position >= pars.head && response[i].position <= pars.tail) {
+                    text = text + response[i].name + '\n';
+                    num++;
+                }
+            }
+            session.sendCard(card.addText('总计' + num + '个角色').addText(text), { temp: true });
             return;
         }
         if (session.guildId != '3128617072930683') {
@@ -26,10 +40,10 @@ class R6Applyrole extends AppCommand {
                 return;
             }
         })
-        async function give() {
-            var response = await bot.API.guildRole.index(session.guildId)
-            var num = 0;
-            return new Promise<number>((resolve) => {
+        function give() {
+            return new Promise<number>(async (resolve) => {
+                var response = await bot.API.guildRole.index(session.guildId)
+                var num = 0;
                 for (var i = 0; i < response.length; i++) {
                     if (response[i].name == session.args[0] && response[i].position >= pars.head && response[i].position <= pars.tail) {
                         rid = response[i].roleId;
@@ -53,7 +67,7 @@ class R6Applyrole extends AppCommand {
                     }
                 }
                 if (!flag)
-                    session.send("没有该角色")
+                    session.send("没有该角色，输入`.申请角色 列表`查看角色列表")
             })
         }
     }
