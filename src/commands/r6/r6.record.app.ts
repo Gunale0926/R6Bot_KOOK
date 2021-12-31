@@ -1,5 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
-import{ connection } from '../../tests/init'
+import { connection } from '../../tests/init'
 var tabname = 'usrlib'
 class R6Record extends AppCommand {
     code = 'record'; // 只是用作标记
@@ -16,11 +16,13 @@ class R6Record extends AppCommand {
                 var exp = 'INSERT INTO ' + tabname + '(id,r6id,sel) VALUES("' + id + '","' + r6id + '",1)'
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
-                        console.log('[SELECT ERROR] - ', err.message);
+                        //console.log('[SELECT ERROR] - ', err.message);
                         exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
                         connection.query(exp, function (err: any, result: any) {
                             if (err) {
-                                console.log('[INSERT ERROR] - ', err.message);
+                                var tmstp = new Date().getTime()
+                                console.log('[INSERT ERROR] - ', err.message, ' [ID] - ', tmstp);
+                                session.send('[INSERT ERROR] - [ID] - ' + tmstp)
                             }
                             else {
                                 session.send('换绑了ID： ' + r6id);

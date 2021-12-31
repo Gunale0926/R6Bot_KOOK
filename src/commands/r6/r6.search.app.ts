@@ -53,7 +53,7 @@ class R6Search extends AppCommand {
             }
         }
         async function searchid(id: string) {
-            return new Promise<any>(async (resolve, reject) => {
+            return new Promise<any>(async (resolve) => {
                 var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
@@ -160,7 +160,7 @@ class R6Search extends AppCommand {
                                     "type": "section",
                                     "text": {
                                         "type": "kmarkdown",
-                                        "content": "(ins)[查看更多](" + urln + ")(ins)"
+                                        "content": "~~查看更多~~[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)"
                                     }
                                 }]
                             }]

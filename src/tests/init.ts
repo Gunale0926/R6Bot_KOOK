@@ -34,6 +34,7 @@ import { r6Search } from '../commands/r6/r6.search.app';
 import { r6Team } from '../commands/r6/r6.team.app';
 import { apexMenu } from '../commands/apex/apex.menu';
 import { r6Revokerole } from '../commands/r6/r6.revokerole.app';
+import { r6Announce } from '../commands/r6/r6.announce.app';
 /*
 import { kBotifyLogger } from 'core/logger';
 import Application from 'koa';
@@ -51,6 +52,7 @@ bot.addAlias(r6Applyrole, "申请角色");
 bot.addAlias(r6Revokerole, "撤销角色");
 bot.addAlias(r6Team, "组队");
 bot.addAlias(r6Active, "激活");
+bot.addAlias(r6Announce, "公告");
 bot.logger.debug('system init success');
 var https = require('https');
 var mysql = require('mysql');
@@ -162,9 +164,15 @@ bot.message.on('text', async (message) => {
                 if (err) {
                     exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
                     connection.query(exp, function (err: any) {
-                        if (!err) {
+                        if (err) {
+                            var tmstp = new Date().getTime()
+                            console.log('[INSERT ERROR] - ', err.message, ' [ID] - ', tmstp);
+                            bot.API.message.create(1, message.channelId, '[INSERT ERROR] - [ID] - ' + tmstp);
+                        }
+                        else {
                             bot.API.message.create(1, message.channelId, '查询到此ID并换绑：' + r6id, '', message.authorId);
                             updateList(id)
+
                         }
                     })
                 }

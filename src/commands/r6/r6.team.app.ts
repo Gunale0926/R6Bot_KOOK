@@ -1,9 +1,9 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot } from 'tests/init';
 class R6Team extends AppCommand {
-    code = 'team'; // 只是用作标记s
+    code = 'team'; // 只是用作标记
     trigger = 'team'; // 用于触发的文字
-    help = '注意：请私聊机器人此指令".r6 team + 频道名称（干员英文名）+模式+要求"(缩写.组队)（例如：.组队 BANDIT 排位 2500分左右 KD0.5以上）'; // 帮助文字
+    help = '注意：请私聊机器人此指令`.组队 + 频道名称（干员英文名）+模式+要求`\n（例如：`.组队 BANDIT 排位 2500分左右 KD0.5以上`）'; // 帮助文字
     intro = '发布组队';
     response: 'both';
     func: AppFunc<BaseSession> = async (session) => {
