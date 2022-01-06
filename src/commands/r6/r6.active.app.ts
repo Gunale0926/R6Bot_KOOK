@@ -7,7 +7,7 @@ class R6Active extends AppCommand {
     trigger = 'active'; // 用于触发的文字
     help = '`.激活 XXXX-XXXX-XXXX`（注意：仅私聊机器人有效）'; // 帮助文字
     intro = '激活机器人高级功能';
-    response: 'private';
+    response: 'private' = 'private';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0) {
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
