@@ -12,7 +12,7 @@ export function initFuncResult<T>(
     data: T,
     resultType?: ResultTypes,
     msgSent?: MessageCreateResponseInternal
-): FuncResult<any> {
+): FuncResult {
     const funcResult: FuncResult<T> = {
         detail: data,
         resultType: resultType ? resultType : ResultTypes.PENDING,
@@ -42,7 +42,7 @@ export abstract class AppCommand implements BaseCommand {
     /**
      * 命令响应：仅响应频道，仅响应私聊，全部响应
      */
-    response: 'guild' | 'pm' | 'both' = 'guild';
+    response: 'guild' | 'private' | 'both' = 'guild';
     /**
      * 默认的触发命令，如果有上级菜单需要先触发菜单
      */
@@ -157,12 +157,21 @@ export abstract class AppCommand implements BaseCommand {
         msg?: TextMessage | ButtonEventMessage
     ): Promise<boolean> => {
         if (
-            !(sessionOrCommand instanceof GuildSession) &&
-            this.response === 'guild'
+            this.response === 'guild' &&
+            !(sessionOrCommand instanceof GuildSession)
         ) {
             kBotifyLogger.debug(
-                'guild only command receiving base session. return.',
-                this.constructor.name
+                `guild only command ${this.constructor.name} receiving base session. return.`
+            );
+
+            return false;
+        }
+        if (
+            this.response === 'private' &&
+            !(sessionOrCommand instanceof PrivateSession)
+        ) {
+            kBotifyLogger.debug(
+                `private only command ${this.constructor.name} receiving private session. return.`
             );
 
             return false;
@@ -221,10 +230,10 @@ export abstract class AppCommand implements BaseCommand {
 
     private async run(
         session: BaseSession | GuildSession
-    ): Promise<any> {
+    ): Promise<ResultTypes> {
         const args = session.args;
         const msg = session.msg;
-        kBotifyLogger.debug('running command: ', session.cmdString, msg, args);
+        kBotifyLogger.debug('running command: ', session.cmdString, args);
         if (!this.client) {
             throw new Error(
                 "'Command used before assigning a bot instance or message sender.'"
@@ -238,10 +247,11 @@ export abstract class AppCommand implements BaseCommand {
                 return ResultTypes.HELP;
             }
 
-            const result = await this.func(session as any);
+            const result:any = await this.func(session as any);
             if (typeof result === 'string' || !result) {
                 return result ? result : ResultTypes.SUCCESS;
             }
+
             return result.resultType;
         } catch (error) {
             kBotifyLogger.error(error);
@@ -251,4 +261,4 @@ export abstract class AppCommand implements BaseCommand {
     }
 }
 
-export { };
+export {};

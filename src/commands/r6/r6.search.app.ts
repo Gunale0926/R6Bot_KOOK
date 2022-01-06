@@ -80,6 +80,7 @@ class R6Search extends AppCommand {
                         return;
                     }
                     else {
+                        var rawhtml = html;
                         html = html.replace(/\n/g, '');
                         var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
                         var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
@@ -87,9 +88,12 @@ class R6Search extends AppCommand {
                         //if (flag) var src = html.match('<div class="trn-profile-header__avatar trn-roundavatar trn-roundavatar--white "><img src="(.*?)" /></div>')[1];
                         //else
                         var src = session.user.avatar;
+                        if (src == 'https://img.kaiheila.cn/assets/avatar_7.jpg/icon')
+                            src = 'https://img.kaiheila.cn/assets/avatar_1.jpg/icon'
                         var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
                         var level = html.match('<div class="trn-defstat__name">Level</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1];
                         var WLratio = html.match('<div class="trn-defstat__value" data-stat="PVPWLRatio">(.*?)</div>')[1];
+                        var highestMMR = html.match('<div class="trn-defstat__name">Best MMR</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1].replace(',', '');
                         var time = html.match('<div class="trn-defstat__value" data-stat="PVPTimePlayed">(.*?)</div>')[1];
                         try {
                             var skd = html.match('<div class="trn-defstat__name">K/D</div><div class="trn-defstat__value">(.*?)<small>')[1];
@@ -112,6 +116,10 @@ class R6Search extends AppCommand {
                         if (arg3 === 'III') arg3 = rankcn + '3';
                         if (arg3 === 'IV') arg3 = rankcn + '4';
                         if (arg3 === 'V') arg3 = rankcn + '5';
+                        var l1 = 'High Calibre'
+                        var l1v = html.match(l1 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
+                        var l2 = 'Crystal Guard'
+                        var l2v = html.match(l2 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
                         if (flag)
                             var card = [{
                                 "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
@@ -124,9 +132,12 @@ class R6Search extends AppCommand {
                                             { "type": "kmarkdown", "content": "**等级**\n" + level },
                                             { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
                                             { "type": "kmarkdown", "content": "**总KD**\n" + kd },
-                                            { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
                                             { "type": "kmarkdown", "content": "**MMR**\n" + mmr },
                                             { "type": "kmarkdown", "content": "**赛季KD**\n" + skd },
+                                            { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
+                                            { "type": "kmarkdown", "content": "**历史最高分**\n" + highestMMR },
+                                            { "type": "kmarkdown", "content": "**" + l1 + "**\n" + l1v },
+                                            { "type": "kmarkdown", "content": "**" + l2 + "**\n" + l2v },
                                         ]
                                     }
                                 },
@@ -150,9 +161,12 @@ class R6Search extends AppCommand {
                                             { "type": "kmarkdown", "content": "**等级**\n" + level },
                                             { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
                                             { "type": "kmarkdown", "content": "**总KD**\n" + kd },
-                                            { "type": "kmarkdown", "content": "**多人游戏时长**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
                                             { "type": "kmarkdown", "content": "**MMR**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
                                             { "type": "kmarkdown", "content": "**赛季KD**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                            { "type": "kmarkdown", "content": "**多人游戏时长**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                            { "type": "kmarkdown", "content": "**历史最高分**\n" + highestMMR },
+                                            { "type": "kmarkdown", "content": "**" + l1 + "**\n" + l1v },
+                                            { "type": "kmarkdown", "content": "**" + l2 + "**\n" + l2v },
                                         ]
                                     }
                                 },

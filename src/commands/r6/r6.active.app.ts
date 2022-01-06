@@ -3,11 +3,11 @@ import { bot } from 'tests/init';
 var tabname = 'cdklist'
 import { connection } from '../../tests/init'
 class R6Active extends AppCommand {
-    code = 'active'; // 只是用作标记
+    code = '激活'; // 只是用作标记
     trigger = 'active'; // 用于触发的文字
-    help = '.r6 active+KEY（注意：请私聊机器人此指令！！！）'; // 帮助文字
-    intro = '激活测试权限';
-    response: 'both' = 'both';
+    help = '`.激活 XXXX-XXXX-XXXX`（注意：仅私聊机器人有效）'; // 帮助文字
+    intro = '激活机器人高级功能';
+    response: 'private';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length == 0) {
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
@@ -20,7 +20,7 @@ class R6Active extends AppCommand {
                 session.send("内部参数错误")
             }
             else if (result[0]) {
-                session.send("已经激活了内测用户组")
+                session.send("已经激活过高级功能")
                 return;
             }
             else {
