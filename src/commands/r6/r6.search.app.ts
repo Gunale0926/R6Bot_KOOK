@@ -116,10 +116,18 @@ class R6Search extends AppCommand {
                         if (arg3 === 'III') arg3 = rankcn + '3';
                         if (arg3 === 'IV') arg3 = rankcn + '4';
                         if (arg3 === 'V') arg3 = rankcn + '5';
-                        var l1 = 'High Calibre'
-                        var l1v = html.match(l1 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
-                        var l2 = 'Crystal Guard'
-                        var l2v = html.match(l2 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
+                        try {
+                            var l1 = 'High Calibre';
+                            var l1v = html.match(l1 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
+                        } catch (error) {
+                            l1v = '未定级';
+                        }
+                        try {
+                            var l2 = 'Crystal Guard';
+                            var l2v = html.match(l2 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
+                        } catch (error) {
+                            l2v = '未定级';
+                        }
                         if (flag)
                             var card = [{
                                 "type": "card", "theme": "secondary", "color": arg6, "size": "lg",
