@@ -14,8 +14,8 @@ export const bot = new KBotify({
     debug: false,
 });
 export const pars = {
-    head: 8,
-    tail: 62
+    head: 9,
+    tail: 64
 }
 async function send(itm: number) {
     list[itm].card = await getall(itm)
