@@ -35,6 +35,7 @@ import { r6Team } from '../commands/r6/r6.team.app';
 import { apexMenu } from '../commands/apex/apex.menu';
 import { r6Revokerole } from '../commands/r6/r6.revokerole.app';
 import { r6Announce } from '../commands/r6/r6.announce.app';
+import { r6Auth } from '../commands/r6/r6.auth.app';
 /*
 import { kBotifyLogger } from 'core/logger';
 import Application from 'koa';
@@ -53,6 +54,7 @@ bot.addAlias(r6Revokerole, "撤销角色");
 bot.addAlias(r6Team, "组队");
 bot.addAlias(r6Active, "激活");
 bot.addAlias(r6Announce, "公告");
+bot.addAlias(r6Auth, '认证')
 bot.logger.debug('system init success');
 var https = require('https');
 var mysql = require('mysql');

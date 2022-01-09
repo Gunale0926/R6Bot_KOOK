@@ -112,13 +112,13 @@ class R6Search extends AppCommand {
                         if (rank.search(/GOLD/) === 0) { arg6 = "#EED01E"; rankcn = "黄金"; arg3 = arg3.replace('GOLD', ''); }
                         if (rank.search(/PLATINUM/) === 0) { arg6 = "#5BB9B3"; rankcn = "白金"; arg3 = arg3.replace('PLATINUM', ''); }
                         if (rank.search(/DIAMOND/) === 0) { arg6 = "#BD9FF6"; rankcn = "钻石"; arg3 = arg3.replace('DIAMOND', ''); }
-                        if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; rankcn = "冠军"; arg3 = arg3.replace('CHAMPION', ''); }
+                        if (rank.search(/CHAMPION/) === 0) { arg6 = "#9D385C"; arg3 = '冠军'; }
                         if (rank.search(/-/) === 0) { arg6 = "#B2B6BB"; arg3 = "未定级"; }
                         if (arg3 === 'I') arg3 = rankcn += '1';
-                        if (arg3 === 'II') arg3 = rankcn + '2';
-                        if (arg3 === 'III') arg3 = rankcn + '3';
-                        if (arg3 === 'IV') arg3 = rankcn + '4';
-                        if (arg3 === 'V') arg3 = rankcn + '5';
+                        else if (arg3 === 'II') arg3 = rankcn + '2';
+                        else if (arg3 === 'III') arg3 = rankcn + '3';
+                        else if (arg3 === 'IV') arg3 = rankcn + '4';
+                        else if (arg3 === 'V') arg3 = rankcn + '5';
                         try {
                             var l1 = 'High Calibre';
                             var l1v = html.match(l1 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
