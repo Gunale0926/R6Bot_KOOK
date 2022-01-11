@@ -17,12 +17,6 @@ export const pars = {
     head: 9,
     tail: 64
 }
-async function send(itm: number) {
-    list[itm].card = await getall(itm)
-    //console.log(JSON.stringify(list[itm].card))
-    bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
-    //bot.API.message.create(10, "2408081738284872", list[itm].card);
-}
 import { echoMenu } from 'commands/echo/echo.menu';
 import { echoKmd } from 'commands/echo/echo.kmd.app';
 import { testMenu } from 'commands/test/test.menu';
@@ -173,29 +167,19 @@ bot.message.on('text', async (message) => {
                         }
                         else {
                             bot.API.message.create(1, message.channelId, '查询到此ID并换绑：' + r6id, '', message.authorId);
-                            updateList(id)
+                            //updateList(id)
 
                         }
                     })
                 }
                 else {
                     bot.API.message.create(1, message.channelId, '查询到此ID并绑定：' + r6id, '', message.authorId);
-                    updateList(id)
+                    //updateList(id)
                 }
             })
         }
     }
 })
-function updateList(id: string) {
-    for (let i = 0; i < Object.keys(list).length; i++) {
-        for (let j = 0; j < 5; j++) {
-            if (list[i].userid[j] == id) {
-                send(i);
-                return;
-            }
-        }
-    }
-}
 async function searchid(id: string) {
     return new Promise<any>(async (resolve, reject) => {
         var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
@@ -208,6 +192,23 @@ async function searchid(id: string) {
             else resolve(null)
         });
     });
+}
+/*
+async function send(itm: number) {
+    list[itm].card = await getall(itm)
+    //console.log(JSON.stringify(list[itm].card))
+    //bot.API.message.update(list[itm].msgid, JSON.stringify(list[itm].card));
+    //bot.API.message.create(10, "2408081738284872", list[itm].card);
+}
+function updateList(id: string) {
+    for (let i = 0; i < Object.keys(list).length; i++) {
+        for (let j = 0; j < 5; j++) {
+            if (list[i].userid[j] == id) {
+                send(i);
+                return;
+            }
+        }
+    }
 }
 async function getall(itm: number) {
     var avmmr: number = 0, xmmr: number = 0, nmmr: number = 9999, num: number = 0, tmp: number = 0;

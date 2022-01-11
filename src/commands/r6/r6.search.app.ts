@@ -81,23 +81,25 @@ class R6Search extends AppCommand {
                     }
                     else {
                         html = html.replace(/\n/g, '');
-                        var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
-                        var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
-                        var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
-                        //if (flag) var src = html.match('<div class="trn-profile-header__avatar trn-roundavatar trn-roundavatar--white "><img src="(.*?)" /></div>')[1];
-                        //else
-                        var src = session.user.avatar;
-                        if (src == 'https://img.kaiheila.cn/assets/avatar_7.jpg/icon')
-                            src = 'https://img.kaiheila.cn/assets/avatar_1.jpg/icon'
-                        var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
-                        var level = html.match('<div class="trn-defstat__name">Level</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1];
-                        var WLratio = html.match('<div class="trn-defstat__value" data-stat="PVPWLRatio">(.*?)</div>')[1];
+                        try {
+                            var mmr = html.match('<div class="trn-defstat__name">MMR</div><div class="trn-defstat__value">(.*?)</div>')[1].replace(',', '');
+                            var rank = html.match('<div class="trn-defstat__name">Rank</div><div class="trn-defstat__value">(.*?)</div>')[1];
+                            var kd = html.match('<div class="trn-defstat__value" data-stat="RankedKDRatio">(.*?)</div>')[1];
+                            //if (flag) var src = html.match('<div class="trn-profile-header__avatar trn-roundavatar trn-roundavatar--white "><img src="(.*?)" /></div>')[1];
+                            //else
+                            var src = session.user.avatar;
+                            var namer = html.match('R6Tracker - (.*?) -  Rainbow Six Siege Player Stats')[1];
+                            var level = html.match('<div class="trn-defstat__name">Level</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1];
+                            //var WLratio = html.match('<div class="trn-defstat__value" data-stat="PVPWLRatio">(.*?)</div>')[1];
+                            var time = html.match('<div class="trn-defstat__value" data-stat="PVPTimePlayed">(.*?)</div>')[1];
+                        } catch (error) {
+                            throw (error)
+                        }
                         try {
                             var highestMMR = html.match('<div class="trn-defstat__name">Best MMR</div><div class="trn-defstat__value-stylized">(.*?)</div>')[1].replace(',', '');
                         } catch (error) {
                             highestMMR = 'N/A'
                         }
-                        var time = html.match('<div class="trn-defstat__value" data-stat="PVPTimePlayed">(.*?)</div>')[1];
                         try {
                             var skd = html.match('<div class="trn-defstat__name">K/D</div><div class="trn-defstat__value">(.*?)<small>')[1];
                         } catch (error) {
