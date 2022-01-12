@@ -62,12 +62,12 @@ class R6Auth extends AppCommand {
                         else if (highestMMR < 3200)
                             highestRank = '黄金';
                         else if (highestMMR < 4100)
-                            highestRank = '铂金';
+                            highestRank = '白金';
                         else if (highestMMR < 5000)
                             highestRank = '钻石';
                         else
                             highestRank = '冠军';
-                        session.send('ID：' + r6id + '\n最高段位：' + highestRank+'\n请将游戏内截图（含该ID）发送到频道中，等待审核！');
+                        session.send('ID：' + r6id + '\n最高段位：' + highestRank + '\n请等待审核！');
                         return;
                     }
                 });

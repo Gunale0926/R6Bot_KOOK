@@ -180,6 +180,7 @@ bot.message.on('text', async (message) => {
         }
     }
 })
+/*
 async function searchid(id: string) {
     return new Promise<any>(async (resolve, reject) => {
         var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
@@ -193,7 +194,6 @@ async function searchid(id: string) {
         });
     });
 }
-/*
 async function send(itm: number) {
     list[itm].card = await getall(itm)
     //console.log(JSON.stringify(list[itm].card))
