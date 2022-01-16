@@ -1,4 +1,4 @@
-import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from '../..';
+import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot, pars } from 'tests/init';
 import { connection } from '../../tests/init'
 class R6Applyrole extends AppCommand {

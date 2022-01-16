@@ -1,4 +1,4 @@
-import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from '../..';
+import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { bot, pars } from 'tests/init';
 class R6Revokerole extends AppCommand {
     code = 'revokerole'; // 只是用作标记

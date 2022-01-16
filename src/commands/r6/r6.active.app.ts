@@ -1,5 +1,4 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
-import { bot } from 'tests/init';
 var tabname = 'cdklist'
 import { connection } from '../../tests/init'
 class R6Active extends AppCommand {
@@ -50,20 +49,25 @@ class R6Active extends AppCommand {
             return new Promise<void>((resolve, reject) => {
                 var today = new Date();
                 var exp = 'UPDATE ' + tabname + ' SET act=1, actdate="' + today.toISOString().substring(0, 10) + '", id=' + session.userId + ' WHERE cdk="' + cdk + "\"";
-                connection.query(exp, function (err: any, result: any) {
+                connection.query(exp, function (err: any) {
                     if (err) {
                         console.log('[UPDATE ERROR] - ', err.message);
                         session.send("参数错误")
                     }
                     else {
-                        if (cdk.charAt(cdk.length - 1) != 'F') {
-                            session.user.grantRole(373739, '3128617072930683');//赞助者
-                            //session.user.grantRole(373758, '3128617072930683');//内测
-                            session.send('激活成功，感谢支持');
+                        if (cdk.charAt(cdk.length - 1) == 'F') {
+                            //session.user.grantRole(373739, '3128617072930683');//赞助者
+                            session.send('激活赠送激活码成功');
+
+                        }
+                        else if (cdk.charAt(cdk.length - 1) == 'C') {
+                            //session.user.grantRole(, '3128617072930683');//冠军
+                            session.send('冠军奖品激活码激活成功');
                         }
                         else {
                             session.user.grantRole(373739, '3128617072930683');//赞助者
-                            session.send('激活赠送激活码成功');
+                            //session.user.grantRole(373758, '3128617072930683');//内测
+                            session.send('激活成功，感谢支持');
                         }
                         resolve()
 

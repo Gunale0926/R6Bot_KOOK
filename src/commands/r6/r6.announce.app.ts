@@ -1,5 +1,5 @@
-import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from '../..';
-import { bot, pars } from 'tests/init';
+import { AppCommand, AppFunc, BaseSession, Card } from '../..';
+import { bot } from 'tests/init';
 class R6Announce extends AppCommand {
     code = 'announce'; // 只是用作标记
     trigger = 'announce'; // 用于触发的文字

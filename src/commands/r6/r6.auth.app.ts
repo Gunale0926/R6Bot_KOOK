@@ -1,4 +1,4 @@
-import { AppCommand, AppFunc, BaseSession, Card } from '../..';
+import { AppCommand, AppFunc, BaseSession } from '../..';
 import { connection } from '../../tests/init'
 var tabname = 'usrlib'
 var https = require('https');

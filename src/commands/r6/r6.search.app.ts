@@ -1,4 +1,4 @@
-import { AppCommand, AppFunc, BaseSession, Card } from '../..';
+import { AppCommand, AppFunc, BaseSession } from '../..';
 import { connection } from '../../tests/init'
 var tabname = 'usrlib'
 var https = require('https');
@@ -147,8 +147,8 @@ class R6Search extends AppCommand {
                                             { "type": "kmarkdown", "content": "**总KD**\n" + kd },
                                             { "type": "kmarkdown", "content": "**MMR**\n" + mmr },
                                             { "type": "kmarkdown", "content": "**赛季KD**\n" + skd },
-                                            { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
                                             { "type": "kmarkdown", "content": "**历史最高分**\n" + highestMMR },
+                                            { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
                                             { "type": "kmarkdown", "content": "**" + l1 + "**\n" + l1v },
                                             { "type": "kmarkdown", "content": "**" + l2 + "**\n" + l2v },
                                         ]
@@ -176,8 +176,8 @@ class R6Search extends AppCommand {
                                             { "type": "kmarkdown", "content": "**总KD**\n" + kd },
                                             { "type": "kmarkdown", "content": "**MMR**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
                                             { "type": "kmarkdown", "content": "**赛季KD**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
-                                            { "type": "kmarkdown", "content": "**多人游戏时长**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
-                                            { "type": "kmarkdown", "content": "**历史最高分**\n" + highestMMR },
+                                            { "type": "kmarkdown", "content": "**历史最高分**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                            { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
                                             { "type": "kmarkdown", "content": "**" + l1 + "**\n" + l1v },
                                             { "type": "kmarkdown", "content": "**" + l2 + "**\n" + l2v },
                                         ]
@@ -187,7 +187,7 @@ class R6Search extends AppCommand {
                                     "type": "section",
                                     "text": {
                                         "type": "kmarkdown",
-                                        "content": "~~查看更多~~[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)"
+                                        "content": "[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)~~查看更多~~"
                                     }
                                 }]
                             }]
