@@ -28,7 +28,7 @@ class R6Active extends AppCommand {
             }
         });
         async function searchkey(cdk: string) {
-            return new Promise<boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve) => {
                 var exp = 'SELECT act FROM ' + tabname + ' WHERE cdk="' + cdk + '" && act=0';
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
@@ -46,7 +46,7 @@ class R6Active extends AppCommand {
             })
         }
         async function recordkey(cdk: string) {
-            return new Promise<void>((resolve, reject) => {
+            return new Promise<void>((resolve) => {
                 var today = new Date();
                 var exp = 'UPDATE ' + tabname + ' SET act=1, actdate="' + today.toISOString().substring(0, 10) + '", id=' + session.userId + ' WHERE cdk="' + cdk + "\"";
                 connection.query(exp, function (err: any) {

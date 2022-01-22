@@ -12,13 +12,13 @@ class R6Record extends AppCommand {
         else
             await recordid(session.userId, session.args[0])
         async function recordid(id: string, r6id: string) {
-            return new Promise<void>((resolve, reject) => {
+            return new Promise<void>((resolve) => {
                 var exp = 'INSERT INTO ' + tabname + '(id,r6id,sel) VALUES("' + id + '","' + r6id + '",1)'
-                connection.query(exp, function (err: any, result: any) {
+                connection.query(exp, function (err: any) {
                     if (err) {
                         //console.log('[SELECT ERROR] - ', err.message);
                         exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
-                        connection.query(exp, function (err: any, result: any) {
+                        connection.query(exp, function (err: any) {
                             if (err) {
                                 var tmstp = new Date().getTime()
                                 console.log('[INSERT ERROR] - ', err.message, ' [ID] - ', tmstp);

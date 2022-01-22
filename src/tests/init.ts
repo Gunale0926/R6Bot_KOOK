@@ -30,6 +30,7 @@ import { apexMenu } from '../commands/apex/apex.menu';
 import { r6Revokerole } from '../commands/r6/r6.revokerole.app';
 import { r6Announce } from '../commands/r6/r6.announce.app';
 import { r6Auth } from '../commands/r6/r6.auth.app';
+import { r6Pm } from '../commands/r6/r6.pm.app';
 /*
 import { kBotifyLogger } from 'core/logger';
 import Application from 'koa';
@@ -49,6 +50,7 @@ bot.addAlias(r6Team, "组队");
 bot.addAlias(r6Active, "激活");
 bot.addAlias(r6Announce, "公告");
 bot.addAlias(r6Auth, '认证')
+bot.addAlias(r6Pm,'pm')
 bot.logger.debug('system init success');
 var https = require('https');
 var mysql = require('mysql');
@@ -134,7 +136,7 @@ bot.message.on('buttonEvent', (event) => {
     bot.API.channel.moveUser(String(list[i].chnid), [event.userId])
 })
 async function getif(r6id: string) {
-    return new Promise<boolean>(async (resolve, reject) => {
+    return new Promise<boolean>(async (resolve) => {
         var urln = url + r6id;
         https.get(urln, function (res: any) {
             var html: string = '';
