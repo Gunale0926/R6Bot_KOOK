@@ -5,6 +5,7 @@ class R6Pm extends AppCommand {
     trigger = 'pm'; // 用于触发的文字
     help = '`pm'; // 帮助文字
     intro = 'pm';
+    response: 'private' = 'private';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length < 2) {
             session.sendCard(new Card().addTitle(this.intro).addText(this.help));
