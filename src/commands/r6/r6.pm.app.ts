@@ -90,8 +90,7 @@ class R6Pm extends AppCommand {
                             break;
                     }
                     bot.API.directMessage.create(1, id, (await bot.API.userChat.create(id)).code, '你好，我是开黑啦『Rainbow Six 小队丨玩家社区 』管理员，有人匿名举报你在本社区有违规行为，我们也能够理解你当时的心情，导致你出现违规的原因，但是玩家社区是一个公开公共游戏交流的地方，我们建议您在本社区进行文字聊天以及语音聊天时，能够做到文明友好的交流！文明共同营造良好的社区环境！！！\n\n根据『Rainbow Six 小队丨玩家社区 规则』你违反了' + rule + '\n特此 ' + penalize + ' ！\n\n感谢你对『Rainbow Six 小队丨玩家社区 』的支持与理解');
-                    console.log(new Card().addTitle('处罚公示').addText('被处罚用户ID：' + id).addText('违反规则：' + rule).addText('处罚：' + penalize).setTheme('danger').toString())
-                    bot.API.message.create(10, '9515554930036017', new Card().addTitle('处罚公示').addText('被处罚用户ID：' + id).addText('处罚：' + penalize).setTheme('danger').toString())
+                    bot.API.message.create(10, '9515554930036017', new Card().addTitle('处罚公示').addText('被处罚用户ID：' + id).addText('违反规则：' + rule).addText('处罚：' + penalize).setTheme('danger').toString())
                     session.send('OK:\nrule:' + rule + '\npenalize:' + penalize)
                 }
                 else
