@@ -3,8 +3,8 @@ import { bot } from '../../tests/init'
 class R6Pm extends AppCommand {
     code = 'pm'; // 只是用作标记
     trigger = 'pm'; // 用于触发的文字
-    help = '`pm'; // 帮助文字
-    intro = 'pm';
+    help = '参数1处罚理由: \n1=第一类：文明交流规则；\n2=第二类：其他规则\n参数2处罚：\n1=第一次警告；\n2=第二次警告；\n3=踢出（不删除发言，仍可重新加入）；\n4=轻度封禁（删除发言，仍可重新加入）；\n5=永久封禁（删除发言，不可重新加入）'; // 帮助文字
+    intro = '快捷处罚';
     response: 'private' = 'private';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.args.length < 2) {
@@ -58,10 +58,13 @@ class R6Pm extends AppCommand {
                             var penalize = '第一次警告';
                             break;
                         case 2:
+                            var penalize = '第二次警告';
+                            break;
+                        case 3:
                             var penalize = '踢出（不删除发言，仍可重新加入）';
                             bot.API.guild.kickout(session.guildId, id)
                             break;
-                        case 3:
+                        case 4:
                             var penalize = '轻度封禁（删除发言，仍可重新加入）';
                             bot.axios.post('https://www.kaiheila.cn/api/v3/blacklist/create', {
                                 'guild_id': session.guildId,
@@ -76,7 +79,7 @@ class R6Pm extends AppCommand {
                             })
 
                             break;
-                        case 4:
+                        case 5:
                             var penalize = '永久封禁（删除发言，不可重新加入）';
                             bot.axios.post('https://www.kaiheila.cn/api/v3/blacklist/create', {
                                 'guild_id': session.guildId,
