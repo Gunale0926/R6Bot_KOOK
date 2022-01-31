@@ -1,9 +1,9 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { connection } from '../../tests/init'
 class R6Active extends AppCommand {
-    code = '激活cp'; // 只是用作标记
-    trigger = 'activecp'; // 用于触发的文字
-    help = '`.激活cp XXXX-XXXX-XXXX`（注意：仅私聊机器人有效）'; // 帮助文字
+    code = '激活'; // 只是用作标记
+    trigger = 'active'; // 用于触发的文字
+    help = '`.激活 XXXX-XXXX-XXXX`（注意：仅私聊机器人有效）'; // 帮助文字
     intro = '激活机器人高级功能';
     response: 'private' = 'private';
     func: AppFunc<BaseSession> = async (session) => {

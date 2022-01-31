@@ -31,6 +31,7 @@ import { r6Revokerole } from '../commands/r6/r6.revokerole.app';
 import { r6Announce } from '../commands/r6/r6.announce.app';
 import { r6Auth } from '../commands/r6/r6.auth.app';
 import { r6Pm } from '../commands/r6/r6.pm.app';
+import { r6Access } from '../commands/r6/r6.access.app';
 /*
 import { kBotifyLogger } from 'core/logger';
 import Application from 'koa';
@@ -41,6 +42,7 @@ bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu);
 bot.addCommands(apexMenu);
 bot.connect();
 bot.addAlias(r6Menu, "菜单");
+bot.addAlias(r6Access, "权限");
 bot.addAlias(r6Search, "查询");
 bot.addAlias(r6Record, "记录");
 bot.addAlias(r6Record, "绑定");

@@ -8,6 +8,7 @@ import { r6Team } from './r6.team.app'
 import { r6Revokerole } from './r6.revokerole.app';
 import { r6Announce } from './r6.announce.app';
 import { r6Auth } from './r6.auth.app';
+import { r6Access } from './r6.access.app'
 class R6Menu extends MenuCommand {
     code = 'r6';
     trigger = 'r6';
@@ -17,4 +18,4 @@ class R6Menu extends MenuCommand {
     useCardMenu = true; // 使用卡片菜单
 }
 
-export const r6Menu = new R6Menu(r6Record, r6Search, r6Active, r6Applyrole, r6Team, r6Revokerole, r6Announce, r6Auth);
+export const r6Menu = new R6Menu(r6Record, r6Search, r6Active, r6Applyrole, r6Team, r6Revokerole, r6Announce, r6Auth, r6Access);
