@@ -13,7 +13,6 @@ class R6Active extends AppCommand {
         }
         var req = session.args[0];
         var days = await searchkey(req);
-
         if (days != false)
             recordkey(req, days)
         else {
@@ -41,13 +40,12 @@ class R6Active extends AppCommand {
         }
 
         async function recordkey(cdk: string, days: any) {
-            return new Promise<void>((resolve) => {
+            return new Promise<void>(async (resolve) => {
                 var exp1 = 'UPDATE cdklist SET act=1, actid=' + session.userId + ' WHERE cdk="' + cdk + '"';
-                connection.query(exp1, function (err: any) { console.log(err); session.send('ERROR'); })
-                var exp2 = 'INSERT IGNORE INTO usrlib (id) VALUES("' + session.userId + '")'
-                connection.query(exp2)
+                await connection.query(exp1, function (err: any) { if (err) { console.log(err); session.send('ERROR'); } })
+                await connection.query('INSERT IGNORE INTO usrlib (id) VALUES("' + session.userId + '")')
                 var exp3 = 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
-                connection.query(exp3, function (err: any, result: any) {
+                await connection.query(exp3, function (err: any, result: any) {
                     if (err) { console.log(err); session.send('ERROR'); }
                     else {
                         var addDays = function (myDate: Date, days: number) {
@@ -64,7 +62,8 @@ class R6Active extends AppCommand {
                             var time = addDays(expdate, days)
                             //更新为expdate+date
                         }
-                        var exp3 = 'UPDATE usrlib SET expdate="' + time.toISOString().replace(/T/, ' ').replace(/\..+/, '') + '" WHERE id="' + session.userId + '"';
+                        console.log(time.toISOString());
+                        var exp3 = 'UPDATE usrlib SET expdate="' + time.toISOString().replace('T', ' ').substr(0, 19) + '" WHERE id="' + session.userId + '"';
                         connection.query(exp3, function (err: any) {
                             if (err) { console.log(err); session.send('ERROR'); }
                             else {
