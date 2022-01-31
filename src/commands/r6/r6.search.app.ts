@@ -14,20 +14,20 @@ class R6Search extends AppCommand {
             return;
         }
         var flag = false;
-        var exp = 'SELECT act FROM cdklist WHERE id="' + session.userId + '" && act=1';
-        connection.query(exp, async function (err: any, result: any) {
+        var exp3 = 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
+        connection.query(exp3, function (err: any, result: any) {
             if (err) {
                 console.log('[SELECT ERROR] - ', err.message);
                 session.send("INJECT")
             }
-            else if (result[0]) {
-                flag = true
-                main()
-            }
             else {
-                //session.send("前往[爱发电](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)支持后可使用高级版！")
-                flag = false
-                main()
+                var expdate = new Date(result[0].expdate);
+                var date = new Date(); //现在
+                if (expdate >= date)
+                    flag = true;
+                else
+                    flag = false;
+                main();
             }
         });
         async function main() {
@@ -178,9 +178,9 @@ class R6Search extends AppCommand {
                                             { "type": "kmarkdown", "content": "**等级**\n" + level },
                                             { "type": "kmarkdown", "content": "**段位**\n" + arg3 },
                                             { "type": "kmarkdown", "content": "**总KD**\n" + kd },
-                                            { "type": "kmarkdown", "content": "**MMR**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
-                                            { "type": "kmarkdown", "content": "**赛季KD**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
-                                            { "type": "kmarkdown", "content": "**历史最高分**\n(spl)[¥10解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)(spl)" },
+                                            { "type": "kmarkdown", "content": "**MMR**\n(spl)[¥10解锁](https://afdian.net/@Gunale)(spl)" },
+                                            { "type": "kmarkdown", "content": "**赛季KD**\n(spl)[¥10解锁](https://afdian.net/@Gunale)(spl)" },
+                                            { "type": "kmarkdown", "content": "**历史最高分**\n(spl)[¥10解锁](https://afdian.net/@Gunale)(spl)" },
                                             { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
                                             { "type": "kmarkdown", "content": "**" + l1 + "**\n" + l1v },
                                             { "type": "kmarkdown", "content": "**" + l2 + "**\n" + l2v },
@@ -191,7 +191,7 @@ class R6Search extends AppCommand {
                                     "type": "section",
                                     "text": {
                                         "type": "kmarkdown",
-                                        "content": "[解锁](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)~~查看更多~~"
+                                        "content": "[解锁](https://afdian.net/@Gunale)~~查看更多~~"
                                     }
                                 }]
                             }]

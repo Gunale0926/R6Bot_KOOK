@@ -31,36 +31,38 @@ class R6Applyrole extends AppCommand {
         }
         var rid: number, flag = false;
         give().then(function (num) {
-            var exp = 'SELECT act FROM cdklist WHERE id="' + session.userId + '" && act=1';
-            connection.query(exp, async function (err: any, result: any) {
+            var exp3 = 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
+            connection.query(exp3, function (err: any, result: any) {
                 if (err) {
                     console.log('[SELECT ERROR] - ', err.message);
                     session.send("INJECT")
-                }
-                else if (result[0]) {
-                    if (num < 2) {
-                        session.user.grantRole(rid, session.guildId)
-                        session.user.grantRole(35688, session.guildId)
-                        session.send("申请成功（" + (num + 1) + "/2）");
-                        return;
-                    } else {
-                        session.send('高级用户最多只能申请两个！')
-                        return;
+                } else {
+                    var expdate = new Date(result[0].expdate);
+                    var date = new Date(); //现在
+                    if (expdate >= date) {
+                        if (num < 2) {
+                            session.user.grantRole(rid, session.guildId)
+                            session.user.grantRole(35688, session.guildId)
+                            session.send("申请成功（" + (num + 1) + "/2）");
+                            return;
+                        } else {
+                            session.send('高级用户最多只能申请两个！')
+                            return;
+                        }
                     }
-                }
-                else {
-                    if (num == 0) {
-                        session.user.grantRole(rid, session.guildId)
-                        session.user.grantRole(35688, session.guildId)
-                        session.send("申请成功（1/1）");
-                        return;
-                    } else {
-                        session.send('普通用户最多只能申请一个！[提高上限](https://afdian.net/item?plan_id=399e6166059011ec865552540025c377)')
-                        return;
+                    else {
+                        if (num == 0) {
+                            session.user.grantRole(rid, session.guildId)
+                            session.user.grantRole(35688, session.guildId)
+                            session.send("申请成功（1/1）");
+                            return;
+                        } else {
+                            session.send('普通用户最多只能申请一个！[提高上限](https://afdian.net/@Gunale)')
+                            return;
+                        }
                     }
                 }
             })
-
         })
         function give() {
             return new Promise<number>(async (resolve) => {

@@ -1,10 +1,9 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
-var tabname = 'cdklist'
 import { connection } from '../../tests/init'
 class R6Active extends AppCommand {
-    code = '激活'; // 只是用作标记
-    trigger = 'active'; // 用于触发的文字
-    help = '`.激活 XXXX-XXXX-XXXX`（注意：仅私聊机器人有效）'; // 帮助文字
+    code = '激活cp'; // 只是用作标记
+    trigger = 'activecp'; // 用于触发的文字
+    help = '`.激活cp XXXX-XXXX-XXXX`（注意：仅私聊机器人有效）'; // 帮助文字
     intro = '激活机器人高级功能';
     response: 'private' = 'private';
     func: AppFunc<BaseSession> = async (session) => {
@@ -12,69 +11,71 @@ class R6Active extends AppCommand {
             session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
             return;
         }
-        var exp = 'SELECT act FROM ' + tabname + ' WHERE id="' + session.userId + '" && act=1';
-        connection.query(exp, async function (err: any, result: any) {
-            if (err) {
-                console.log('[SELECT ERROR] - ', err.message);
-                session.send("内部参数错误")
-            }
-            else if (result[0]) {
-                session.send("已经激活过高级功能")
-                return;
-            }
-            else {
-                if (await searchkey(session.args[0]) == true)
-                    recordkey(session.args[0])
-            }
-        });
+        var req = session.args[0];
+        var days = await searchkey(req);
+
+        if (days != false)
+            recordkey(req, days)
+        else {
+            session.send("CDK错误或已经被激活！")
+            return;
+        }
+
         async function searchkey(cdk: string) {
-            return new Promise<boolean>((resolve) => {
-                var exp = 'SELECT act FROM ' + tabname + ' WHERE cdk="' + cdk + '" && act=0';
+            return new Promise<number | boolean>((resolve) => {
+                var exp = 'SELECT days FROM cdklist WHERE cdk="' + cdk + '" && act=0';
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
                         session.send("参数错误")
+                        return;
                     }
                     else if (result[0]) {
-                        resolve(true);
+                        resolve(Number(result[0].days));
                     }
                     else {
-                        session.send("CDK错误或已经被激活！")
                         resolve(false)
                     }
                 });
             })
         }
-        async function recordkey(cdk: string) {
-            return new Promise<void>((resolve) => {
-                var today = new Date();
-                var exp = 'UPDATE ' + tabname + ' SET act=1, actdate="' + today.toISOString().substring(0, 10) + '", id=' + session.userId + ' WHERE cdk="' + cdk + "\"";
-                connection.query(exp, function (err: any) {
-                    if (err) {
-                        console.log('[UPDATE ERROR] - ', err.message);
-                        session.send("参数错误")
-                    }
-                    else {
-                        if (cdk.charAt(cdk.length - 1) == 'F') {
-                            //session.user.grantRole(373739, '3128617072930683');//赞助者
-                            session.send('激活赠送激活码成功');
 
+        async function recordkey(cdk: string, days: any) {
+            return new Promise<void>((resolve) => {
+                var exp1 = 'UPDATE cdklist SET act=1, actid=' + session.userId + ' WHERE cdk="' + cdk + '"';
+                connection.query(exp1, function (err: any) { console.log(err); session.send('ERROR'); })
+                var exp2 = 'INSERT IGNORE INTO usrlib (id) VALUES("' + session.userId + '")'
+                connection.query(exp2)
+                var exp3 = 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
+                connection.query(exp3, function (err: any, result: any) {
+                    if (err) { console.log(err); session.send('ERROR'); }
+                    else {
+                        var addDays = function (myDate: Date, days: number) {
+                            myDate.setDate(myDate.getDate() + days);
+                            return myDate;
                         }
-                        else if (cdk.charAt(cdk.length - 1) == 'C') {
-                            //session.user.grantRole(, '3128617072930683');//冠军
-                            session.send('冠军奖品激活码激活成功');
+                        var expdate = new Date(result[0].expdate);
+                        var date = new Date(); //现在
+                        if (expdate < date) {
+                            var time = addDays(date, days)
+                            //更新为现在+days
                         }
                         else {
-                            session.user.grantRole(373739, '3128617072930683');//赞助者
-                            //session.user.grantRole(373758, '3128617072930683');//内测
-                            session.send('激活成功，感谢支持');
+                            var time = addDays(expdate, days)
+                            //更新为expdate+date
                         }
-                        resolve()
-
+                        var exp3 = 'UPDATE usrlib SET expdate="' + time.toISOString().replace(/T/, ' ').replace(/\..+/, '') + '" WHERE id="' + session.userId + '"';
+                        connection.query(exp3, function (err: any) {
+                            if (err) { console.log(err); session.send('ERROR'); }
+                            else {
+                                session.send('激活成功！\n激活时长：' + days + '天\n到期时间（ISO FORMAT）：' + time.toISOString());
+                            }
+                        })
                     }
                 })
             })
         }
     }
 }
+
 export const r6Active = new R6Active();

@@ -50,12 +50,65 @@ bot.addAlias(r6Team, "组队");
 bot.addAlias(r6Active, "激活");
 bot.addAlias(r6Announce, "公告");
 bot.addAlias(r6Auth, '认证')
-bot.addAlias(r6Pm,'pm')
+bot.addAlias(r6Pm, 'pm')
 bot.logger.debug('system init success');
 var https = require('https');
 var mysql = require('mysql');
-var tabname = 'usrlib';
 var url = "https://r6.tracker.network/profile/pc/";
+export var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '20060926Abc',
+    database: 'bot_db'
+});
+async function getif(r6id: string) {
+    return new Promise<boolean>(async (resolve) => {
+        var urln = url + r6id;
+        https.get(urln, function (res: any) {
+            var html: string = '';
+            res.on('data', function (data: any) {
+                html += data;
+            });
+            res.on('end', function () {
+                if (html.indexOf("RankedKDRatio") !== -1)
+                    resolve(true)
+                else
+                    resolve(false)
+            })
+        })
+    })
+}
+bot.message.on('text', async (message) => {
+    if (message.type == 1 && message.channelId == '1459838591677870' && !new RegExp("[\\u4E00-\\u9FFF]+", "g").test(message.content)) {
+        if (await getif(message.content))
+            recordid(message.authorId, message.content);
+        function recordid(id: string, r6id: string) {
+            var exp = 'INSERT INTO usrlib(id,r6id) VALUES("' + id + '","' + r6id + '")'
+            connection.query(exp, function (err: any) {
+                if (err) {
+                    exp = 'UPDATE usrlib SET r6id=\'' + r6id + '\'WHERE id=' + id;
+                    connection.query(exp, function (err: any) {
+                        if (err) {
+                            var tmstp = new Date().getTime()
+                            console.log('[INSERT ERROR] - ', err.message, ' [ID] - ', tmstp);
+                            bot.API.message.create(1, message.channelId, '[INSERT ERROR] - [ID] - ' + tmstp);
+                        }
+                        else {
+                            bot.API.message.create(1, message.channelId, '查询到此ID并换绑：' + r6id, '', message.authorId);
+                            //updateList(id)
+
+                        }
+                    })
+                }
+                else {
+                    bot.API.message.create(1, message.channelId, '查询到此ID并绑定：' + r6id, '', message.authorId);
+                    //updateList(id)
+                }
+            })
+        }
+    }
+})
+/*
 var list = [{
     chnname: 'DOC',
     chnid: 8574655462452796,
@@ -123,66 +176,12 @@ var list = [{
     msgid: '38421844-f17b-484a-b6e4-e0d79c99320d',
     card: ''
 }];
-export var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '20060926Abc',
-    database: 'bot_db'
-});
 bot.message.on('buttonEvent', (event) => {
     for (var i = 0; i < Object.keys(list).length; i++)
         if (event.content == list[i].chnname)
             break;
     bot.API.channel.moveUser(String(list[i].chnid), [event.userId])
 })
-async function getif(r6id: string) {
-    return new Promise<boolean>(async (resolve) => {
-        var urln = url + r6id;
-        https.get(urln, function (res: any) {
-            var html: string = '';
-            res.on('data', function (data: any) {
-                html += data;
-            });
-            res.on('end', function () {
-                if (html.indexOf("RankedKDRatio") !== -1)
-                    resolve(true)
-                else
-                    resolve(false)
-            })
-        })
-    })
-}
-bot.message.on('text', async (message) => {
-    if (message.type == 1 && message.channelId == '1459838591677870' && !new RegExp("[\\u4E00-\\u9FFF]+", "g").test(message.content)) {
-        if (await getif(message.content))
-            recordid(message.authorId, message.content);
-        function recordid(id: string, r6id: string) {
-            var exp = 'INSERT INTO ' + tabname + '(id,r6id,sel) VALUES("' + id + '","' + r6id + '",1)'
-            connection.query(exp, function (err: any) {
-                if (err) {
-                    exp = 'UPDATE ' + tabname + ' SET r6id=\'' + r6id + '\'WHERE id=' + id;
-                    connection.query(exp, function (err: any) {
-                        if (err) {
-                            var tmstp = new Date().getTime()
-                            console.log('[INSERT ERROR] - ', err.message, ' [ID] - ', tmstp);
-                            bot.API.message.create(1, message.channelId, '[INSERT ERROR] - [ID] - ' + tmstp);
-                        }
-                        else {
-                            bot.API.message.create(1, message.channelId, '查询到此ID并换绑：' + r6id, '', message.authorId);
-                            //updateList(id)
-
-                        }
-                    })
-                }
-                else {
-                    bot.API.message.create(1, message.channelId, '查询到此ID并绑定：' + r6id, '', message.authorId);
-                    //updateList(id)
-                }
-            })
-        }
-    }
-})
-/*
 async function searchid(id: string) {
     return new Promise<any>(async (resolve, reject) => {
         var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
