@@ -35,7 +35,6 @@ class R6Applyrole extends AppCommand {
             connection.query(exp3, function (err: any, result: any) {
                 if (err) {
                     console.log('[SELECT ERROR] - ', err.message);
-                    session.send("INJECT")
                 } else {
                     var expdate = new Date(result[0].expdate);
                     var date = new Date(); //现在
