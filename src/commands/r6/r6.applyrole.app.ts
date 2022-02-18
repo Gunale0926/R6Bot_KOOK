@@ -36,7 +36,12 @@ class R6Applyrole extends AppCommand {
                 if (err) {
                     console.log('[SELECT ERROR] - ', err.message);
                 } else {
-                    var expdate = new Date(result[0].expdate);
+                    try {
+                        var expdate = new Date(result[0].expdate);
+                    }
+                    catch {
+                        var expdate = new Date('1900-1-1 00:00:00');
+                    }
                     var date = new Date(); //现在
                     if (expdate >= date) {
                         if (num < 2) {
