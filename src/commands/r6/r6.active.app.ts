@@ -68,6 +68,7 @@ class R6Active extends AppCommand {
                             if (err) { console.log(err); session.send('ERROR'); }
                             else {
                                 session.send('激活成功！\n激活时长：' + days + '天\n到期时间（ISO FORMAT）：' + time.toISOString());
+                                session.user.grantRole(373739, '3128617072930683');
                             }
                         })
                     }
