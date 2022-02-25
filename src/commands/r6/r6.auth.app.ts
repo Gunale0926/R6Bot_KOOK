@@ -1,6 +1,5 @@
 import { AppCommand, AppFunc, BaseSession } from '../..';
 import { connection } from '../../tests/init'
-var tabname = 'usrlib'
 var https = require('https');
 var url = "https://r6.tracker.network/profile/pc/";
 class R6Auth extends AppCommand {
@@ -19,7 +18,7 @@ class R6Auth extends AppCommand {
         return;
         async function searchid(id: string) {
             return new Promise<any>(async (resolve) => {
-                var exp = 'SELECT r6id FROM ' + tabname + ' WHERE id=' + id;
+                var exp = 'SELECT r6id FROM usrlib WHERE id=' + id;
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);

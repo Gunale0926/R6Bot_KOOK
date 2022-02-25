@@ -22,7 +22,8 @@ class R6Active extends AppCommand {
 
         async function searchkey(cdk: string) {
             return new Promise<number | boolean>((resolve) => {
-                var exp = 'SELECT days FROM cdklist WHERE cdk="' + cdk + '" && act=0';
+
+                var exp = 'SELECT days FROM cdklist WHERE cdk=' + connection.escape(cdk) + ' && act=0';
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
@@ -62,7 +63,6 @@ class R6Active extends AppCommand {
                             var time = addDays(expdate, days)
                             //更新为expdate+date
                         }
-                        console.log(time.toISOString());
                         var exp3 = 'UPDATE usrlib SET expdate="' + time.toISOString().replace('T', ' ').substr(0, 19) + '" WHERE id="' + session.userId + '"';
                         connection.query(exp3, function (err: any) {
                             if (err) { console.log(err); session.send('ERROR'); }

@@ -46,7 +46,7 @@ class R6Applyrole extends AppCommand {
                     if (expdate >= date) {
                         if (num < 2) {
                             session.user.grantRole(rid, session.guildId)
-                            session.user.grantRole(35688, session.guildId)
+                            //session.user.grantRole(35688, session.guildId)
                             session.send("申请成功（" + (num + 1) + "/2）");
                             return;
                         } else {
@@ -57,7 +57,7 @@ class R6Applyrole extends AppCommand {
                     else {
                         if (num == 0) {
                             session.user.grantRole(rid, session.guildId)
-                            session.user.grantRole(35688, session.guildId)
+                            //session.user.grantRole(35688, session.guildId)
                             session.send("申请成功（1/1）");
                             return;
                         } else {
