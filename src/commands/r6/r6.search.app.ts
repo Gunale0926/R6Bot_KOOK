@@ -113,6 +113,11 @@ class R6Search extends AppCommand {
                         } catch (error) {
                             skd = 'N/A'
                         }
+                        try {
+
+                        } catch (error) {
+
+                        }
                         var arg3 = rank.replace(' ', '');
                         var arg6 = '#B2B6BB';
                         var rankcn;
@@ -130,16 +135,12 @@ class R6Search extends AppCommand {
                         else if (arg3 === 'IV') arg3 = rankcn + '4';
                         else if (arg3 === 'V') arg3 = rankcn + '5';
                         try {
-                            var l1 = 'High Calibre';
-                            var l1v = html.match(l1 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
+                            var ban = html.match('<div class="r6-alias-history"><div class="r6-alias-history__row"><div class="r6-alias-history__nickname">Reason</div><div class="r6-alias-history__line"></div><div class="r6-alias-history__current">Date</div></div><div class="r6-alias-history__row"><div class="r6-alias-history__nickname">(.*?)</div><div class="r6-alias-history__line"></div><div class="r6-alias-history__date">(.*?)</div></div></div>');
+                            var banstat = ban[1]
+                            var bantime = ban[2]
                         } catch (error) {
-                            l1v = '未定级';
-                        }
-                        try {
-                            var l2 = 'Crystal Guard';
-                            var l2v = html.match(l2 + '</div><div><span class="r6-quickseason__value[\\s\\S]*?">(.*?)</span>')[1].replace(',', '');
-                        } catch (error) {
-                            l2v = '未定级';
+                            banstat='无封禁'
+                            bantime='无封禁'
                         }
                         if (flag)
                             var card = [{
@@ -157,8 +158,8 @@ class R6Search extends AppCommand {
                                             { "type": "kmarkdown", "content": "**赛季KD**\n" + skd },
                                             { "type": "kmarkdown", "content": "**历史最高分**\n" + highestMMR },
                                             { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
-                                            { "type": "kmarkdown", "content": "**" + l1 + "**\n" + l1v },
-                                            { "type": "kmarkdown", "content": "**" + l2 + "**\n" + l2v },
+                                            { "type": "kmarkdown", "content": "**封禁状态**\n" + banstat },
+                                            { "type": "kmarkdown", "content": "**封禁时间**\n" + bantime },
                                         ]
                                     }
                                 },
@@ -186,8 +187,8 @@ class R6Search extends AppCommand {
                                             { "type": "kmarkdown", "content": "**赛季KD**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)" },
                                             { "type": "kmarkdown", "content": "**历史最高分**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)" },
                                             { "type": "kmarkdown", "content": "**多人游戏时长**\n" + time },
-                                            { "type": "kmarkdown", "content": "**" + l1 + "**\n" + l1v },
-                                            { "type": "kmarkdown", "content": "**" + l2 + "**\n" + l2v },
+                                            { "type": "kmarkdown", "content": "**封禁状态**\n" + banstat },
+                                            { "type": "kmarkdown", "content": "**封禁时间**\n" + bantime },
                                         ]
                                     }
                                 },
