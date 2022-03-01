@@ -135,7 +135,7 @@ class R6Search extends AppCommand {
                         else if (arg3 === 'IV') arg3 = rankcn + '4';
                         else if (arg3 === 'V') arg3 = rankcn + '5';
                         try {
-                            var ban = html.match('<div class="r6-alias-history"><div class="r6-alias-history__row"><div class="r6-alias-history__nickname">Reason</div><div class="r6-alias-history__line"></div><div class="r6-alias-history__current">Date</div></div><div class="r6-alias-history__row"><div class="r6-alias-history__nickname">(.*?)</div><div class="r6-alias-history__line"></div><div class="r6-alias-history__date">(.*?)</div></div></div>');
+                            var ban = html.match('<div class="r6-alias-history__row"><div class="r6-alias-history__nickname">Reason</div><div class="r6-alias-history__line"></div><div class="r6-alias-history__current">Date</div></div><div class="r6-alias-history__row"><div class="r6-alias-history__nickname">(.*?)</div><div class="r6-alias-history__line"></div><div class="r6-alias-history__date">(.*?)</div></div>');
                             var banstat = ban[1]
                             var bantime = ban[2]
                         } catch (error) {
