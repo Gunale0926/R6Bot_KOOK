@@ -13,7 +13,6 @@ class R6Applyrole extends AppCommand {
         }
         if (session.args[0] == '列表') {
             var response = await bot.API.guildRole.index(session.guildId);
-            console.log(response);
             var card = new Card().addTitle('可申请的角色列表');
             var text: string = '';
             var num: number = 0;
