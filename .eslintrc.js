@@ -208,7 +208,7 @@ module.exports = {
                 allowShortCircuit: true,
             },
         ],
-        'no-var': 'error',
+        'no-var': '0',
         'no-void': 'error',
         'object-shorthand': 'error',
         'one-var': ['error', 'never'],

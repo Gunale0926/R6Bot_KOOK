@@ -26,7 +26,6 @@ import { r6Applyrole } from '../commands/r6/r6.applyrole.app';
 import { r6Record } from '../commands/r6/r6.record.app';
 import { r6Search } from '../commands/r6/r6.search.app';
 import { r6Team } from '../commands/r6/r6.team.app';
-import { apexMenu } from '../commands/apex/apex.menu';
 import { r6Revokerole } from '../commands/r6/r6.revokerole.app';
 import { r6Announce } from '../commands/r6/r6.announce.app';
 import { r6Auth } from '../commands/r6/r6.auth.app';
@@ -39,7 +38,6 @@ import { AttachmentBase } from 'kaiheila-bot-root';
 import { resolveLevel } from 'bunyan';
 */
 bot.addCommands(echoMenu, echoKmd, testMenu, r6Menu);
-bot.addCommands(apexMenu);
 bot.connect();
 bot.addAlias(r6Menu, "菜单");
 bot.addAlias(r6Access, "权限");
