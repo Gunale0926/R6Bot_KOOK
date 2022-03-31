@@ -83,16 +83,21 @@ class R6Search extends AppCommand {
 					WLratio = res.data.pvp.general.winRate;
 					time = (res.data.pvp.general.playtime / 3600).toFixed(1);
 				})
-				.then(function() {
+				.finally(function() {
 					axios.get('http://localhost:3000/uplay/rank/username/' + r6id)
 						.then(function(res: any) {
-							mmr = res.data.seasons[Object.keys(res.data.seasons).length + 5].regions.apac.boards.pvp_ranked.current.mmr;
-							rank = res.data.seasons[Object.keys(res.data.seasons).length + 5].regions.apac.boards.pvp_ranked.current.name;
-							highestMMR = res.data.seasons[Object.keys(res.data.seasons).length + 5].regions.apac.boards.pvp_ranked.max.mmr;
-							skd = res.data.seasons[Object.keys(res.data.seasons).length + 5].regions.apac.boards.pvp_ranked.kd;
-							sWLratio = res.data.seasons[Object.keys(res.data.seasons).length + 5].regions.apac.boards.pvp_ranked.winRate;
+							try {
+								mmr = res.data.seasons[24].regions.apac.boards.pvp_ranked.current.mmr;
+								rank = res.data.seasons[24].regions.apac.boards.pvp_ranked.current.name;
+								highestMMR = res.data.seasons[24].regions.apac.boards.pvp_ranked.max.mmr;
+								skd = res.data.seasons[24].regions.apac.boards.pvp_ranked.kd;
+								sWLratio = res.data.seasons[24].regions.apac.boards.pvp_ranked.winRate;
+							}
+							catch (error) {
+
+							}
 						})
-						.then(function() {
+						.finally(function() {
 							axios.get('http://localhost:3000/uplay/level/username/' + r6id)
 								.then(function(res: any) {
 									level = res.data.level;
