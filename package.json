@@ -56,7 +56,8 @@
         "dotenv": "^8.2.0",
         "kaiheila-bot-root": "^0.2.9",
         "lru-cache": "^6.0.0",
-        "mysql": "^2.18.1"
+        "mysql": "^2.18.1",
+        "rainbowsix-siege-api": "^1.0.3"
     },
     "files": [
         "dist"
