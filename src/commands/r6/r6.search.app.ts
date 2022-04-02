@@ -88,6 +88,17 @@ class R6Search extends AppCommand {
 					stats = res.data.players[Object.keys(res.data.players)[0]]
 				})
 				.then(function() {
+					var nodata:any;
+					try{
+						nodata=stats.error.message
+					}
+					catch{
+						
+					}
+					if(nodata=='User not found!'){
+						session.send('查无此人！请检查ID后重试！')
+						return;
+					}
 					axios.get('http://localhost:9099/getStats.php?appcode=thisisthecode&name=' + r6id)
 						.then(function(res:any) {
 								var result:any = res.data.players[Object.keys(res.data.players)[0]]
