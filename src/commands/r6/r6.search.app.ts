@@ -81,32 +81,35 @@ class R6Search extends AppCommand {
 			});
 		}
 		async function get(r6id: string) {
-			var kd:any,src: string,arg6: string,stats: any, time:any,WLratio:any;
+			var kd: any, src: string, arg6: string, stats: any, time: any, WLratio: any;
 			src = session.user.avatar;
 			axios.get('http://localhost:9099/getUser.php?appcode=thisisthecode&name=' + r6id)
 				.then(function(res: any) {
 					stats = res.data.players[Object.keys(res.data.players)[0]]
 				})
 				.then(function() {
-					var nodata:any;
-					try{
-						nodata=stats.error.message
+					var nodata: any;
+					try {
+						nodata = stats.error.message
 					}
-					catch{
-						
+					catch {
+
 					}
-					if(nodata=='User not found!'){
+					if (nodata == 'User not found!') {
 						session.send('查无此人！请检查ID后重试！')
 						return;
 					}
 					axios.get('http://localhost:9099/getStats.php?appcode=thisisthecode&name=' + r6id)
-						.then(function(res:any) {
-								var result:any = res.data.players[Object.keys(res.data.players)[0]]
-							time=(result.generalpvp_timeplayed / 3600).toFixed(2);
-							kd=(result.generalpvp_kills/result.generalpvp_death).toFixed(2);
-							WLratio=(result.generalpvp_matchwon/result.generalpvp_matchplayed).toFixed(2);
+						.then(function(res: any) {
+							var result: any = res.data.players[Object.keys(res.data.players)[0]]
+							if (!result) {
+								return;
+							}
+								time = (result.generalpvp_timeplayed / 3600).toFixed(2);
+								kd = (result.generalpvp_kills / result.generalpvp_death).toFixed(2);
+								WLratio = (result.generalpvp_matchwon / result.generalpvp_matchplayed).toFixed(2);
 						})
-						.finally(function() {
+						.then(function() {
 							if (stats.rankInfo.name.search(/Copper/) === 0) { arg6 = "#B30B0D"; }
 							if (stats.rankInfo.name.search(/Bronze/) === 0) { arg6 = "#C98B3B"; }
 							if (stats.rankInfo.name.search(/Silver/) === 0) { arg6 = "#B0B0B0"; }
@@ -128,7 +131,7 @@ class R6Search extends AppCommand {
 												{ "type": "kmarkdown", "content": "**段位**\n" + stats.rankInfo.name },
 												{ "type": "kmarkdown", "content": "**总KD**\n" + kd },
 												{ "type": "kmarkdown", "content": "**赛季KD**\n" + (stats.kills / stats.deaths).toFixed(2) },
-												{ "type": "kmarkdown", "content": "**胜率**\n" + WLratio*100+'%' },
+												{ "type": "kmarkdown", "content": "**胜率**\n" + WLratio * 100 + '%' },
 												{ "type": "kmarkdown", "content": "**赛季胜率**\n" + (stats.wins / stats.losses).toFixed(2) },
 												{ "type": "kmarkdown", "content": "**MMR**\n" + stats.mmr },
 												{ "type": "kmarkdown", "content": "**赛季最高分**\n" + stats.max_mmr },
@@ -157,7 +160,7 @@ class R6Search extends AppCommand {
 												{ "type": "kmarkdown", "content": "**段位**\n" + stats.rankInfo.name },
 												{ "type": "kmarkdown", "content": "**总KD**\n" + kd },
 												{ "type": "kmarkdown", "content": "**赛季KD**\n" + (stats.kills / stats.deaths).toFixed(2) },
-												{ "type": "kmarkdown", "content": "**胜率**\n" + WLratio*100+"%" },
+												{ "type": "kmarkdown", "content": "**胜率**\n" + WLratio * 100 + "%" },
 												{ "type": "kmarkdown", "content": "**赛季胜率**\n" + (stats.wins / stats.losses).toFixed(2) },
 												{ "type": "kmarkdown", "content": "**MMR**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)" },
 												{ "type": "kmarkdown", "content": "**赛季最高分**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)" },
