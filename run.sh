@@ -9,8 +9,6 @@ do
     else
         cd /root/r6bot
         nohup npm test &
-		cd r6api
-		php -s localhost:9099
     fi
     sleep 5
  done

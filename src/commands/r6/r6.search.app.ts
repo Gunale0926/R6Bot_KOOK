@@ -120,7 +120,7 @@ class R6Search extends AppCommand {
 												{ "type": "kmarkdown", "content": "**胜率**\n" + WLratio*100+'%' },
 												{ "type": "kmarkdown", "content": "**赛季胜率**\n" + (stats.wins / stats.losses).toFixed(2) },
 												{ "type": "kmarkdown", "content": "**MMR**\n" + stats.mmr },
-												{ "type": "kmarkdown", "content": "**历史最高分**\n" + stats.max_mmr },
+												{ "type": "kmarkdown", "content": "**赛季最高分**\n" + stats.max_mmr },
 												{ "type": "kmarkdown", "content": "**多人游戏时长**\n" + time }
 											]
 										}
@@ -149,7 +149,7 @@ class R6Search extends AppCommand {
 												{ "type": "kmarkdown", "content": "**胜率**\n" + WLratio*100+"%" },
 												{ "type": "kmarkdown", "content": "**赛季胜率**\n" + (stats.wins / stats.losses).toFixed(2) },
 												{ "type": "kmarkdown", "content": "**MMR**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)" },
-												{ "type": "kmarkdown", "content": "**历史最高分**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)" },
+												{ "type": "kmarkdown", "content": "**赛季最高分**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)" },
 												{ "type": "kmarkdown", "content": "**多人游戏时长**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)" }
 
 											]
