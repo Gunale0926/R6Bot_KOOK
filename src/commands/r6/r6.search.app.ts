@@ -3,11 +3,6 @@ import { connection } from '../../tests/init'
 const r6api = require('../../../api.js');
 var tabname = 'usrlib'
 import axios from 'axios';
-var email = '1599326217@qq.com';
-var password = '20060926Abc';
-var platform = 'uplay';
-var account = r6api.createAccount(email, password, platform);
-var season = '5';
 class R6Search extends AppCommand {
 	code = 'search'; // 只是用作标记
 	trigger = 'search'; // 用于触发的文字
