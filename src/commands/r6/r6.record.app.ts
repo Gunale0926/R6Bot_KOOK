@@ -1,6 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, Card } from '../..';
 import { connection } from '../../tests/init'
-var tabname = 'usrlib'
 class R6Record extends AppCommand {
     code = 'record'; // 只是用作标记
     trigger = 'record'; // 用于触发的文字

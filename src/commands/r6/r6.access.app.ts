@@ -23,5 +23,4 @@ class R6Access extends AppCommand {
         })
     }
 }
-
 export const r6Access = new R6Access();
