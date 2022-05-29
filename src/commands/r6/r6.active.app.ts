@@ -27,7 +27,7 @@ class R6Active extends AppCommand {
         async function searchkey(cdk: string) {
             return new Promise<number | boolean>((resolve) => {
                 var exp =
-                    'SELECT days FROM cdklist WHERE cdk=' + 
+                    'SELECT days FROM cdklist WHERE cdk=' +
                     connection.escape(cdk) +
                     ' && act=0';
                 connection.query(exp, function (err: any, result: any) {
@@ -60,8 +60,8 @@ class R6Active extends AppCommand {
                 });
                 await connection.query(
                     'INSERT IGNORE INTO usrlib (id) VALUES("' +
-                    session.userId +
-                    '")'
+                        session.userId +
+                        '")'
                 );
                 var exp3 =
                     'SELECT expdate FROM usrlib WHERE id="' +
@@ -98,9 +98,9 @@ class R6Active extends AppCommand {
                             } else {
                                 session.send(
                                     '激活成功！\n激活时长：' +
-                                    days +
-                                    '天\n到期时间（ISO FORMAT）：' +
-                                    time.toISOString()
+                                        days +
+                                        '天\n到期时间（ISO FORMAT）：' +
+                                        time.toISOString()
                                 );
                                 session.user.grantRole(
                                     373739,
