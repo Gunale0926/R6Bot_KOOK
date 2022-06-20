@@ -1,4 +1,3 @@
-<<<<<<< ours
 import { AppCommand, AppFunc, BaseSession } from '../..';
 import { connection } from '../../tests/init';
 import axios from 'axios';
@@ -721,4 +720,3 @@ class R6Search extends AppCommand {
 }
 
 export const r6Search = new R6Search();
->>>>>>> theirs
