@@ -41,7 +41,7 @@ class R6Applyrole extends AppCommand {
         }
         var rid: number,
             flag = false;
-        give().then(function (num) {
+        GetRole().then(function (num: number) {
             var exp3 =
                 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
             connection.query(exp3, function (err: any, result: any) {
@@ -80,7 +80,7 @@ class R6Applyrole extends AppCommand {
                 }
             });
         });
-        function give() {
+        function GetRole() {
             return new Promise<number>(async (resolve) => {
                 var response = await bot.API.guildRole.index(session.guildId);
                 var num = 0;
@@ -109,11 +109,11 @@ class R6Applyrole extends AppCommand {
                                             ) {
                                                 if (
                                                     usres.items[j].roles[k] ==
-                                                        response[z].roleId &&
+                                                    response[z].roleId &&
                                                     response[z].position >=
-                                                        pars.head &&
+                                                    pars.head &&
                                                     response[z].position <=
-                                                        pars.tail
+                                                    pars.tail
                                                 ) {
                                                     num++;
                                                 }
