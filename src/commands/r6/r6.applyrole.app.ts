@@ -71,9 +71,7 @@ class R6Applyrole extends AppCommand {
                             session.send('申请成功（1/1）');
                             return;
                         } else {
-                            session.send(
-                                '普通用户最多只能申请一个！[提高上限](https://afdian.net/@Gunale)'
-                            );
+                            session.send('普通用户最多只能申请一个！[提高上限](https://afdian.net/@Gunale)');
                             return;
                         }
                     }
