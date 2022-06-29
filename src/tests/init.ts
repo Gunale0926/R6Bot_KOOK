@@ -14,8 +14,8 @@ export const bot = new KBotify({
     debug: false,
 });
 export const pars = {
-    head: 9,
-    tail: 65
+    head: 11,
+    tail: 67
 }
 import { echoMenu } from 'commands/echo/echo.menu';
 import { echoKmd } from 'commands/echo/echo.kmd.app';
