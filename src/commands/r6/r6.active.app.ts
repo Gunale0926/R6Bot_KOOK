@@ -6,7 +6,7 @@ class R6Active extends AppCommand {
     help = '`.激活 XXXX-XXXX-XXXX`（注意：仅私聊机器人有效）'; // 帮助文字
     intro = '激活机器人高级功能';
     response: 'private' = 'private';
-    func: AppFunc<BaseSession> = async (session) => {
+    func: AppFunc<BaseSession> = async (session): Promise<void> => {
         if (session.args.length == 0) {
             session.sendCard(
                 new Card()
@@ -60,8 +60,8 @@ class R6Active extends AppCommand {
                 });
                 await connection.query(
                     'INSERT IGNORE INTO usrlib (id) VALUES("' +
-                        session.userId +
-                        '")'
+                    session.userId +
+                    '")'
                 );
                 var exp3 =
                     'SELECT expdate FROM usrlib WHERE id="' +
@@ -87,7 +87,7 @@ class R6Active extends AppCommand {
                         }
                         var exp3 =
                             'UPDATE usrlib SET expdate="' +
-                            time.toISOString().replace('T', ' ').substr(0, 19) +
+                            time.toISOString().replace('T', ' ').substring(0, 19) +
                             '" WHERE id="' +
                             session.userId +
                             '"';
@@ -98,10 +98,11 @@ class R6Active extends AppCommand {
                             } else {
                                 session.send(
                                     '激活成功！\n激活时长：' +
-                                        days +
-                                        '天\n到期时间（ISO FORMAT）：' +
-                                        time.toISOString()
+                                    days +
+                                    '天\n到期时间（ISO FORMAT）：' +
+                                    time.toISOString()
                                 );
+                                resolve()
                                 session.user.grantRole(
                                     373739,
                                     '3128617072930683'

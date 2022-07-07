@@ -40,7 +40,7 @@ class R6Applyrole extends AppCommand {
             return;
         }
         var rid: number,
-            flag = false;
+        flag = false;
         GetRole().then(function (num: number) {
             var exp3 =
                 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
@@ -86,41 +86,41 @@ class R6Applyrole extends AppCommand {
                     if (
                         response[i].name == session.args[0] &&
                         response[i].position >= pars.head &&
-                        response[i].position <= pars.tail
+                    response[i].position <= pars.tail
                     ) {
                         rid = response[i].roleId;
                         flag = true;
                         bot.API.guild
-                            .userList(session.guildId)
-                            .then(function (usres) {
-                                for (var j = 0; j < usres.items.length; j++) {
-                                    if (usres.items[j].id == session.userId) {
+                        .userList(session.guildId)
+                        .then(function (usres) {
+                            for (var j = 0; j < usres.items.length; j++) {
+                                if (usres.items[j].id == session.userId) {
+                                    for (
+                                        var k = 0;
+                                    k < usres.items[j].roles.length;
+                                    k++
+                                    ) {
                                         for (
-                                            var k = 0;
-                                            k < usres.items[j].roles.length;
-                                            k++
+                                            var z = 0;
+                                        z < response.length;
+                                        z++
                                         ) {
-                                            for (
-                                                var z = 0;
-                                                z < response.length;
-                                                z++
+                                            if (
+                                                usres.items[j].roles[k] ==
+                                                response[z].roleId &&
+                                            response[z].position >=
+                                        pars.head &&
+                                    response[z].position <=
+                                pars.tail
                                             ) {
-                                                if (
-                                                    usres.items[j].roles[k] ==
-                                                    response[z].roleId &&
-                                                    response[z].position >=
-                                                    pars.head &&
-                                                    response[z].position <=
-                                                    pars.tail
-                                                ) {
-                                                    num++;
-                                                }
+                                                num++;
                                             }
                                         }
                                     }
                                 }
-                                resolve(num);
-                            });
+                            }
+                            resolve(num);
+                        });
                     }
                 }
                 if (!flag)
