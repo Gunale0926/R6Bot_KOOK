@@ -3,6 +3,7 @@ import { Card } from '../../core/card';
 import { r6Record } from './r6.record.app';
 import { r6Search } from './r6.search.app';
 import { r6Active } from './r6.active.app';
+import { r6Access } from './r6.access.app';
 class R6Menu extends MenuCommand {
     code = 'r6';
     trigger = 'r6';
@@ -17,4 +18,5 @@ export const r6Menu = new R6Menu(
     r6Record,
     r6Search,
     r6Active,
+    r6Access
 );
