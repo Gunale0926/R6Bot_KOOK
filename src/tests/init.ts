@@ -13,7 +13,7 @@ export const bot = new KBotify({
 });
 export const pars = {
     head: 11,
-    tail: 67
+    tail: 68
 }
 import { r6Menu } from 'commands/r6/r6.menu';
 import { r6ComMenu } from 'commands/r6community/r6com.menu';
