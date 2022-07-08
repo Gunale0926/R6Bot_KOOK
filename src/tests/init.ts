@@ -1,6 +1,7 @@
 console.log('Startms:' + new Date().getTime())
 import * as dotenv from 'dotenv';
 import { KBotify } from '..';
+import axios from 'axios';
 dotenv.config();
 export const bot = new KBotify({
     mode: 'websocket',
