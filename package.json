@@ -31,6 +31,7 @@
     "devDependencies": {
         "@types/bunyan": "^1.8.8",
         "@types/lru-cache": "^7.10.9",
+        "@types/node": "^18.0.3",
         "@typescript-eslint/eslint-plugin": "^5.29.0",
         "@typescript-eslint/eslint-plugin-tslint": "^5.29.0",
         "@typescript-eslint/parser": "^5.29.0",
@@ -54,11 +55,12 @@
         "bunyan": "^1.8.15",
         "dependencies": "^0.0.1",
         "dotenv": "^16.0.1",
+        "ffmpeg-static": "^5.0.0",
         "kaiheila-bot-root": "^0.2.9",
         "lru-cache": "^7.10.2",
         "mysql": "^2.18.1",
-        "rainbowsix-siege-api": "^1.0.3",
-        "ffmpeg-static": "^5.0.0"
+        "node-schedule": "^2.1.0",
+        "rainbowsix-siege-api": "^1.0.3"
     },
     "files": [
         "dist"
