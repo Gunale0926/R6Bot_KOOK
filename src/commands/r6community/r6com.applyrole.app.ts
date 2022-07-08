@@ -4,9 +4,15 @@ import { connection } from '../../tests/init';
 class R6Applyrole extends AppCommand {
     code = 'applyrole'; // 只是用作标记
     trigger = 'applyrole'; // 用于触发的文字
-    help = '`.申请角色 角色`'; // 帮助文字
+    help = '`.申请角色 列表`查看可申请角色列表'; // 帮助文字
     intro = '申请角色';
     func: AppFunc<BaseSession> = async (session) => {
+        if (session.guildId != '3128617072930683') {
+            session.sendCard(
+                new Card().addTitle('只能在Rainbow Six小队频道使用')
+            );
+            return;
+        }
         if (session.args.length == 0) {
             session.sendCard(
                 new Card().addTitle('申请角色').addText(this.help)
@@ -30,12 +36,6 @@ class R6Applyrole extends AppCommand {
             session.sendCard(
                 card.addText('总计' + num + '个角色').addText(text),
                 { temp: true }
-            );
-            return;
-        }
-        if (session.guildId != '3128617072930683') {
-            session.sendCard(
-                new Card().addTitle('只能在Rainbow Six小队频道使用')
             );
             return;
         }
@@ -125,7 +125,7 @@ class R6Applyrole extends AppCommand {
                 }
                 if (!flag)
                     session.send(
-                        '没有该角色，输入`.申请角色 列表`查看角色列表'
+                        '没有该角色，输入`.申请角色 列表`查看可申请角色列表'
                     );
             });
         }
