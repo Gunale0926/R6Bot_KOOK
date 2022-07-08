@@ -7,7 +7,7 @@ class R6ComMenu extends MenuCommand {
     code = 'r6com';
     trigger = 'r6com';
     help =
-        '`.申请角色 R6干员英文名（大写）`可获得该干员的角色\n`.撤销角色 R6干员英文名（大写）`可撤销该干员的角色\n`.认证`认证彩虹六号成绩';
+        '仅可以在Rainbow Six 小队服务器使用！\n`.申请角色 R6干员英文名（大写）`可获得该干员的角色\n`.撤销角色 R6干员英文名（大写）`可撤销该干员的角色\n`.认证`认证彩虹六号成绩';
     intro = 'R6小队菜单';
     menu = new Card().addText(this.help).setColor('danger').toString();
     useCardMenu = true; // 使用卡片菜单
