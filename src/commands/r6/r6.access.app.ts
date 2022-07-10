@@ -8,7 +8,7 @@ class R6Access extends AppCommand {
     response: 'both' = 'both';
     func: AppFunc<BaseSession> = async (session) => {
         var exp3 =
-            'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
+        'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
         connection.query(exp3, function (err: any, result: any) {
             if (err) {
                 console.log('[SELECT ERROR] - ', err.message);
@@ -18,7 +18,7 @@ class R6Access extends AppCommand {
                 if (expdate >= date)
                     session.send(
                         '到期时间（ISO FORMAT）：' + expdate.toISOString()
-                    );
+                        );
                 else session.send('高级权限未激活或已经过期');
             }
         });

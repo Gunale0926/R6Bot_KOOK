@@ -11,7 +11,7 @@ class R6Auth extends AppCommand {
         if (session.guildId != '3128617072930683') {
             session.sendCard(
                 new Card().addTitle('只能在Rainbow Six小队频道使用')
-            );
+                );
             return;
         }
         var r6id = await searchid(session.userId);
@@ -39,7 +39,7 @@ class R6Auth extends AppCommand {
             .get(
                 'http://localhost:9099/getUser.php?appcode=thisisthecode&name=' +
                 r6id
-            )
+                )
             .then(function (res: any) {
                 stats = res.data.players[Object.keys(res.data.players)[0]];
             })
@@ -69,11 +69,11 @@ class R6Auth extends AppCommand {
                 else highestRank = '冠军';
                 session.send(
                     'ID：' +
-                        r6id +
-                        '\n本赛季最高段位：' +
-                        highestRank +
-                        '\n请等待审核！'
-                );
+                    r6id +
+                    '\n本赛季最高段位：' +
+                    highestRank +
+                    '\n请等待审核！'
+                    );
                 return;
             });
         }

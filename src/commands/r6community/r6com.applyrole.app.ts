@@ -10,13 +10,13 @@ class R6Applyrole extends AppCommand {
         if (session.guildId != '3128617072930683') {
             session.sendCard(
                 new Card().addTitle('只能在Rainbow Six小队频道使用')
-            );
+                );
             return;
         }
         if (session.args.length == 0) {
             session.sendCard(
                 new Card().addTitle('申请角色').addText(this.help)
-            );
+                );
             return;
         }
         if (session.args[0] == '列表') {
@@ -28,31 +28,31 @@ class R6Applyrole extends AppCommand {
                 if (
                     response[i].position >= pars.head &&
                     response[i].position <= pars.tail
-                ) {
+                    ) {
                     text = text + response[i].name + '\n';
-                    num++;
-                }
+                num++;
             }
-            session.sendCard(
-                card.addText('总计' + num + '个角色').addText(text),
-                { temp: true }
-            );
-            return;
         }
-        var rid: number,
-        flag = false;
-        GetRole().then(function (num: number) {
-            var exp3 =
-                'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
-            connection.query(exp3, function (err: any, result: any) {
-                if (err) {
-                    console.log('[SELECT ERROR] - ', err.message);
-                } else {
-                    try {
-                        var expdate = new Date(result[0].expdate);
-                    } catch {
-                        var expdate = new Date('1900-1-1 00:00:00');
-                    }
+        session.sendCard(
+            card.addText('总计' + num + '个角色').addText(text),
+            { temp: true }
+            );
+        return;
+    }
+    var rid: number,
+    flag = false;
+    GetRole().then(function (num: number) {
+        var exp3 =
+        'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
+        connection.query(exp3, function (err: any, result: any) {
+            if (err) {
+                console.log('[SELECT ERROR] - ', err.message);
+            } else {
+                try {
+                    var expdate = new Date(result[0].expdate);
+                } catch {
+                    var expdate = new Date('1900-1-1 00:00:00');
+                }
                     var date = new Date(); //现在
                     if (expdate >= date) {
                         if (num < 2) {
@@ -77,59 +77,59 @@ class R6Applyrole extends AppCommand {
                     }
                 }
             });
-        });
-        function GetRole() {
-            return new Promise<number>(async (resolve) => {
-                var response = await bot.API.guildRole.index(session.guildId);
-                var num = 0;
-                for (var i = 0; i < response.length; i++) {
-                    if (
-                        response[i].name == session.args[0] &&
-                        response[i].position >= pars.head &&
+    });
+    function GetRole() {
+        return new Promise<number>(async (resolve) => {
+            var response = await bot.API.guildRole.index(session.guildId);
+            var num = 0;
+            for (var i = 0; i < response.length; i++) {
+                if (
+                    response[i].name == session.args[0] &&
+                    response[i].position >= pars.head &&
                     response[i].position <= pars.tail
                     ) {
-                        rid = response[i].roleId;
-                        flag = true;
-                        bot.API.guild
-                        .userList(session.guildId)
-                        .then(function (usres) {
-                            for (var j = 0; j < usres.items.length; j++) {
-                                if (usres.items[j].id == session.userId) {
-                                    for (
-                                        var k = 0;
-                                    k < usres.items[j].roles.length;
-                                    k++
+                    rid = response[i].roleId;
+                flag = true;
+                bot.API.guild
+                .userList(session.guildId)
+                .then(function (usres) {
+                    for (var j = 0; j < usres.items.length; j++) {
+                        if (usres.items[j].id == session.userId) {
+                            for (
+                                var k = 0;
+                                k < usres.items[j].roles.length;
+                                k++
+                                ) {
+                                for (
+                                    var z = 0;
+                                    z < response.length;
+                                    z++
                                     ) {
-                                        for (
-                                            var z = 0;
-                                        z < response.length;
-                                        z++
-                                        ) {
-                                            if (
-                                                usres.items[j].roles[k] ==
-                                                response[z].roleId &&
-                                            response[z].position >=
+                                    if (
+                                        usres.items[j].roles[k] ==
+                                        response[z].roleId &&
+                                        response[z].position >=
                                         pars.head &&
-                                    response[z].position <=
-                                pars.tail
-                                            ) {
-                                                num++;
-                                            }
-                                        }
-                                    }
+                                        response[z].position <=
+                                        pars.tail
+                                        ) {
+                                        num++;
                                 }
                             }
-                            resolve(num);
-                        });
+                        }
                     }
                 }
-                if (!flag)
-                    session.send(
-                        '没有该角色，输入`.申请角色 列表`查看可申请角色列表'
-                    );
+                resolve(num);
             });
+            }
         }
-    };
+        if (!flag)
+            session.send(
+                '没有该角色，输入`.申请角色 列表`查看可申请角色列表'
+                );
+    });
+    }
+};
 }
 
 export const r6Applyrole = new R6Applyrole();

@@ -10,10 +10,10 @@ class R6Active extends AppCommand {
         if (session.args.length == 0) {
             session.sendCard(
                 new Card()
-                    .addTitle(this.code)
-                    .addText(this.intro)
-                    .addText(this.help)
-            );
+                .addTitle(this.code)
+                .addText(this.intro)
+                .addText(this.help)
+                );
             return;
         }
         var req = session.args[0];
@@ -27,9 +27,9 @@ class R6Active extends AppCommand {
         async function searchkey(cdk: string) {
             return new Promise<number | boolean>((resolve) => {
                 var exp =
-                    'SELECT days FROM cdklist WHERE cdk=' +
-                    connection.escape(cdk) +
-                    ' && act=0';
+                'SELECT days FROM cdklist WHERE cdk=' +
+                connection.escape(cdk) +
+                ' && act=0';
                 connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log('[SELECT ERROR] - ', err.message);
@@ -47,11 +47,11 @@ class R6Active extends AppCommand {
         async function recordkey(cdk: string, days: any) {
             return new Promise<void>(async (resolve) => {
                 var exp1 =
-                    'UPDATE cdklist SET act=1, actid=' +
-                    session.userId +
-                    ' WHERE cdk="' +
-                    cdk +
-                    '"';
+                'UPDATE cdklist SET act=1, actid=' +
+                session.userId +
+                ' WHERE cdk="' +
+                cdk +
+                '"';
                 await connection.query(exp1, function (err: any) {
                     if (err) {
                         console.log(err);
@@ -62,11 +62,11 @@ class R6Active extends AppCommand {
                     'INSERT IGNORE INTO usrlib (id) VALUES("' +
                     session.userId +
                     '")'
-                );
+                    );
                 var exp3 =
-                    'SELECT expdate FROM usrlib WHERE id="' +
-                    session.userId +
-                    '"';
+                'SELECT expdate FROM usrlib WHERE id="' +
+                session.userId +
+                '"';
                 await connection.query(exp3, function (err: any, result: any) {
                     if (err) {
                         console.log(err);
@@ -86,11 +86,11 @@ class R6Active extends AppCommand {
                             //expdate+date
                         }
                         var exp3 =
-                            'UPDATE usrlib SET expdate="' +
-                            time.toISOString().replace('T', ' ').substring(0, 19) +
-                            '" WHERE id="' +
-                            session.userId +
-                            '"';
+                        'UPDATE usrlib SET expdate="' +
+                        time.toISOString().replace('T', ' ').substring(0, 19) +
+                        '" WHERE id="' +
+                        session.userId +
+                        '"';
                         connection.query(exp3, function (err: any) {
                             if (err) {
                                 console.log(err);
@@ -101,12 +101,12 @@ class R6Active extends AppCommand {
                                     days +
                                     '天\n到期时间（ISO FORMAT）：' +
                                     time.toISOString()
-                                );
+                                    );
                                 resolve()
                                 session.user.grantRole(
                                     373739,
                                     '3128617072930683'
-                                );
+                                    );
                             }
                         });
                     }
