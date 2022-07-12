@@ -76,7 +76,7 @@ class R6Search extends AppCommand {
             r6id = r6id.replace(/\\/g, "");
             axios
                 .get(
-                    "http://localhost:9099/getUser.php?appcode=thisisthecode&name=" + r6id
+                    "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id
                 )
                 .then(function(res: any) {
                     stats = res.data.players[Object.keys(res.data.players)[0]];
@@ -91,7 +91,7 @@ class R6Search extends AppCommand {
                     catch { }
                     axios
                         .get(
-                            "http://localhost:9099/getStats.php?appcode=thisisthecode&name=" +
+                            "http://127.0.0.1:9099/getStats.php?appcode=thisisthecode&name=" +
                             r6id
                         )
                         .then(function(res: any) {
