@@ -37,7 +37,7 @@ class R6Auth extends AppCommand {
             var stats: any, highestMMR;
             axios
             .get(
-                'http://localhost:9099/getUser.php?appcode=thisisthecode&name=' +
+                'http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=' +
                 r6id
                 )
             .then(function (res: any) {
