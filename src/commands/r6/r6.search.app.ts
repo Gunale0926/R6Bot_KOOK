@@ -100,13 +100,13 @@ class R6Search extends AppCommand {
                             if (!result) {
                                 return;
                             }
-                            time = (result.generalpvp_timeplayed / 3600).toFixed(2);
+                            time = (result.generalpvp_timeplayed / 3600).toFixed(1);
                             kd = (result.generalpvp_kills / result.generalpvp_death).toFixed(
                                 2
                             );
                             WLratio = (
-                                result.generalpvp_matchwon / result.generalpvp_matchplayed
-                            ).toFixed(2);
+                                result.generalpvp_matchwon / result.generalpvp_matchplayed * 100
+                            ).toFixed(1);
                         })
                         .then(function() {
                             if (stats.rankInfo.name.search(/Copper/) === 0) {
@@ -176,12 +176,12 @@ class R6Search extends AppCommand {
                                                                 (stats.kills / stats.deaths).toFixed(1),
                                                         }, {
                                                             type: "kmarkdown",
-                                                            content: "**胜率**\n" + WLratio * 100 + "%",
+                                                            content: "**胜率**\n" + WLratio + "%",
                                                         }, {
                                                             type: "kmarkdown",
                                                             content:
                                                                 "**赛季胜率**\n" +
-                                                                (stats.wins / stats.losses).toFixed(2),
+                                                                (stats.wins / (stats.losses + stats.wins) * 100).toFixed(1) + "%",
                                                         }, {
                                                             type: "kmarkdown",
                                                             content: "**MMR**\n" + stats.mmr,
