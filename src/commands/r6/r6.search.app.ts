@@ -94,7 +94,7 @@ class R6Search extends AppCommand {
                             session.send("查无此人！请检查ID后重试！")
                             return
                         }
-                        if (!stats) {
+                        if (!stats.nickname) {
                             session.send("服务器异常")
                             return
                         }
