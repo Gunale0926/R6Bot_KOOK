@@ -12,8 +12,15 @@ class R6Search extends AppCommand {
             return;
         }
         var flag = false;
+        if (session.args[1]) {
+            if (session.args[1].charAt(0) == 'p' || session.args[1].charAt(0) == 'P')
+                var plat = "ps";
+            else if (session.args[1].charAt(0) == 'x' || session.args[1].charAt(0) == 'X')
+                var plat = "xbox";
+        }
+        else var plat = "uplay";
         var exp3 = 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
-        connection.query(exp3, function(err: any, result: any) {
+        connection.query(exp3, function (err: any, result: any) {
             if (err) {
                 console.log("[SELECT ERROR] - ", err.message);
             } else {
@@ -55,7 +62,7 @@ class R6Search extends AppCommand {
         async function searchid(id: string) {
             return new Promise<any>(async (resolve) => {
                 var exp = "SELECT r6id FROM usrlib WHERE id=" + id;
-                connection.query(exp, function(err: any, result: any) {
+                connection.query(exp, function (err: any, result: any) {
                     if (err) {
                         console.log("[SELECT ERROR] - ", err.message);
                     } else if (result[0]) resolve(result[0].r6id);
@@ -76,12 +83,12 @@ class R6Search extends AppCommand {
             r6id = r6id.replace(/\\/g, "");
             axios
                 .get(
-                    "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id
+                    "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
                 )
-                .then(function(res: any) {
+                .then(function (res: any) {
                     stats = res.data.players[Object.keys(res.data.players)[0]];
                 })
-                .then(function() {
+                .then(function () {
                     try {
                         if (stats.error.message) {
                             session.send("查无此人！请检查ID后重试！");
@@ -91,10 +98,9 @@ class R6Search extends AppCommand {
                     catch { }
                     axios
                         .get(
-                            "http://127.0.0.1:9099/getStats.php?appcode=thisisthecode&name=" +
-                            r6id
+                            "http://127.0.0.1:9099/getStats.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
                         )
-                        .then(function(res: any) {
+                        .then(function (res: any) {
                             var result: any =
                                 res.data.players[Object.keys(res.data.players)[0]];
                             if (!result) {
@@ -108,7 +114,7 @@ class R6Search extends AppCommand {
                                 result.generalpvp_matchwon / result.generalpvp_matchplayed * 100
                             ).toFixed(1);
                         })
-                        .then(function() {
+                        .then(function () {
                             if (stats.rankInfo.name.search(/Copper/) === 0) {
                                 arg6 = "#B30B0D";
                             }
