@@ -91,10 +91,10 @@ class R6Search extends AppCommand {
                 .then(function () {
                     try {
                         if (stats.error.message) {
-                            session.send("查无此人！请检查ID后重试！");
+                            session.send("查无此人！请检查ID后重试！")
                             return
                         }
-                        if (!stats.data.players) {
+                        if (!stats) {
                             session.send("服务器异常")
                             return
                         }
