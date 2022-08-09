@@ -92,7 +92,11 @@ class R6Search extends AppCommand {
                     try {
                         if (stats.error.message) {
                             session.send("查无此人！请检查ID后重试！");
-                            return;
+                            return
+                        }
+                        if (!stats.data.players) {
+                            session.send("服务器异常")
+                            return
                         }
                     }
                     catch { }
