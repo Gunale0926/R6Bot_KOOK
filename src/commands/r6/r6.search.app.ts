@@ -81,8 +81,9 @@ class R6Search extends AppCommand {
         WLratio: any,
         src = session.user.avatar,
         r6id = r6id.replace(/\\/g, "");
-      const url1 = "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
-      const url2 = "http://127.0.0.1:9099/getStats.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
+      const url1 = "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat;
+      const url2 = "http://127.0.0.1:9099/getStats.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat;
+      var ret = false;
       await Promise.all([
         axios.get(url1)
           .then(function (res: any) {
@@ -90,12 +91,12 @@ class R6Search extends AppCommand {
           })
           .then(function () {
             if (stats.error) {
-              session.send("查无此人！请检查ID后重试！")
-              return
-            }
+              session.send("查无此人！请检查ID后重试！");
+	      ret = true;
+            
             if (stats == undefined) {
-              session.send("服务器异常")
-              return;
+              session.send("服务器异常");
+	      ret = true;
             }
           })
         , axios.get(url2)
@@ -103,16 +104,16 @@ class R6Search extends AppCommand {
             var result: any =
               res.data.players[Object.keys(res.data.players)[0]];
             if (!result) {
-              return;
+              ret = true;
             }
-            time = (result.generalpvp_timeplayed / 3600).toFixed(1);
-            kd = (result.generalpvp_kills / result.generalpvp_death).toFixed(
-              2
-            );
-            WLratio = (result.generalpvp_matchwon / result.generalpvp_matchplayed);
-          })
+           })
       ])
         .then(function () {
+	  if(ret)
+	  return;
+	  time = (result.generalpvp_timeplayed / 3600).toFixed(1);
+          kd = (result.generalpvp_kills / result.generalpvp_death).toFixed(2);
+          WLratio = (result.generalpvp_matchwon / result.generalpvp_matchplayed);
           if (stats.rankInfo.name.search(/Copper/) === 0) {
             arg6 = "#B30B0D";
           }
