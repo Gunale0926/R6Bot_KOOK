@@ -78,224 +78,217 @@ class R6Search extends AppCommand {
         arg6: string,
         stats: any,
         time: any,
-        WLratio: any;
-      src = session.user.avatar;
-      r6id = r6id.replace(/\\/g, "");
-      axios
-        .get(
-          "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
-        )
-        .then(async function (res: any) {
-          stats = res.data.players[Object.keys(res.data.players)[0]];
-
-        })
-        .then(async function () {
-          try {
-            if (stats.error.message) {
-              await session.send("查无此人！请检查ID后重试！")
+        WLratio: any,
+        src = session.user.avatar,
+        r6id = r6id.replace(/\\/g, "");
+      const url1 = "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
+      const url2 = "http://127.0.0.1:9099/getStats.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
+      await Promise.all([
+        axios.get(url1)
+          .then(function (res: any) {
+            stats = res.data.players[Object.keys(res.data.players)[0]];
+          })
+          .then(function () {
+            if (stats.error) {
+              session.send("查无此人！请检查ID后重试！")
               return
             }
-
+            if (stats == undefined) {
+              session.send("服务器异常")
+              return;
+            }
+          })
+        , axios.get(url2)
+          .then(function (res: any) {
+            var result: any =
+              res.data.players[Object.keys(res.data.players)[0]];
+            if (!result) {
+              return;
+            }
+            time = (result.generalpvp_timeplayed / 3600).toFixed(1);
+            kd = (result.generalpvp_kills / result.generalpvp_death).toFixed(
+              2
+            );
+            WLratio = (result.generalpvp_matchwon / result.generalpvp_matchplayed);
+          })
+      ])
+        .then(function () {
+          if (stats.rankInfo.name.search(/Copper/) === 0) {
+            arg6 = "#B30B0D";
           }
-          catch { }
-          if (stats == undefined) {
-            await session.send("服务器异常")
-            return
+          if (stats.rankInfo.name.search(/Bronze/) === 0) {
+            arg6 = "#C98B3B";
           }
-          axios
-            .get(
-              "http://127.0.0.1:9099/getStats.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
-            )
-            .then(function (res: any) {
-              var result: any =
-                res.data.players[Object.keys(res.data.players)[0]];
-              if (!result) {
-                return;
-              }
-              time = (result.generalpvp_timeplayed / 3600).toFixed(1);
-              kd = (result.generalpvp_kills / result.generalpvp_death).toFixed(
-                2
-              );
-              WLratio = (result.generalpvp_matchwon / result.generalpvp_matchplayed);
-            })
-            .then(function () {
-              if (stats.rankInfo.name.search(/Copper/) === 0) {
-                arg6 = "#B30B0D";
-              }
-              if (stats.rankInfo.name.search(/Bronze/) === 0) {
-                arg6 = "#C98B3B";
-              }
-              if (stats.rankInfo.name.search(/Silver/) === 0) {
-                arg6 = "#B0B0B0";
-              }
-              if (stats.rankInfo.name.search(/Gold/) === 0) {
-                arg6 = "#EED01E";
-              }
-              if (stats.rankInfo.name.search(/Platinum/) === 0) {
-                arg6 = "#5BB9B3";
-              }
-              if (stats.rankInfo.name.search(/Diamond/) === 0) {
-                arg6 = "#BD9FF6";
-              }
-              if (stats.rankInfo.name.search(/Champion/) === 0) {
-                arg6 = "#9D385C";
-              }
-              if (stats.rankInfo.name.search(/Unranked/) === 0) {
-                arg6 = "#B2B6BB";
-              }
-              if (flag)
-                var card = [
+          if (stats.rankInfo.name.search(/Silver/) === 0) {
+            arg6 = "#B0B0B0";
+          }
+          if (stats.rankInfo.name.search(/Gold/) === 0) {
+            arg6 = "#EED01E";
+          }
+          if (stats.rankInfo.name.search(/Platinum/) === 0) {
+            arg6 = "#5BB9B3";
+          }
+          if (stats.rankInfo.name.search(/Diamond/) === 0) {
+            arg6 = "#BD9FF6";
+          }
+          if (stats.rankInfo.name.search(/Champion/) === 0) {
+            arg6 = "#9D385C";
+          }
+          if (stats.rankInfo.name.search(/Unranked/) === 0) {
+            arg6 = "#B2B6BB";
+          }
+          if (flag)
+            var card = [
+              {
+                type: "card",
+                theme: "secondary",
+                color: arg6,
+                size: "lg",
+                modules: [
                   {
-                    type: "card",
-                    theme: "secondary",
-                    color: arg6,
-                    size: "lg",
-                    modules: [
-                      {
-                        type: "section",
-                        text: {
+                    type: "section",
+                    text: {
+                      type: "kmarkdown",
+                      content: "**:crown:" + r6id + "**",
+                    },
+                    mode: "left",
+                    accessory: {
+                      type: "image",
+                      src: src,
+                      size: "lg",
+                    },
+                  },
+                  {
+                    type: "section",
+                    text: {
+                      type: "paragraph",
+                      cols: 3,
+                      fields: [
+                        {
                           type: "kmarkdown",
-                          content: "**:crown:" + r6id + "**",
-                        },
-                        mode: "left",
-                        accessory: {
-                          type: "image",
-                          src: src,
-                          size: "lg",
-                        },
-                      },
-                      {
-                        type: "section",
-                        text: {
-                          type: "paragraph",
-                          cols: 3,
-                          fields: [
-                            {
-                              type: "kmarkdown",
-                              content: "**等级**\n" + stats.level,
-                            }, {
-                              type: "kmarkdown",
-                              content: "**段位**\n" + stats.rankInfo.name,
-                            }, {
-                              type: "kmarkdown",
-                              content: "**总KD**\n" + kd,
-                            }, {
-                              type: "kmarkdown",
-                              content:
-                                "**赛季KD**\n" +
-                                (stats.kills / stats.deaths).toFixed(2),
-                            }, {
-                              type: "kmarkdown",
-                              content: "**胜率**\n" + (WLratio * 100).toFixed(1) + "%",
-                            }, {
-                              type: "kmarkdown",
-                              content:
-                                "**赛季胜率**\n" +
-                                (stats.wins / (stats.losses + stats.wins) * 100).toFixed(1) + "%",
-                            }, {
-                              type: "kmarkdown",
-                              content: "**MMR**\n" + stats.mmr,
-                            }, {
-                              type: "kmarkdown",
-                              content: "**赛季最高分**\n" + stats.max_mmr,
-                            }, {
-                              type: "kmarkdown",
-                              content: "**多人游戏时长**\n" + time,
-                            },
-                          ],
-                        },
-                      }, {
-                        type: "section",
-                        text: {
+                          content: "**等级**\n" + stats.level,
+                        }, {
+                          type: "kmarkdown",
+                          content: "**段位**\n" + stats.rankInfo.name,
+                        }, {
+                          type: "kmarkdown",
+                          content: "**总KD**\n" + kd,
+                        }, {
                           type: "kmarkdown",
                           content:
-                            "(ins)[查看更多](https://r6.tracker.network/profile/pc/" +
-                            r6id +
-                            "/)(ins)",
-                        },
-                      },
-                    ],
-                  },
-                ];
-              else
-                var card = [
-                  {
-                    type: "card",
-                    theme: "secondary",
-                    color: arg6,
-                    size: "lg",
-                    modules: [
-                      {
-                        type: "section",
-                        text: {
+                            "**赛季KD**\n" +
+                            (stats.kills / stats.deaths).toFixed(2),
+                        }, {
                           type: "kmarkdown",
-                          content: "**" + r6id + "**",
-                        },
-                        mode: "left",
-                        accessory: {
-                          type: "image",
-                          src: src,
-                          size: "lg",
-                        },
-                      },
-                      {
-                        type: "section",
-                        text: {
-                          type: "paragraph",
-                          cols: 3,
-                          fields: [
-                            {
-                              type: "kmarkdown",
-                              content: "**等级**\n" + stats.level,
-                            }, {
-                              type: "kmarkdown",
-                              content: "**段位**\n" + stats.rankInfo.name,
-                            }, {
-
-                              type: "kmarkdown",
-                              content: "**总KD**\n" + kd,
-                            }, {
-
-                              type: "kmarkdown",
-                              content:
-                                "**赛季KD**\n" +
-                                (stats.kills / stats.deaths).toFixed(2),
-                            }, {
-
-                              type: "kmarkdown",
-                              content: "**胜率**\n" + (WLratio * 100).toFixed(1) + "%",
-                            }, {
-
-                              type: "kmarkdown",
-                              content:
-                                "**赛季胜率**\n" +
-                                (stats.wins / (stats.losses + stats.wins) * 100).toFixed(1) + "%",
-                            }, {
-                              type: "kmarkdown",
-                              content: "**MMR**\n" + stats.mmr,
-                            }, {
-                              type: "kmarkdown",
-                              content: "**赛季最高分**\n" + stats.max_mmr,
-                            }, {
-                              type: "kmarkdown",
-                              content: "**多人游戏时长**\n" + time,
-                            },
-                          ],
-                        },
-                      }, {
-                        type: "section",
-                        text: {
+                          content: "**胜率**\n" + (WLratio * 100).toFixed(1) + "%",
+                        }, {
                           type: "kmarkdown",
                           content:
-                            "[发电支持作者！](https://afdian.net/@Gunale)",
+                            "**赛季胜率**\n" +
+                            (stats.wins / (stats.losses + stats.wins) * 100).toFixed(1) + "%",
+                        }, {
+                          type: "kmarkdown",
+                          content: "**MMR**\n" + stats.mmr,
+                        }, {
+                          type: "kmarkdown",
+                          content: "**赛季最高分**\n" + stats.max_mmr,
+                        }, {
+                          type: "kmarkdown",
+                          content: "**多人游戏时长**\n" + time,
                         },
-                      },
-                    ],
+                      ],
+                    },
+                  }, {
+                    type: "section",
+                    text: {
+                      type: "kmarkdown",
+                      content:
+                        "[查看更多](https://r6.tracker.network/profile/pc/" +
+                        r6id +
+                        "/)",
+                    },
                   },
-                ];
-              session.sendCard(JSON.stringify(card));
-            });
-        });
+                ],
+              },
+            ];
+          else
+            var card = [
+              {
+                type: "card",
+                theme: "secondary",
+                color: arg6,
+                size: "lg",
+                modules: [
+                  {
+                    type: "section",
+                    text: {
+                      type: "kmarkdown",
+                      content: "**" + r6id + "**",
+                    },
+                    mode: "left",
+                    accessory: {
+                      type: "image",
+                      src: src,
+                      size: "lg",
+                    },
+                  },
+                  {
+                    type: "section",
+                    text: {
+                      type: "paragraph",
+                      cols: 3,
+                      fields: [
+                        {
+                          type: "kmarkdown",
+                          content: "**等级**\n" + stats.level,
+                        }, {
+                          type: "kmarkdown",
+                          content: "**段位**\n" + stats.rankInfo.name,
+                        }, {
+
+                          type: "kmarkdown",
+                          content: "**总KD**\n" + kd,
+                        }, {
+
+                          type: "kmarkdown",
+                          content:
+                            "**赛季KD**\n" +
+                            (stats.kills / stats.deaths).toFixed(2),
+                        }, {
+
+                          type: "kmarkdown",
+                          content: "**胜率**\n" + (WLratio * 100).toFixed(1) + "%",
+                        }, {
+
+                          type: "kmarkdown",
+                          content:
+                            "**赛季胜率**\n" +
+                            (stats.wins / (stats.losses + stats.wins) * 100).toFixed(1) + "%",
+                        }, {
+                          type: "kmarkdown",
+                          content: "**MMR**\n" + stats.mmr,
+                        }, {
+                          type: "kmarkdown",
+                          content: "**赛季最高分**\n" + stats.max_mmr,
+                        }, {
+                          type: "kmarkdown",
+                          content: "**多人游戏时长**\n" + time,
+                        },
+                      ],
+                    },
+                  }, {
+                    type: "section",
+                    text: {
+                      type: "kmarkdown",
+                      content:
+                        "[发电支持作者！](https://afdian.net/@Gunale)",
+                    },
+                  },
+                ],
+              },
+            ];
+          session.sendCard(JSON.stringify(card));
+        })
     }
   };
 }
