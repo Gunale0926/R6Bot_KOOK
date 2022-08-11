@@ -186,7 +186,7 @@ class R6Search extends AppCommand {
                                 (stats.kills / stats.deaths).toFixed(2),
                             }, {
                               type: "kmarkdown",
-                              content: "**胜率**\n" + WLratio * 100 + "%",
+                              content: "**胜率**\n" + (WLratio * 100).toFixed(1) + "%",
                             }, {
                               type: "kmarkdown",
                               content:
@@ -263,7 +263,7 @@ class R6Search extends AppCommand {
                             }, {
 
                               type: "kmarkdown",
-                              content: "**胜率**\n" + WLratio + "%",
+                              content: "**胜率**\n" + (WLratio * 100).toFixed(1) + "%",
                             }, {
 
                               type: "kmarkdown",
