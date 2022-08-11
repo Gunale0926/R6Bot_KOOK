@@ -20,7 +20,7 @@ class R6Search extends AppCommand {
     }
     else var plat = "uplay";
     var exp3 = 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
-    connection.query(exp3, function(err: any, result: any) {
+    connection.query(exp3, function (err: any, result: any) {
       if (err) {
         console.log("[SELECT ERROR] - ", err.message);
       } else {
@@ -62,7 +62,7 @@ class R6Search extends AppCommand {
     async function searchid(id: string) {
       return new Promise<any>(async (resolve) => {
         var exp = "SELECT r6id FROM usrlib WHERE id=" + id;
-        connection.query(exp, function(err: any, result: any) {
+        connection.query(exp, function (err: any, result: any) {
           if (err) {
             console.log("[SELECT ERROR] - ", err.message);
           } else if (result[0]) resolve(result[0].r6id);
@@ -85,11 +85,11 @@ class R6Search extends AppCommand {
         .get(
           "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
         )
-        .then(async function(res: any) {
+        .then(async function (res: any) {
           stats = res.data.players[Object.keys(res.data.players)[0]];
 
         })
-        .then(async function() {
+        .then(async function () {
           try {
             if (stats.error.message) {
               await session.send("查无此人！请检查ID后重试！")
@@ -106,7 +106,7 @@ class R6Search extends AppCommand {
             .get(
               "http://127.0.0.1:9099/getStats.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat
             )
-            .then(function(res: any) {
+            .then(function (res: any) {
               var result: any =
                 res.data.players[Object.keys(res.data.players)[0]];
               if (!result) {
@@ -116,11 +116,9 @@ class R6Search extends AppCommand {
               kd = (result.generalpvp_kills / result.generalpvp_death).toFixed(
                 2
               );
-              WLratio = (
-                result.generalpvp_matchwon / result.generalpvp_matchplayed * 100
-              ).toFixed(1);
+              WLratio = (result.generalpvp_matchwon / result.generalpvp_matchplayed);
             })
-            .then(function() {
+            .then(function () {
               if (stats.rankInfo.name.search(/Copper/) === 0) {
                 arg6 = "#B30B0D";
               }
@@ -185,10 +183,10 @@ class R6Search extends AppCommand {
                               type: "kmarkdown",
                               content:
                                 "**赛季KD**\n" +
-                                (stats.kills / stats.deaths).toFixed(1),
+                                (stats.kills / stats.deaths).toFixed(2),
                             }, {
                               type: "kmarkdown",
-                              content: "**胜率**\n" + WLratio + "%",
+                              content: "**胜率**\n" + WLratio * 100 + "%",
                             }, {
                               type: "kmarkdown",
                               content:
@@ -265,27 +263,22 @@ class R6Search extends AppCommand {
                             }, {
 
                               type: "kmarkdown",
-                              content: "**胜率**\n" + WLratio * 100 + "%",
+                              content: "**胜率**\n" + WLratio + "%",
                             }, {
 
                               type: "kmarkdown",
                               content:
                                 "**赛季胜率**\n" +
-                                (stats.wins / stats.losses).toFixed(2),
-                            }, {
-
-                              type: "kmarkdown",
-                              content:
-                                "**MMR**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)",
-                            }, {
-
-                              type: "kmarkdown",
-                              content:
-                                "**赛季最高分**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)",
+                                (stats.wins / (stats.losses + stats.wins) * 100).toFixed(1) + "%",
                             }, {
                               type: "kmarkdown",
-                              content:
-                                "**多人游戏时长**\n(spl)[解锁](https://afdian.net/@Gunale)(spl)",
+                              content: "**MMR**\n" + stats.mmr,
+                            }, {
+                              type: "kmarkdown",
+                              content: "**赛季最高分**\n" + stats.max_mmr,
+                            }, {
+                              type: "kmarkdown",
+                              content: "**多人游戏时长**\n" + time,
                             },
                           ],
                         },
@@ -294,7 +287,7 @@ class R6Search extends AppCommand {
                         text: {
                           type: "kmarkdown",
                           content:
-                            "[解锁](https://afdian.net/@Gunale)~~查看更多~~",
+                            "[发电支持作者！](https://afdian.net/@Gunale)",
                         },
                       },
                     ],
