@@ -79,6 +79,7 @@ class R6Search extends AppCommand {
         stats: any,
         time: any,
         WLratio: any,
+	result: any,
         src = session.user.avatar,
         r6id = r6id.replace(/\\/g, "");
       const url1 = "http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=" + r6id + "&platform=" + plat;
@@ -93,7 +94,6 @@ class R6Search extends AppCommand {
             if (stats.error) {
               session.send("查无此人！请检查ID后重试！");
 	      ret = true;
-            
             if (stats == undefined) {
               session.send("服务器异常");
 	      ret = true;
@@ -101,11 +101,9 @@ class R6Search extends AppCommand {
           })
         , axios.get(url2)
           .then(function (res: any) {
-            var result: any =
-              res.data.players[Object.keys(res.data.players)[0]];
-            if (!result) {
+            result = res.data.players[Object.keys(res.data.players)[0]];
+            if (!result) 
               ret = true;
-            }
            })
       ])
         .then(function () {
