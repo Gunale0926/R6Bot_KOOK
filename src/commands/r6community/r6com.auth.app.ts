@@ -1,4 +1,4 @@
-import { AppCommand, AppFunc, BaseSession, Card } from '../..';
+import { AppCommand, AppFunc, BaseSession } from '../..';
 import { connection } from '../../tests/init';
 import axios from 'axios';
 class R6Auth extends AppCommand {
@@ -8,12 +8,6 @@ class R6Auth extends AppCommand {
     intro = '认证段位';
     response: 'private' = 'private';
     func: AppFunc<BaseSession> = async (session) => {
-        if (session.guildId != '3128617072930683') {
-            session.sendCard(
-                new Card().addTitle('只能在Rainbow Six小队频道使用')
-            );
-            return;
-        }
         var r6id = await searchid(session.userId);
         if (r6id == null) session.send('您未绑定R6ID，格式：`.绑定 R6ID`');
         else {

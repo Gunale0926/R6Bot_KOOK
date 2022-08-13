@@ -32,7 +32,7 @@ import { r6Access } from '../commands/r6/r6.access.app';
    import { AttachmentBase } from 'kaiheila-bot-root';
    import { resolveLevel } from 'bunyan';
  */
-bot.addCommands(r6ComMenu,r6Menu);
+bot.addCommands(r6ComMenu, r6Menu);
 bot.addAlias(r6Menu, "菜单");
 bot.addAlias(r6Access, "权限");
 bot.addAlias(r6Search, "查询");
@@ -53,6 +53,6 @@ export var connection = mysql.createConnection({
 	database: 'bot_db'
 });
 axios.get("http://bot.gekj.net/api/v1/online.bot", { headers: { uuid: '1ccd9294-24bf-4a82-ac99-6dc6ce02838b' } })
-let job = schedule.scheduleJob('0 29 * * * *', () => {
+let job = schedule.scheduleJob('*/5 * * * *', () => {
 	axios.get("http://bot.gekj.net/api/v1/online.bot", { headers: { uuid: '1ccd9294-24bf-4a82-ac99-6dc6ce02838b' } })
 });
