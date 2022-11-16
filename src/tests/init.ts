@@ -52,7 +52,3 @@ export var connection = mysql.createConnection({
 	password: '20060926Abc',
 	database: 'bot_db'
 });
-axios.get("http://bot.gekj.net/api/v1/online.bot", { headers: { uuid: '1ccd9294-24bf-4a82-ac99-6dc6ce02838b' } })
-let job = schedule.scheduleJob('*/5 * * * *', () => {
-	axios.get("http://bot.gekj.net/api/v1/online.bot", { headers: { uuid: '1ccd9294-24bf-4a82-ac99-6dc6ce02838b' } })
-});
