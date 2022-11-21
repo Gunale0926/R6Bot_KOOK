@@ -1,8 +1,6 @@
 console.log('Startms:' + new Date().getTime())
 import * as dotenv from 'dotenv';
 import { KBotify } from '..';
-import axios from 'axios';
-const schedule = require('node-schedule');
 dotenv.config();
 export const bot = new KBotify({
 	mode: 'websocket',
@@ -13,6 +11,9 @@ export const bot = new KBotify({
 	ignoreDecryptError: false,
 	debug: false,
 });
+const R6API = require('r6api.js').default;
+const { UBI_EMAIL: email = '', UBI_PASSWORD: password = '' } = process.env;
+const r6api = new R6API({ email, password });
 export const pars = {
 	head: 11,
 	tail: 68
@@ -45,10 +46,11 @@ bot.addAlias(r6Auth, '认证')
 bot.connect();
 bot.logger.debug('Init Success');
 var mysql = require('mysql');
-export var connection = mysql.createConnection({
-	socketPath: '/var/run/mysqld/mysqld.sock',
-	host: 'localhost',
+var connection = mysql.createConnection({
+	//socketPath: '/var/run/mysqld/mysqld.sock',
+	host: '127.0.0.1',
 	user: 'root',
 	password: '20060926Abc',
 	database: 'bot_db'
 });
+export { connection, r6api }
