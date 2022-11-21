@@ -47,8 +47,8 @@ bot.connect();
 bot.logger.debug('Init Success');
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-	//socketPath: '/var/run/mysqld/mysqld.sock',
-	host: '127.0.0.1',
+	socketPath: '/var/run/mysqld/mysqld.sock',
+	host: 'localhost',
 	user: 'root',
 	password: '20060926Abc',
 	database: 'bot_db'
