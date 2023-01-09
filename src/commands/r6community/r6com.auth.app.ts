@@ -1,13 +1,19 @@
 import { AppCommand, AppFunc, BaseSession } from '../..';
-import { connection } from '../../tests/init';
-import axios from 'axios';
+import { connection, r6api } from '../../tests/init';
 class R6Auth extends AppCommand {
     code = '认证'; // 只是用作标记
     trigger = 'auth'; // 用于触发的文字
-    help = '`.认证`'; // 帮助文字
+    help = '`.认证 + platform`'; // 帮助文字
     intro = '认证段位';
     response: 'private' = 'private';
     func: AppFunc<BaseSession> = async (session) => {
+        var platform = 'uplay'
+        if (session.args[1]) {
+            if (session.args[1].charAt(0) == 'p' || session.args[1].charAt(0) == 'P')
+                platform = "ps";
+            else if (session.args[1].charAt(0) == 'x' || session.args[1].charAt(0) == 'X')
+                platform = "xbox";
+        }
         var r6id = await searchid(session.userId);
         if (r6id == null) session.send('您未绑定R6ID，格式：`.绑定 R6ID`');
         else {
@@ -27,49 +33,24 @@ class R6Auth extends AppCommand {
                 });
             });
         }
-        function get(r6id: string) {
-            var stats: any, highestMMR;
-            axios
-                .get(
-                    'http://127.0.0.1:9099/getUser.php?appcode=thisisthecode&name=' +
-                    r6id
-                )
-                .then(function (res: any) {
-                    stats = res.data.players[Object.keys(res.data.players)[0]];
-                })
-                .then(function () {
-                    var nodata: any;
-                    try {
-                        nodata = stats.error.message;
-                    } catch { }
-                    if (nodata == 'User not found!') {
-                        session.send('查无此人！请检查ID后重试！');
-                        return;
-                    }
-
-                    try {
-                        highestMMR = stats.max_mmr;
-                    } catch (error) {
-                        session.send('未进行过排位！');
-                        return;
-                    }
-                    var highestRank;
-                    if (highestMMR < 1600) highestRank = '紫铜';
-                    else if (highestMMR < 2100) highestRank = '黄铜';
-                    else if (highestMMR < 2600) highestRank = '白银';
-                    else if (highestMMR < 3200) highestRank = '黄金';
-                    else if (highestMMR < 4100) highestRank = '白金';
-                    else if (highestMMR < 5000) highestRank = '钻石';
-                    else highestRank = '冠军';
-                    session.send(
-                        'ID：' +
-                        r6id +
-                        '\n本赛季最高段位：' +
-                        highestRank +
-                        '\n请发送段位截图并等待审核！'
-                    );
-                    return;
-                });
+        async function get(r6id: string) {
+            var r6id = r6id.replace(/\\/g, "");
+            const { 0: player } = await r6api.findByUsername(platform, r6id);
+            if (!player) {
+                session.send("用户未找到")
+                return 'Player not found';
+            }
+            const { 0: ranks } = await r6api.getRanks(platform, player.id, { seasonIds: -1 })
+            var rank = ranks.seasons[Object.keys(ranks.seasons)[0]].regions.apac.boards.pvp_ranked
+            var max = rank.max.name
+            session.send(
+                'ID：' +
+                r6id +
+                '\n本赛季最高段位：' +
+                max +
+                '\n请发送段位截图并等待审核！'
+            );
+            return;
         }
     };
 }
