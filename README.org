@@ -1,0 +1,14 @@
+* R6Bot_KOOK
+Sponsor: [[Afdian][https://afdian.net/a/Gunale]]
+** Install
+#+BEGIN_SRC bash
+git clone git@github.com:Gunale0926/R6Bot_KOOK.git
+npm install
+#+END_SRC
+** Config
+Rename template ~._env~ to ~.env~
+Replace all parameters inside (README WIP)
+** Run on Linux&macOS
+#+BEGIN_SRC bash
+sh run.sh
+#+END_SRC
