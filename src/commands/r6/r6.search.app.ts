@@ -10,7 +10,7 @@ class R6Search extends AppCommand {
       session.send("此频道禁止查询");
       return;
     }
-    var flag = false;
+    var vip = false;
     var platform = 'uplay'
     if (session.args[1]) {
       if (session.args[1].charAt(0) == 'p' || session.args[1].charAt(0) == 'P')
@@ -29,8 +29,8 @@ class R6Search extends AppCommand {
           var expdate = new Date("1900-1-1 00:00:00");
         }
         var date = new Date(); //现在
-        if (expdate >= date) flag = true;
-        else flag = false;
+        if (expdate >= date) vip = true;
+        else vip = false;
         main();
       }
     });
@@ -60,7 +60,7 @@ class R6Search extends AppCommand {
     }
     async function searchid(id: string) {
       return new Promise<any>(async (resolve) => {
-        var exp = "SELECT r6id FROM usrlib WHERE id=" + id;
+        var exp = `SELECT r6id FROM usrlib WHERE id=${id}`;
         connection.query(exp, function (err: any, result: any) {
           if (err) {
             console.log("[SELECT ERROR] - ", err.message);
@@ -120,10 +120,10 @@ class R6Search extends AppCommand {
         arg6 = "#B2B6BB";
       }
       var ctn;
-      if (flag)
-        ctn = "**:crown:" + r6id + "**"
+      if (vip)
+        ctn = `**:crown:${r6id}**`
       else
-        ctn = "**" + r6id + "**"
+        ctn = `**${r6id}**`
       var card = [
         {
           type: "card",
@@ -152,35 +152,33 @@ class R6Search extends AppCommand {
                 fields: [
                   {
                     type: "kmarkdown",
-                    content: "**总KD**\n" + kd,
+                    content: `**总KD**\n${kd}`,
                   }, {
                     type: "kmarkdown",
-                    content: "**胜率**\n" + WLratio,
+                    content: `**胜率**\n${WLratio}`,
                   }, {
                     type: "kmarkdown",
-                    content: "**多人游戏时长**\n" + time,
+                    content: `**多人游戏时长**\n${time}`,
                   }, {
                     type: "kmarkdown",
-                    content: "**段位**\n" + rankname,
+                    content: `**段位**\n${rankname}`,
                   }, {
                     type: "kmarkdown",
-                    content: "**MMR**\n" + mmr,
+                    content: `**MMR**\n${mmr}`,
                   }, {
                     type: "kmarkdown",
-                    content: "**上次排位**\n" + rank.lastMatch.result + " " + rank.lastMatch.mmrChange,
-                  }, {
-                    type: "kmarkdown",
-                    content:
-                      "**赛季KD**\n" +
-                      rankKD,
+                    content: `**上次排位**\n${rank.lastMatch.result} ${rank.lastMatch.mmrChange}`,
                   }, {
                     type: "kmarkdown",
                     content:
-                      "**赛季胜率**\n" +
-                      rankWL,
+                      `**赛季KD**\n${rankKD}`,
                   }, {
                     type: "kmarkdown",
-                    content: "**赛季最高分**\n" + max,
+                    content:
+                      `**赛季胜率**\n${rankWL}`,
+                  }, {
+                    type: "kmarkdown",
+                    content: `**赛季最高分**\n${max}`,
                   },],
               },
             }, {

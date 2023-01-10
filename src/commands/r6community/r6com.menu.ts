@@ -16,4 +16,4 @@ export const r6ComMenu = new R6ComMenu(
     r6Applyrole,
     r6Revokerole,
     r6Auth,
-    );
+);

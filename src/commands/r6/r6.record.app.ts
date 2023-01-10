@@ -9,27 +9,27 @@ class R6Record extends AppCommand {
         if (session.args.length == 0)
             session.sendCard(
                 new Card()
-                .addTitle(this.code)
-                .addText(this.intro)
-                .addText(this.help)
-                );
+                    .addTitle(this.code)
+                    .addText(this.intro)
+                    .addText(this.help)
+            );
         else await recordid(session.userId, session.args[0]);
         async function recordid(id: string, r6id: string) {
             return new Promise<void>((resolve) => {
                 var exp =
-                'INSERT INTO usrlib(id,r6id) VALUES(' +
-                id +
-                ',' +
-                connection.escape(r6id) +
-                ')';
+                    'INSERT INTO usrlib(id,r6id) VALUES(' +
+                    id +
+                    ',' +
+                    connection.escape(r6id) +
+                    ')';
                 connection.query(exp, function (err: any) {
                     if (err) {
                         //console.log('[SELECT ERROR] - ', err.message);
                         exp =
-                        'UPDATE usrlib SET r6id=' +
-                        connection.escape(r6id) +
-                        ' WHERE id=' +
-                        id;
+                            'UPDATE usrlib SET r6id=' +
+                            connection.escape(r6id) +
+                            ' WHERE id=' +
+                            id;
                         connection.query(exp, function (err: any) {
                             if (err) {
                                 var tmstp = new Date().getTime();
@@ -38,10 +38,10 @@ class R6Record extends AppCommand {
                                     err.message,
                                     ' [ID] - ',
                                     tmstp
-                                    );
+                                );
                                 session.send(
                                     '[INSERT ERROR] - [ID] - ' + tmstp
-                                    );
+                                );
                             } else {
                                 session.send('换绑了ID： ' + r6id);
                                 resolve();

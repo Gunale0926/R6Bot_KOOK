@@ -23,16 +23,10 @@ import { r6ComMenu } from 'commands/r6community/r6com.menu';
 import { r6Active } from '../commands/r6/r6.active.app';
 import { r6Applyrole } from '../commands/r6community/r6com.applyrole.app';
 import { r6Record } from '../commands/r6/r6.record.app';
-import { r6Search } from '../commands/r6/r6.search.app';
+import { r6Search } from "../commands/r6/r6.search.app";
 import { r6Revokerole } from '../commands/r6community/r6com.revokerole.app';
 import { r6Auth } from '../commands/r6community/r6com.auth.app';
 import { r6Access } from '../commands/r6/r6.access.app';
-/*
-   import { kBotifyLogger } from 'core/logger';
-   import Application from 'koa';
-   import { AttachmentBase } from 'kaiheila-bot-root';
-   import { resolveLevel } from 'bunyan';
- */
 bot.addCommands(r6ComMenu, r6Menu);
 bot.addAlias(r6Menu, "菜单");
 bot.addAlias(r6Access, "权限");
@@ -47,10 +41,10 @@ bot.connect();
 bot.logger.debug('Init Success');
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-	socketPath: '/var/run/mysqld/mysqld.sock',
+	socketPath: process.env.SQLSOCKETPATH,
 	host: 'localhost',
-	user: 'root',
-	password: '20060926Abc',
-	database: 'bot_db'
+	user: process.env.SQLUSER,
+	password: process.env.SQLPASS,
+	database: process.env.SQLDB
 });
 export { connection, r6api }
