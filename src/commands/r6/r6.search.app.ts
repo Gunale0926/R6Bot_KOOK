@@ -18,7 +18,7 @@ class R6Search extends AppCommand {
       else if (session.args[1].charAt(0) == 'x' || session.args[1].charAt(0) == 'X')
         platform = "xbox";
     }
-    var exp3 = 'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
+    var exp3 = `SELECT expdate FROM usrlib WHERE id="${session.userId}"`;
     connection.query(exp3, function (err: any, result: any) {
       if (err) {
         console.log("[SELECT ERROR] - ", err.message);

@@ -7,8 +7,7 @@ import { r6Access } from './r6.access.app';
 class R6Menu extends MenuCommand {
     code = 'r6';
     trigger = 'r6';
-    help =
-        '`.查询 R6ID (PS/Xbox)`查询某人绑定ID和战绩，默认PC平台，可在ID后加平台\n`.绑定 R6ID`绑定用户的R6ID\n私聊机器人`.激活 CDK`激活赞助者权限';
+    help = '`.查询 R6ID (PS/Xbox)`查询某人绑定ID和战绩，默认PC平台，可在ID后加平台\n`.绑定 R6ID`绑定用户的R6ID\n私聊机器人`.激活 CDK`激活赞助者权限';
     intro = '查询菜单';
     menu = new Card().addText(this.help).setColor('danger').toString();
     useCardMenu = true; // 使用卡片菜单

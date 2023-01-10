@@ -59,14 +59,10 @@ class R6Active extends AppCommand {
                     }
                 });
                 await connection.query(
-                    'INSERT IGNORE INTO usrlib (id) VALUES("' +
-                    session.userId +
-                    '")'
+                    `INSERT IGNORE INTO usrlib (id) VALUES("${session.userId}")`
                 );
                 var exp3 =
-                    'SELECT expdate FROM usrlib WHERE id="' +
-                    session.userId +
-                    '"';
+                    `SELECT expdate FROM usrlib WHERE id="${session.userId}"`;
                 await connection.query(exp3, function (err: any, result: any) {
                     if (err) {
                         console.log(err);
@@ -80,33 +76,21 @@ class R6Active extends AppCommand {
                         var date = new Date(); //现在
                         if (expdate < date) {
                             var time = addDays(date, days);
-                            //	now+days
+                            //now+days
                         } else {
                             var time = addDays(expdate, days);
                             //expdate+date
                         }
                         var exp3 =
-                            'UPDATE usrlib SET expdate="' +
-                            time.toISOString().replace('T', ' ').substring(0, 19) +
-                            '" WHERE id="' +
-                            session.userId +
-                            '"';
+                            `UPDATE usrlib SET expdate="${time.toISOString().replace('T', ' ').substring(0, 19)}" WHERE id="${session.userId}"`;
                         connection.query(exp3, function (err: any) {
                             if (err) {
                                 console.log(err);
                                 session.send('ERROR');
                             } else {
-                                session.send(
-                                    '激活成功！\n激活时长：' +
-                                    days +
-                                    '天\n到期时间（ISO FORMAT）：' +
-                                    time.toISOString()
-                                );
+                                session.send(`激活成功！\n激活时长：${days}天\n到期时间（ISO FORMAT）：${time.toISOString()}`);
                                 resolve()
-                                session.user.grantRole(
-                                    373739,
-                                    '3128617072930683'
-                                );
+                                session.user.grantRole(373739, '3128617072930683');
                             }
                         });
                     }

@@ -7,18 +7,11 @@ class R6Revokerole extends AppCommand {
     intro = '撤销角色';
     func: AppFunc<BaseSession> = async (session) => {
         if (session.guildId != '3128617072930683') {
-            session.sendCard(
-                new Card().addTitle('只能在Rainbow Six小队频道使用')
-            );
+            session.sendCard(new Card().addTitle('只能在Rainbow Six小队频道使用'));
             return;
         }
         if (session.args.length == 0) {
-            session.sendCard(
-                new Card()
-                    .addTitle(this.code)
-                    .addText(this.intro)
-                    .addText(this.help)
-            );
+            session.sendCard(new Card().addTitle(this.code).addText(this.intro).addText(this.help));
             return;
         }
         var response = await bot.API.guildRole.index(session.guildId);
@@ -29,10 +22,7 @@ class R6Revokerole extends AppCommand {
                 response[i].position <= pars.tail
             ) {
                 try {
-                    await session.user.revokeRole(
-                        response[i].roleId,
-                        session.guildId
-                    );
+                    await session.user.revokeRole(response[i].roleId, session.guildId);
                 } catch (error) {
                     session.send('用户没有此角色');
                     return;

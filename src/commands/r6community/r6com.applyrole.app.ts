@@ -29,12 +29,12 @@ class R6Applyrole extends AppCommand {
                     response[i].position >= pars.head &&
                     response[i].position <= pars.tail
                 ) {
-                    text = text + response[i].name + '\n';
+                    text = `${text + response[i].name}\n`;
                     num++;
                 }
             }
             session.sendCard(
-                card.addText('总计' + num + '个角色').addText(text),
+                card.addText(`总计${num}个角色`).addText(text),
                 { temp: true }
             );
             return;
@@ -43,7 +43,7 @@ class R6Applyrole extends AppCommand {
             flag = false;
         GetRole().then(function (num: number) {
             var exp3 =
-                'SELECT expdate FROM usrlib WHERE id="' + session.userId + '"';
+                `SELECT expdate FROM usrlib WHERE id="${session.userId}"`;
             connection.query(exp3, function (err: any, result: any) {
                 if (err) {
                     console.log('[SELECT ERROR] - ', err.message);
@@ -124,9 +124,7 @@ class R6Applyrole extends AppCommand {
                     }
                 }
                 if (!flag)
-                    session.send(
-                        '没有该角色，输入`.申请角色 列表`查看可申请角色列表'
-                    );
+                    session.send('没有该角色，输入`.申请角色 列表`查看可申请角色列表');
             });
         }
     };
