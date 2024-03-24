@@ -15,8 +15,8 @@ const R6API = require('r6api.js').default;
 const { UBI_EMAIL: email = '', UBI_PASSWORD: password = '' } = process.env;
 const r6api = new R6API({ email, password });
 export const pars = {
-	head: 11,
-	tail: 68
+	head: 15,
+	tail: 80
 }
 import { r6Menu } from 'commands/r6/r6.menu';
 import { r6ComMenu } from 'commands/r6community/r6com.menu';

@@ -6,7 +6,7 @@ class R6Search extends AppCommand {
   help = "`.查询 @某人`或`.查询 R6ID`查询某人战绩"; // 帮助文字
   intro = "查询ID";
   func: AppFunc<BaseSession> = async (session) => {
-    if (session.channel.id == "2249183588482976") {
+    if (session.channel.id == "2249183588482976" || session.channel.id == "1740325282357482") {
       session.send("此频道禁止查询");
       return;
     }
